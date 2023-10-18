@@ -8,6 +8,7 @@ Welcome to the Food Delivery Web App! This web application is designed to simpli
 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
+- [Database](#database)
 
 ## Features
 
