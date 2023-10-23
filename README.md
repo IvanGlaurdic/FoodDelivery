@@ -34,9 +34,8 @@ This food delivery web app offers a range of features to enhance the ordering an
 ### Delivery Scheduling
 - **Scheduled Deliveries**: Users can schedule their food deliveries for a specific date and time, which is particularly useful for planning meals in advance.
 
-### User Ratings and Reviews
+### User Reviews
 - **Reviewing Restaurants**: Users can leave ratings and written reviews for restaurants they've ordered from, helping other users make informed decisions.
-- **Rating System**: The app may implement a rating system for drivers as well, allowing users to rate their delivery experience.
 
 ### User Profiles and Order History
 - **User Profiles**: Users can manage their profiles, update personal information, and view their order history.
@@ -50,7 +49,8 @@ This food delivery web app offers a range of features to enhance the ordering an
 - **Filtering**: Filter options may include sorting by rating, price, distance, or dietary preferences.
 
 ## Database
-![image](https://github.com/OSS-Java-Seminar-2023/FoodDelivery/assets/78646771/6160f161-470b-43a9-bf74-4557c2bcd592)
+![image](https://github.com/OSS-Java-Seminar-2023/FoodDelivery/assets/78646771/33f4554a-2aa5-4719-bae0-f9e93b9f2784)
+
 
 ## Technologies Used
 
