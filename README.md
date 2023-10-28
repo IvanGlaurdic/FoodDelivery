@@ -49,7 +49,8 @@ This food delivery web app offers a range of features to enhance the ordering an
 - **Filtering**: Filter options may include sorting by rating, price, distance, or dietary preferences.
 
 ## Database
-![image](https://github.com/OSS-Java-Seminar-2023/FoodDelivery/assets/78646771/41be6d44-2956-49b2-aecc-7ea1d5d7ceef)
+![image](https://github.com/OSS-Java-Seminar-2023/FoodDelivery/assets/78646771/023db39d-fe12-4123-813c-20813a55ce2b)
+
 
 
 
