@@ -1,0 +1,25 @@
+databaseType = "MySql"
+name = "FoodDelivery"
+id = "6cff49f3-6459-4fee-bd89-3ff3c59ead58"
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+schemaModel = "./schema-model"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.mysql.options.ignores]
+ignoreNewlinesInTextObjects = "off"
+
+[flyway]
+mixed = true
+outOfOrder = true
+locations = [ "filesystem:migrations" ]
+validateMigrationNaming = true
+
+[environments.FoodDelivery]
+url = "jdbc:mysql://localhost:3306"
+schemas = [ "fooddeliverydb" ]
+displayName = "FoodDelivery"
