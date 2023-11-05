@@ -1,8 +1,3 @@
--- Role Enum Type (using a table instead of ENUM)
-CREATE TABLE UserRole (
-    Role NVARCHAR(20) PRIMARY KEY
-);
-
 -- Users Table
 CREATE TABLE Users (
     ID UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
