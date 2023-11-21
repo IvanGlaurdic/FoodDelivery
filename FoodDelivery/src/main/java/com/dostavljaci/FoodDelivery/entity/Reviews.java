@@ -21,5 +21,5 @@ public class Reviews {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "OrderID")
-    private Orders order;
+    private Order order;
 }

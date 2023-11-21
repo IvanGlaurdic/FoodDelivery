@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class Addresses {
+public class Address {
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
@@ -38,5 +38,5 @@ public class Addresses {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RestaurantID")
-    private Restaurants restaurant;
+    private Restaurant restaurant;
 }

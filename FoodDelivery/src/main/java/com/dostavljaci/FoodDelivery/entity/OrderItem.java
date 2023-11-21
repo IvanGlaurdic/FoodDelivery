@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class OrderItems {
+public class OrderItem {
     @Id
     @GeneratedValue
     private UUID id;
@@ -18,9 +18,9 @@ public class OrderItems {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderID", nullable = false)
-    private Orders order;
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MenuItemID", nullable = false)
-    private MenuItems menuItem;
+    private MenuItem menuItem;
 }

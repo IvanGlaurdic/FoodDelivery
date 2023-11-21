@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Notifications {
+public class Notification {
 
     @Id
     @GeneratedValue
@@ -23,6 +23,6 @@ public class Notifications {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderID")
-    private Orders order;
+    private Order order;
 
 }

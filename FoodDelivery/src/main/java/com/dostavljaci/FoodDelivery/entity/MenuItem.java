@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class MenuItems {
+public class MenuItem {
     @Id
     @GeneratedValue
     private UUID id;
@@ -31,5 +31,5 @@ public class MenuItems {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RestaurantID", nullable = false)
-    private Restaurants restaurant;
+    private Restaurant restaurant;
 }

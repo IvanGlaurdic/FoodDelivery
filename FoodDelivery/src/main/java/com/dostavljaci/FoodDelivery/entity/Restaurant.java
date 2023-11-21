@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class Restaurants {
+public class Restaurant {
     @Id
     @GeneratedValue
     private UUID id;
