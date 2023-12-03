@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <!-- Add link to your CSS files -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div id="logo">WEBSITE LOGO</div>
+    <div id="auth">
+        <a th:href="@{/login}">Login</a>
+        <a th:href="@{/register}">Register</a>
+    </div>
+</header>
+
+<aside>
+    <!-- This section will contain filters which you can populate and adjust according to the categories available -->
+    <div id="restaurant-filters">
+        <h3>RESTAURANT FILTERS</h3>
+        <!-- Filter options will go here -->
+    </div>
+</aside>
+
+<section id="restaurant-list">
+    <!-- Thymeleaf will iterate over the list of restaurants -->
+    <div th:each="restaurant : ${restaurants}" class="restaurant-entry">
+        <div class="restaurant-name" th:text="${restaurant.name}">Restaurant Name</div>
+        <div class="restaurant-rating" th:text="${restaurant.rating}">Rating</div>
+        <div class="restaurant-address" th:text="${restaurant.address.street} + ', ' + ${restaurant.address.city}">Address</div>
+    </div>
+</section>
+
+<footer>
+    <!-- Footer content -->
+</footer>
+
+<!-- Add link to your JavaScript files -->
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class Reviews {
+public class Review {
     @Id
     @GeneratedValue
     private UUID id;
