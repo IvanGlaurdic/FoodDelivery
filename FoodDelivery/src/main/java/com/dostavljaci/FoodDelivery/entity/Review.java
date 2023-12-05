@@ -1,12 +1,11 @@
 package com.dostavljaci.FoodDelivery.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import javax.persistence.*;
+import lombok.Data;
+import jakarta.persistence.*;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@Table(name = "review")
 @Entity
 public class Review {
     @Id
@@ -20,6 +19,6 @@ public class Review {
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "OrderID")
+    @JoinColumn(name = "orderid")
     private Order order;
 }

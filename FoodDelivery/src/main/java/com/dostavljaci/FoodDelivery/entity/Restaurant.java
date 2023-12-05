@@ -1,12 +1,11 @@
 package com.dostavljaci.FoodDelivery.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import javax.persistence.*;
+import lombok.Data;
+import jakarta.persistence.*;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@Table(name = "restaurant")
 @Entity
 public class Restaurant {
     @Id
@@ -23,7 +22,7 @@ public class Restaurant {
     private Float rating = 0.0f;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OwnerID", nullable = false)
+    @JoinColumn(nullable = false)
     private User ownerId;
 
 }

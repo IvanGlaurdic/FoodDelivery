@@ -1,14 +1,13 @@
 package com.dostavljaci.FoodDelivery.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import javax.persistence.*;
+import lombok.Data;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@Table(name = "order")
 @Entity
 public class Order {
     @Id
@@ -28,11 +27,10 @@ public class Order {
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID")
+    @JoinColumn
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RestaurantID")
+    @JoinColumn
     private Restaurant restaurant;
-
 }
