@@ -79,5 +79,5 @@ CREATE TABLE Notification (
                               ID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                               OrderID UUID REFERENCES "order"(ID),
                               Message TEXT NOT NULL,
-                              Timestamp TIMESTAMP DEFAULT NOW()
+                              Timestamp DATE
 );

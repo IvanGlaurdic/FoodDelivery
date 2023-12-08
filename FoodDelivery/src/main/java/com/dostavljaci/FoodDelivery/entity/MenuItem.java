@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
-@Table(name = "menuitem")
+@Table(name = "menuitem", schema = "public")
 @Entity
 public class MenuItem {
     @Id
@@ -19,8 +19,8 @@ public class MenuItem {
     @Column
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(nullable = false)
+    private float price;
 
     @Column
     private String imageURL;

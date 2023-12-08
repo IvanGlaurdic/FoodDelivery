@@ -3,11 +3,12 @@ package com.dostavljaci.FoodDelivery.entity;
 import lombok.Data;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
-@Table(name = "order")
+@Table(name = "order", schema = "public")
 @Entity
 public class Order {
     @Id
@@ -15,15 +16,15 @@ public class Order {
     private UUID id;
 
     @Column(nullable = false)
-    private LocalDate orderDate;
+    private Date orderDate;
 
     @Column
-    private LocalDate scheduledDeliveryDate;
+    private Date scheduledDeliveryDate;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+    @Column(nullable = false)
+    private float totalAmount;
 
-    @Column(nullable = false, length = 36)
+    @Column(nullable = false)
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)

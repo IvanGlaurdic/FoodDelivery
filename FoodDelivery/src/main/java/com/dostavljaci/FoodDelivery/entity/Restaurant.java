@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Data
-@Table(name = "restaurant")
+@Table(name = "restaurant", schema = "public")
 @Entity
 public class Restaurant {
     @Id
@@ -19,7 +19,7 @@ public class Restaurant {
     private String contactNumber;
 
     @Column
-    private Float rating = 0.0f;
+    private Float rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

@@ -4,14 +4,14 @@ import lombok.Data;
 import jakarta.persistence.*;
 import java.util.UUID;
 @Data
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 @Entity
 public class User {
     @Id
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "firstname")
     private String firstName;
 
     @Column(nullable = false)

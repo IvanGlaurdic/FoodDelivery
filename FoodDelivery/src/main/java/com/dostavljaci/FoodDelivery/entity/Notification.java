@@ -1,13 +1,15 @@
 package com.dostavljaci.FoodDelivery.entity;
 
 import jakarta.persistence.*;
+
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Data;
 
 @Data
-@Table(name = "notification")
+@Table(name = "notification", schema = "public")
 @Entity
 public class Notification {
 
@@ -19,7 +21,7 @@ public class Notification {
     private String message;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private Date timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
