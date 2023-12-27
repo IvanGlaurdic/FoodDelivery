@@ -2,9 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{style.css}">
 </head>
-<body>
+<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+
+<div class="card w-100" style="max-width: 400px;">
+    <div class="card-body">
+        <form class="row g-3" action="/login" method="post">
+            <!-- Error Message -->
+            <div class="col-12">
+                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+            </div>
+
+            <!-- Username/Email Input -->
+            <div class="col-12">
+                <label for="inputEmail4" class="form-label">Username/Email</label>
+                <input type="text" class="form-control mb-2" id="inputEmail4" name="usernameOrEmail">
+            </div>
+
+            <!-- Password Input -->
+            <div class="col-12">
+                <label for="inputPassword4" class="form-label">Password</label>
+                <input type="password" class="form-control mb-2" id="inputPassword4" name="rawPassword">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary w-100 mb-2">Sign in</button>
+            </div>
+
+            <!-- Register Link -->
+            <div class="col-12">
+                <p class="text-muted small text-center">Don't have an account yet? <a th:href="@{/register}" class="text-secondary">Register</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

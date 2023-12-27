@@ -22,7 +22,7 @@ public class Restaurant {
     private Float rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private User ownerId;
+    @JoinColumn(nullable = false, name = "owner_id_id")
+    private User owner;
 
 }

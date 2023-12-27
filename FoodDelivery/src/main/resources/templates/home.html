@@ -1,42 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
-    <!-- Add link to your CSS files -->
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{style.css}">
 </head>
 <body>
-<header>
-    <div id="logo">WEBSITE LOGO</div>
-    <div id="auth">
-        <a th:href="@{/login}">Login</a>
-        <a th:href="@{/register}">Register</a>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: var(--light-shades);">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}" style="color: var(--dark-shades);">WEBSITE LOGO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/}"  style="color: var(--dark-shades);">Home</a>
+                </li>
+                <!-- Other nav items -->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <!-- Conditional display based on user authentication status -->
+                <li class="nav-item" th:if="${user == null}">
+                    <a class="nav-link" th:href="@{/login}" style="color: var(--dark-shades);">Login</a>
+                </li>
+                <li class="nav-item" th:if="${user == null}">
+                    <a class="nav-link" th:href="@{/register}" style="color: var(--dark-shades);">Register</a>
+                </li>
+
+                <li class="nav-item" th:if="${user != null}">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </li>
+                <li class="nav-item" th:if="${user != null}">
+                    <a class="nav-link" th:href="@{/profile(username=${user.getUsername()})}" th:text="${user.getUsername()}" style="color: var(--dark-shades);"><i class="bi bi-person-circle" style="font-size: 2rem;"></i>User Profile</a>
+                </li>
+
+            </ul>
+        </div>
     </div>
-</header>
+</nav>
 
-<aside>
-    <!-- This section will contain filters which you can populate and adjust according to the categories available -->
-    <div id="restaurant-filters">
-        <h3>RESTAURANT FILTERS</h3>
-        <!-- Filter options will go here -->
-    </div>
-</aside>
 
-<section id="restaurant-list">
-    <!-- Thymeleaf will iterate over the list of restaurants -->
-    <div th:each="restaurant : ${restaurants}" class="restaurant-entry">
-        <div class="restaurant-name" th:text="${restaurant.name}">Restaurant Name</div>
-        <div class="restaurant-rating" th:text="${restaurant.rating}">Rating</div>
-        <div class="restaurant-address" th:text="${restaurant.address.street} + ', ' + ${restaurant.address.city}">Address</div>
-    </div>
-</section>
 
-<footer>
-    <!-- Footer content -->
-</footer>
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<!-- Add link to your JavaScript files -->
-<script src="js/script.js"></script>
 </body>
 </html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{style.css}">
+</head>
+<body>
+<h2>Users</h2>
+<table th:if="${users != null}">
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getUsername()()}">User Name</td>
+        <td th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">Full Name</td>
+        <!-- other restaurant details -->
+    </tr>
+</table>
+<h2>Restaurants</h2>
+<table>
+    <tr th:each="restaurant : ${restaurants}">
+        <td th:text="${restaurant.name}">Restaurant Name</td>
+        <td th:text="${restaurant.getOwnerId().getFirstName()} + ' ' + ${restaurant.getOwnerId().getLastName()()}">Owner Name</td>
+        <!-- other restaurant details -->
+    </tr>
+</table>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

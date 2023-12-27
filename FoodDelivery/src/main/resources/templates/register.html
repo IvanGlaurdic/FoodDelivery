@@ -1,7 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{style.css}">
 </head>
 <body>
 <h2>Register</h2>
@@ -18,7 +23,7 @@
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
     </div>
-    <p th:{error} class="errorMessage"></p>
+    <p th:if="${error}" th:text="${error}" class="errorMessage"></p>
     <div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
@@ -33,10 +38,13 @@
     </div>
     <button type="submit">Register</button>
 </form>
-</body>
-</html>
+<a th:href="@{/login}">Login</a>
 
-<body>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

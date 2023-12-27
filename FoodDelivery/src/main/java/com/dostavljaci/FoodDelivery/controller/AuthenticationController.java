@@ -3,7 +3,9 @@ package com.dostavljaci.FoodDelivery.controller;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.UserRepository;
 import com.dostavljaci.FoodDelivery.service.AuthenticationService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,13 +23,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public String performLogin(@RequestParam String usernameOrEmail, @RequestParam String rawPassword){
+    public String performLogin(@RequestParam String usernameOrEmail, @RequestParam String rawPassword, Model model, HttpSession session){
         User user = authenticationService.authenticate(usernameOrEmail, rawPassword);
         if (user != null){
-            return "redirect:/" + user.getId();
+            session.setAttribute("user", user);
+            return "redirect:/";
         }
         else {
-            return "redirect:/login?error=true";
+            model.addAttribute("error","Incorrect username or password");
+            return "login";
         }
     }
 
@@ -42,10 +46,12 @@ public class AuthenticationController {
                                   @RequestParam String username,
                                   @RequestParam String email,
                                   @RequestParam String password,
-                                  @RequestParam String confirmPassword) {
+                                  @RequestParam String confirmPassword,
+                                  Model model) {
         if (!password.equals(confirmPassword)) {
             // Handle the case where passwords do not match
-            return "redirect:/register?error=passwordsDontMatch";
+            model.addAttribute("error", "Passwords do not match");
+            return "register";
         }
 
         User newUser = new User();

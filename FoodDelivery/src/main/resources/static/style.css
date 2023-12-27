@@ -1,0 +1,79 @@
+:root {
+    --light-shades: #F5F5F5;
+    --dark-shades: #212121;
+    --light-accent: #4CAF50;
+    --main-brand-color: #FFC107;
+    --dark-accent: #673AB7;
+
+    --color-confirm: #4CAF50;
+    --color-decline: #F44336;
+
+    --border-size: 1px; /* You can adjust this as needed */
+    --radius-size: 8px; /* You can adjust this as needed */
+    --color-background: var(--light-shades);
+    --color-text: var(--dark-shades);
+    --color-accent: var(--light-accent);
+
+    --font-family: 'Inter', sans-serif;
+    --font-size: calc(.6rem + .4vw);
+
+    padding: 0 calc(var(--border-size) * 3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* This would be added to your existing style.css file */
+.text-muted {
+    color: #6c757d; /* Bootstrap's default for muted text */
+}
+
+a.text-secondary {
+    color: #6c757d; /* Bootstrap's default for secondary text */
+    text-decoration: none; /* Removes the underline from the link */
+}
+
+a.text-secondary:hover {
+    color: #5a6268; /* Slightly darker to indicate hover state */
+    text-decoration: underline; /* Adds underline on hover for better UX */
+}
+
+/* Adjustments to the button */
+.btn-primary {
+    background-color: var(--main-brand-color);
+    border-color: var(--main-brand-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-accent);
+    border-color: var(--dark-accent);
+}
+
+/* Style adjustments for centering the card */
+body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    padding: 0;
+    margin: 0;
+}
+
+/* Adjustments for spacing */
+.form-label {
+    margin-bottom: .5rem; /* Adds space below the label */
+}
+
+.form-control {
+    margin-bottom: 1rem; /* Adds space below the input fields */
+}
+
+.btn-primary {
+    margin-bottom: 1rem; /* Adds space below the button */
+}
+
+.text-muted {
+    margin-top: 1rem; /* Adds space above the muted text */
+}
