@@ -15,23 +15,23 @@ public class Order {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "order_date")
     private Date orderDate;
 
-    @Column
+    @Column(name = "scheduled_delivery_date")
     private Date scheduledDeliveryDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "total_amount")
     private float totalAmount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "status")
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 }

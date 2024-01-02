@@ -33,12 +33,6 @@
                 </li>
 
                 <li class="nav-item" th:if="${user != null}">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </li>
-                <li class="nav-item" th:if="${user != null}">
                     <a class="nav-link" th:href="@{/profile(username=${user.getUsername()})}" th:text="${user.getUsername()}" style="color: var(--dark-shades);"><i class="bi bi-person-circle" style="font-size: 2rem;"></i>User Profile</a>
                 </li>
 

@@ -12,17 +12,17 @@ public class Restaurant {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "contact_number")
     private String contactNumber;
 
-    @Column
+    @Column(name = "rating")
     private Float rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "owner_id_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
 }

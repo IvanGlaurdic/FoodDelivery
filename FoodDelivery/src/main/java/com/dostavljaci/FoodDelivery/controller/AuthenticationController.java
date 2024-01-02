@@ -47,6 +47,7 @@ public class AuthenticationController {
                                   @RequestParam String email,
                                   @RequestParam String password,
                                   @RequestParam String confirmPassword,
+                                  @RequestParam String phoneNumber,
                                   Model model) {
         if (!password.equals(confirmPassword)) {
             // Handle the case where passwords do not match
@@ -60,6 +61,7 @@ public class AuthenticationController {
         newUser.setUsername(username);
         newUser.setEmail(email);
         newUser.setPassword(authenticationService.getPasswordEncoder().encode(password));
+        newUser.setPhoneNumber(phoneNumber);
         newUser.setRole("user");
 
 

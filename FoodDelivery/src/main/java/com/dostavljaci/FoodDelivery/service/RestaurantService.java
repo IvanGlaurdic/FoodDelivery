@@ -28,4 +28,13 @@ public class RestaurantService {
     public List<Restaurant> getRestaurantsByOwner(UUID ownerId) {
         return restaurantRepository.findByOwnerId(ownerId);
     }
+
+
+    public Restaurant getRestaurantById(UUID restaurantId) {
+        return restaurantRepository.getReferenceById(restaurantId);
+    }
+
+    public Restaurant saveRestaurant(Restaurant restaurant) {
+        return restaurantRepository.save(restaurant);
+    }
 }

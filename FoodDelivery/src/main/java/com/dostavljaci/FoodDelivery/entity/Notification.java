@@ -17,14 +17,14 @@ public class Notification {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "message")
     private String message;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "timestamp")
     private Date timestamp;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "order_id")
     private Order order;
 
 }

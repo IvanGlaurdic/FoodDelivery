@@ -2,43 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Login</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Your Custom CSS -->
     <link rel="stylesheet" th:href="@{style.css}">
 </head>
-<body>
-<h2>Register</h2>
-<form action="/register" method="post">
-    <div>
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" required>
+<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+
+<div class="card w-100" style="max-width: 400px;">
+    <div class="card-body">
+        <form class="row g-3" action="/register" method="post">
+            <!-- Error Message -->
+            <div class="col-12">
+                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+            </div>
+
+            <!-- First Name Input -->
+            <div class="col-6">
+                <label for="firstName" class="form-label">First Name:</label>
+                <input type="text" class="form-control mb-2" id="firstName" name="firstName" required>
+            </div>
+
+            <!-- Last Name Input -->
+            <div class="col-6">
+                <label for="lastName" class="form-label">Last Name:</label>
+                <input type="text" class="form-control mb-2" id="lastName" name="lastName" required>
+            </div>
+
+            <!-- Username Input -->
+            <div class="col-12">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" class="form-control mb-2" id="username" name="username" required>
+            </div>
+
+            <!-- Email Input -->
+            <div class="col-12">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control mb-2" id="email" name="email" required>
+            </div>
+
+            <!-- Password Input -->
+            <div class="col-6">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control mb-4" id="password" name="password" required>
+            </div>
+
+            <!-- Confirm Password Input -->
+            <div class="col-6">
+                <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                <input type="password" class="form-control mb-4" id="confirmPassword" name="confirmPassword" required>
+            </div>
+
+            <!-- Phone Number Input -->
+            <div class="col-12">
+                <label for="phoneNumber" class="form-label">Confirm Password:</label>
+                <input type="tel" class="form-control mb-2" id="phoneNumber" name="phoneNumber" required>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary w-100 mb-2">Register</button>
+            </div>
+
+            <!-- Login Link -->
+            <div class="col-12">
+                <p class="text-muted small text-center">Don't have an account yet? <a th:href="@{/login}" class="text-secondary">Login</a></p>
+            </div>
+        </form>
     </div>
-    <div>
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" required>
-    </div>
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-    </div>
-    <p th:if="${error}" th:text="${error}" class="errorMessage"></p>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-    </div>
-    <div>
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required>
-    </div>
-    <button type="submit">Register</button>
-</form>
-<a th:href="@{/login}">Login</a>
+</div>
 
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
