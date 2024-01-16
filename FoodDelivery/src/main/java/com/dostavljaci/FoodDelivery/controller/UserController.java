@@ -30,7 +30,7 @@ public class UserController {
             List<Restaurant> restaurants = null;
             if (Objects.equals(user.getRole().toLowerCase(), "admin")){
                 users = userService.getAllUsers();
-                restaurants = restaurantService.getAllRestaurantsWithOwners();
+                restaurants = restaurantService.getAllRestaurants();
             } else if (Objects.equals(user.getRole().toLowerCase(), "owner")) {
                 restaurants = restaurantService.getRestaurantsByOwner(user.getId());
             }

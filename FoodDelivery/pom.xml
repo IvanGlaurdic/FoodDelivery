@@ -121,6 +121,13 @@
             <artifactId>geocoding-api</artifactId>
             <version>2.1.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/global.maplink/geocode-schema -->
+        <dependency>
+            <groupId>global.maplink</groupId>
+            <artifactId>geocode-schema</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
 
 
     </dependencies>

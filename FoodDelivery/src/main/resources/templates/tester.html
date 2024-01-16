@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<p th:text="${restaurant.getName()}"></p>
+<p th:text="${restaurant.getOwner()}"></p>
+<p th:text="${restaurant.toString()}"></p>
+<br>
+<br>
+<p th:text="${address.getCity()}" ></p>
+<p th:text="${address.getLatitude()()}" ></p>
+<p th:text="${address.getLongitude()()}" ></p>
+<p th:text="${address.toString()()}" ></p>
+
+
+<br>
+<br>
+<p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+
+<p th:=""></p>
+</body>
+</html>

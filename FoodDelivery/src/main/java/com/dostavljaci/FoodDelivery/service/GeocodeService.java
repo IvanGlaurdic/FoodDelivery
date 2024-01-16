@@ -1,6 +1,7 @@
 package com.dostavljaci.FoodDelivery.service;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import io.redlink.geocoding.Geocoder;
 import io.redlink.geocoding.LatLon;
@@ -11,13 +12,15 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class GeocodeService {
     private Geocoder geocoder; // This bean is provided by the geocoding-spring-boot-autoconfigure
 
+
     public LatLon geocodeAddress(String address) throws IOException {
-        List<Place> geocodedPlaces = geocoder.geocode(address);
-        if (!geocodedPlaces.isEmpty()) {
-            Place place = geocodedPlaces.get(0); // Take the first result
+        List<Place> geocodedPlace = geocoder.geocode(address);
+        if (!geocodedPlace.isEmpty()) {
+            Place place = geocodedPlace.get(0); // Take the first result
             return place.getLatLon();
         }
 
