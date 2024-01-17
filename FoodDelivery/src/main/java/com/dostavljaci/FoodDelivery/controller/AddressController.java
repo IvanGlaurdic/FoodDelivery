@@ -24,13 +24,4 @@ public class AddressController {
         return new ResponseEntity<>(savedAddress, HttpStatus.CREATED);
     }
 
-    @GetMapping("/address")
-    public ResponseEntity<Address> getAddress(@RequestParam double latitude, @RequestParam double longitude) throws Exception {
-        Address address = addressService.reverseGeocodeLatLng((float) latitude, (float) longitude);
-        if (address != null) {
-            return new ResponseEntity<>(address, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }

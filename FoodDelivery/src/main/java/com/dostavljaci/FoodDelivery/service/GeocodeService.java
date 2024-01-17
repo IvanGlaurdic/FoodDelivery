@@ -1,52 +1,51 @@
 package com.dostavljaci.FoodDelivery.service;
 
-import com.dostavljaci.FoodDelivery.entity.Address;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import io.redlink.geocoding.Geocoder;
-import io.redlink.geocoding.LatLon;
-import io.redlink.geocoding.Place;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.IOException;
-import java.util.List;
-
+;
 @Service
 @AllArgsConstructor
 public class GeocodeService {
-    private Geocoder geocoder; // This bean is provided by the geocoding-spring-boot-autoconfigure
+    private final RestTemplate restTemplate;
 
 
-    public LatLon geocodeAddress(String address) throws IOException {
-        List<Place> geocodedPlace = geocoder.geocode(address);
-        if (!geocodedPlace.isEmpty()) {
-            Place place = geocodedPlace.get(0); // Take the first result
-            return place.getLatLon();
-        }
+    public Map<String, Double> geocodeAddress(String address) {
+        Map<String, Double> coordinates = new HashMap<>();
+        try {
+            String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8).replace("+", "%20");
+            String graphhopperLink = "https://graphhopper.com/api/1/geocode?";
+            Object graphhopperApiKey = "24f245a4-bd48-4a72-b873-3710a6d8bab0";
+            String url = String.format(graphhopperLink + "q=%s&limit=1&key=%s", encodedAddress, graphhopperApiKey);
 
-        return null;
-    }
+            ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
 
-    public Address reverseGeocodeLatLng(double latitude, double longitude) throws IOException {
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                JsonNode hits = response.getBody().path("hits");
+                if (!hits.isEmpty()) {
+                    JsonNode firstHit = hits.get(0);
+                    JsonNode point = firstHit.path("point");
+                    double lat = point.path("lat").asDouble();
+                    double lng = point.path("lng").asDouble();
 
-            List<Place> reverseGeocodedPlaces = geocoder.reverseGeocode(LatLon.create(latitude, longitude));
-            if (!reverseGeocodedPlaces.isEmpty()) {
-                Place place = reverseGeocodedPlaces.get(0);
-                Address address = new Address();
-
-                String fullAddress = place.getAddress();
-
-                String[] addressComponents = fullAddress.split(", ");
-                address.setStreet(addressComponents[0]);
-                address.setCity(addressComponents[1]);
-                address.setProvince(addressComponents[2]);
-                address.setCountry(addressComponents[addressComponents.length - 1]);
-                address.setPostalCode(addressComponents[addressComponents.length - 2]);
-
-                address.setLatitude((float) place.getLatLon().lat());
-                address.setLongitude((float) place.getLatLon().lon());
-                return address;
+                    coordinates.put("latitude", lat);
+                    coordinates.put("longitude", lng);
+                }
             }
-        return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return coordinates;
     }
+
+
 }

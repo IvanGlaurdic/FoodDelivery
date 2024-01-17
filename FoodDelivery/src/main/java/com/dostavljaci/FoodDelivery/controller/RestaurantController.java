@@ -7,17 +7,13 @@ import com.dostavljaci.FoodDelivery.service.AddressService;
 import com.dostavljaci.FoodDelivery.service.GeocodeService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
-import io.redlink.geocoding.LatLon;
 import lombok.AllArgsConstructor;
-import org.hibernate.Remove;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -44,7 +40,7 @@ public class RestaurantController {
                                              @RequestParam String province,
                                              @RequestParam String country,
                                              @RequestParam String postalCode,
-                                             Model model) throws IOException {
+                                             Model model) {
 
         try {
             User user = userService.getUserByUsername("bg121788");
@@ -63,9 +59,9 @@ public class RestaurantController {
             address.setPostalCode(postalCode);
 
 
-            LatLon geocodedLatLon = geocodeService.geocodeAddress(address.toString());
-            address.setLongitude((float) geocodedLatLon.lon());
-            address.setLatitude((float) geocodedLatLon.lat());
+            Map<String, Double> geocodedLatLon = geocodeService.geocodeAddress(address.toString());
+            address.setLongitude(geocodedLatLon.get("lon").floatValue());
+            address.setLatitude(geocodedLatLon.get("lat").floatValue());
             address.setRestaurant(savedRestaurant);
 
             addressService.saveAddress(address);
