@@ -24,10 +24,13 @@ public class GeocodeService {
         try {
             String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8).replace("+", "%20");
             String graphhopperLink = "https://graphhopper.com/api/1/geocode?";
-            Object graphhopperApiKey = "24f245a4-bd48-4a72-b873-3710a6d8bab0";
+            String graphhopperApiKey = "24f245a4-bd48-4a72-b873-3710a6d8bab0";
             String url = String.format(graphhopperLink + "q=%s&limit=1&key=%s", encodedAddress, graphhopperApiKey);
 
             ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+
+            System.out.println("Response from GraphHopper API: " + response.getBody().toString());
+
 
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                 JsonNode hits = response.getBody().path("hits");

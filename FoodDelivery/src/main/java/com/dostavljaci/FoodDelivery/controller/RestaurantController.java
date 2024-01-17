@@ -60,8 +60,8 @@ public class RestaurantController {
 
 
             Map<String, Double> geocodedLatLon = geocodeService.geocodeAddress(address.toString());
-            address.setLongitude(geocodedLatLon.get("lon").floatValue());
-            address.setLatitude(geocodedLatLon.get("lat").floatValue());
+            address.setLongitude(geocodedLatLon.get("longitude").floatValue());
+            address.setLatitude(geocodedLatLon.get("latitude").floatValue());
             address.setRestaurant(savedRestaurant);
 
             addressService.saveAddress(address);

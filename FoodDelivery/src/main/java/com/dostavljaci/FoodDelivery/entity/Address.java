@@ -43,6 +43,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return street + ", " + city + ", " + province + ", " + country + ", " + postalCode;
+        return String.format("%s, %s, %s, %s, %s", street,city,province,country,postalCode);
     }
 }

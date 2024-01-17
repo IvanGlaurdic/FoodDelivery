@@ -18,8 +18,8 @@ public class AddressService {
     public Address saveAddress(Address address) throws IOException {
         Map<String, Double> latLon = geocodeService.geocodeAddress(address.toString());
         if (latLon != null) {
-            address.setLatitude(latLon.get("lat").floatValue());
-            address.setLongitude(latLon.get("lon").floatValue());
+            address.setLatitude(latLon.get("latitude").floatValue());
+            address.setLongitude(latLon.get("longitude").floatValue());
         }
         return addressRepository.save(address);
     }
