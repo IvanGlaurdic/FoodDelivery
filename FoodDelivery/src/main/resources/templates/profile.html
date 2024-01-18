@@ -46,20 +46,43 @@
     </div>
 </nav>
 
+<table>
+    <th>Personal Information</th>
+    <tr>
+        <td>Full name:</td>
+        <td th:text="${user.getFirstName() + ' ' + user.getLastName()}"></td>
+    </tr>
+    <tr>
+        <td>Username</td>
+        <td th:text="${user.getUsername()}"></td>
+    </tr>
+    <tr>
+        <td>Email:</td>
+        <td th:text="${user.getEmail()}"></td>
+    </tr>
+    <tr>
+        <td>Role:</td>
+        <td th:text="${user.getRole()}"></td>
+    </tr>
+</table>
+
+
 <table th:if="${users != null}">
-    <th th:text="Users"></th>
+    <th th:text="Users">Users</th>
+    <tr><td><a class="btn-primary w-100 mb-2" th:href="@{/}">Add User</a></td></tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.getUsername()}">User Name</td>
         <td th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">Full Name</td>
         <!-- other restaurant details -->
     </tr>
 </table>
-<h2>Restaurants</h2>
-<table>
-    <th><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant}">Add Restaurant</a></th>
+
+<table th:if="${restaurants != null}">
+    <th>Restaurants</th>
+    <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant}">Add Restaurant</a></td><td></td></tr>
     <tr th:each="restaurant : ${restaurants}">
         <td th:text="${restaurant.getName()}">Restaurant Name</td>
-        <td th:text="${restaurant.getOwner().getFirstName()} + ' ' + ${restaurant.getOwner().getLastName()()}">Owner Name</td>
+        <td th:text="${restaurant.getOwner().getFirstName()} + ' ' + ${restaurant.getOwner().getLastName()}">Owner Name</td>
         <!-- other restaurant details -->
     </tr>
 </table>

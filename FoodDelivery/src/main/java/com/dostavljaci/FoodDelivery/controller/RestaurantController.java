@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -42,39 +41,16 @@ public class RestaurantController {
                                              @RequestParam String postalCode,
                                              Model model) {
 
-        try {
-            User user = userService.getUserByUsername("bg121788");
-            Restaurant restaurant = new Restaurant();
-            restaurant.setOwner(user);
-            restaurant.setName(restaurantName);
-            restaurant.setContactNumber(contactNumber);
-            restaurant.setRating((float)0);
-            Restaurant savedRestaurant = restaurantService.saveRestaurant(restaurant);
+        User user = userService.getUserByUsername("bg121788");
+        Address savedAddress = addressService.saveAddress(city,street,province,country,postalCode);
+        Restaurant savedRestaurant = restaurantService.saveRestaurant(restaurantName,contactNumber,user,(float)0);
 
-            Address address = new Address();
-            address.setCity(city);
-            address.setStreet(street);
-            address.setProvince(province);
-            address.setCountry(country);
-            address.setPostalCode(postalCode);
+        addressService.updateAddressRestaurant(savedAddress, savedRestaurant);
 
+        model.addAttribute(addressService.getAddressById(savedAddress.getId()));
+        model.addAttribute(restaurantService.getRestaurantById(savedRestaurant.getId()));
 
-            Map<String, Double> geocodedLatLon = geocodeService.geocodeAddress(address.toString());
-            address.setLongitude(geocodedLatLon.get("longitude").floatValue());
-            address.setLatitude(geocodedLatLon.get("latitude").floatValue());
-            address.setRestaurant(savedRestaurant);
-
-            addressService.saveAddress(address);
-
-            model.addAttribute(restaurant);
-            model.addAttribute(address);
-        }
-
-        catch (IOException exception){
-            model.addAttribute("error",  exception.getMessage());
-        }
-
-        return "tester"; // Assuming you have a Thymeleaf template for address form
+        return "home"; // Assuming you have a Thymeleaf template for address form
     }
 
     @PostMapping("/restaurant/{restaurantId}/address")

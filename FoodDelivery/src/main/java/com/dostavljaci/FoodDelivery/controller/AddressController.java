@@ -18,10 +18,6 @@ import java.io.IOException;
 public class AddressController {
     private final AddressService addressService;
 
-    @PostMapping("/address")
-    public ResponseEntity<Address> createAddress(@RequestBody Address address) throws IOException, InterruptedException {
-        Address savedAddress = addressService.saveAddress(address);
-        return new ResponseEntity<>(savedAddress, HttpStatus.CREATED);
-    }
+
 
 }

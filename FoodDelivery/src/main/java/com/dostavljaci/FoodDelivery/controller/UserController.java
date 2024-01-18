@@ -26,13 +26,18 @@ public class UserController {
     public String profile(Model model, String username) {
         User user = userService.getUserByUsername(username);
         if (user != null) {
-            List<User> users = null;
-            List<Restaurant> restaurants = null;
+            List<User> users;
+            List<Restaurant> restaurants;
             if (Objects.equals(user.getRole().toLowerCase(), "admin")){
                 users = userService.getAllUsers();
                 restaurants = restaurantService.getAllRestaurants();
             } else if (Objects.equals(user.getRole().toLowerCase(), "owner")) {
                 restaurants = restaurantService.getRestaurantsByOwner(user.getId());
+                users = null;
+            }
+            else {
+                users = null;
+                restaurants = null;
             }
             model.addAttribute("user", user);
             model.addAttribute("users", users);

@@ -3,6 +3,7 @@ package com.dostavljaci.FoodDelivery.controller;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.UserRepository;
 import com.dostavljaci.FoodDelivery.service.AuthenticationService;
+import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.ui.Model;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String login(){
@@ -55,17 +56,13 @@ public class AuthenticationController {
             return "register";
         }
 
-        User newUser = new User();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setUsername(username);
-        newUser.setEmail(email);
-        newUser.setPassword(authenticationService.getPasswordEncoder().encode(password));
-        newUser.setPhoneNumber(phoneNumber);
-        newUser.setRole("user");
+        userService.saveUser(firstName,
+                lastName,
+                username,
+                email,
+                authenticationService.getPasswordEncoder().encode(password),
+                phoneNumber);
 
-
-        userRepository.save(newUser);
 
         // Redirect to a success page or login page after successful registration
         return "redirect:/login";

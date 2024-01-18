@@ -37,4 +37,13 @@ public class RestaurantService {
     public Restaurant saveRestaurant(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
     }
+
+    public Restaurant saveRestaurant(String restaurantName, String contactNumber, User user, float v) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setOwner(user);
+        restaurant.setName(restaurantName);
+        restaurant.setContactNumber(contactNumber);
+        restaurant.setRating(v);
+        return restaurantRepository.save(restaurant);
+    }
 }

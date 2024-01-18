@@ -20,4 +20,22 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public void saveUser(String firstName,
+                         String lastName,
+                         String username,
+                         String email,
+                         String password,
+                         String phoneNumber) {
+
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setPhoneNumber(phoneNumber);
+        user.setRole("user");
+        userRepository.save(user);
+    }
 }
