@@ -39,13 +39,13 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    public void updateAddressRestaurant(Address savedAddress, Restaurant savedRestaurant) {
-        Address address = addressRepository.getReferenceById(savedAddress.getId());
-        address.setRestaurant(savedRestaurant);
-        addressRepository.save(address);
-    }
+
 
     public Object getAddressById(UUID id) {
         return addressRepository.getReferenceById(id);
+    }
+
+    public Address getAddressByCityStreetCountryPostalCode(String city, String street, String country, String postalCode) {
+        return addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode);
     }
 }

@@ -1,27 +1,6 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Users Table
-CREATE TABLE "user" (
-                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                        first_name VARCHAR(100) NOT NULL,
-                        last_name VARCHAR(100) NOT NULL,
-                        username VARCHAR(100) UNIQUE NOT NULL,
-                        email VARCHAR(150) UNIQUE NOT NULL,
-                        password TEXT NOT NULL,
-                        phone_number VARCHAR(15) NOT NULL,
-                        role VARCHAR(100) NOT NULL
-);
-
--- Restaurants Table
-CREATE TABLE Restaurant (
-                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                            name VARCHAR(150) NOT NULL,
-                            contact_number VARCHAR(15) NOT NULL,
-                            rating FLOAT DEFAULT 0,
-                            owner_id UUID REFERENCES "user"(ID) ON DELETE CASCADE
-);
-
 -- Addresses Table
 CREATE TABLE Address(
                         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -31,9 +10,36 @@ CREATE TABLE Address(
                         country TEXT NOT NULL,
                         postal_code TEXT NOT NULL,
                         latitude FLOAT,
-                        longitude FLOAT,
-                        user_id UUID REFERENCES "user"(ID) ON DELETE CASCADE,
-                        restaurant_id UUID REFERENCES Restaurant(ID) ON DELETE CASCADE
+                        longitude FLOAT
+);
+
+-- Users Table
+CREATE TABLE "user" (
+                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                        first_name VARCHAR(100) NOT NULL,
+                        last_name VARCHAR(100) NOT NULL,
+                        username VARCHAR(100) UNIQUE NOT NULL,
+                        email VARCHAR(150) UNIQUE NOT NULL,
+                        password TEXT NOT NULL,
+                        phone_number VARCHAR(15),
+                        role VARCHAR(100) NOT NULL,
+                        address_id UUID REFERENCES "address"(id) ON DELETE CASCADE
+);
+
+-- Restaurants Table
+CREATE TABLE Restaurant (
+                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                            name VARCHAR(150) UNIQUE NOT NULL,
+                            contact_number VARCHAR(15) NOT NULL,
+                            rating FLOAT DEFAULT 0,
+                            owner_id UUID REFERENCES "user"(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE restaurant_addresses (
+                                      restaurant_id UUID REFERENCES "restaurant" (id) ON DELETE CASCADE,
+                                      address_id UUID REFERENCES "address" (id) ON DELETE CASCADE,
+                                      PRIMARY KEY (restaurant_id, address_id)
 );
 
 -- MenuItems Table

@@ -1,7 +1,6 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.User;
-import com.dostavljaci.FoodDelivery.repository.UserRepository;
 import com.dostavljaci.FoodDelivery.service.AuthenticationService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -56,12 +55,13 @@ public class AuthenticationController {
             return "register";
         }
 
-        userService.saveUser(firstName,
+        userService.saveNewUser(firstName,
                 lastName,
                 username,
                 email,
                 authenticationService.getPasswordEncoder().encode(password),
-                phoneNumber);
+                phoneNumber,
+                null);
 
 
         // Redirect to a success page or login page after successful registration

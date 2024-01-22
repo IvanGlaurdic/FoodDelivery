@@ -1,7 +1,6 @@
 package com.dostavljaci.FoodDelivery.repository;
 
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
-import com.dostavljaci.FoodDelivery.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +16,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
     @Query("SELECT r FROM Restaurant r JOIN FETCH r.owner")
     List<Restaurant> findAllWithOwners();
+
+    @Query("SELECT r FROM Restaurant r JOIN FETCH r.address")
+    List<Restaurant> findRestaurantsWithAddresses();
+
+    Restaurant findRestaurantByName(String restaurantName);
 }

@@ -64,26 +64,62 @@
         <td>Role:</td>
         <td th:text="${user.getRole()}"></td>
     </tr>
+    <tr>
+        <td>Address:</td>
+        <td th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ' ' + user.getAddress().getCity() + ' ' + user.getAddress().getPostalCode()}"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user(username=${user.getUsername()})}">Edit Info</a></td>
+    </tr>
 </table>
 
 
 <table th:if="${users != null}">
     <th th:text="Users">Users</th>
-    <tr><td><a class="btn-primary w-100 mb-2" th:href="@{/}">Add User</a></td></tr>
+    <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/add-user}">Add User</a></td></tr>
+    <tr>
+        <td>Username</td>
+        <td>Full Name</td>
+        <td>Email</td>
+        <td>Role</td>
+        <td></td>
+        <td></td>
+    </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.getUsername()}">User Name</td>
         <td th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">Full Name</td>
-        <!-- other restaurant details -->
+        <td th:text="${user.getEmail()}">Email</td>
+        <td th:text="${user.getRole()}">Role</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ' ' + user.getAddress().getCity() + ' ' + user.getAddress().getPostalCode()}">Address</td>
+
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Edit User</a></td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Delete User</a></td>
     </tr>
 </table>
 
 <table th:if="${restaurants != null}">
     <th>Restaurants</th>
-    <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant}">Add Restaurant</a></td><td></td></tr>
+    <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant}">Add Restaurant</a></td></tr>
+    <tr>
+        <td>Restaurant Name</td>
+        <td>Owner</td>
+        <td>Rating</td>
+        <td></td>
+        <td></td>
+    </tr>
     <tr th:each="restaurant : ${restaurants}">
         <td th:text="${restaurant.getName()}">Restaurant Name</td>
         <td th:text="${restaurant.getOwner().getFirstName()} + ' ' + ${restaurant.getOwner().getLastName()}">Owner Name</td>
-        <!-- other restaurant details -->
+        <td th:text="${restaurant.getRating()}">Rating</td>
+        <td th:each="address : ${restaurant.getAddress()}">
+            <span th:text="${address.getStreet() + ' ' + address.getCity()}">Address</span><br>
+        </td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Edit</a></td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Delete</a></td>
     </tr>
 </table>
 

@@ -1,5 +1,6 @@
 package com.dostavljaci.FoodDelivery.service;
 
+import com.dostavljaci.FoodDelivery.entity.Address;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -21,12 +22,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void saveUser(String firstName,
-                         String lastName,
-                         String username,
-                         String email,
-                         String password,
-                         String phoneNumber) {
+    public void saveNewUser(String firstName,
+                            String lastName,
+                            String username,
+                            String email,
+                            String password,
+                            String phoneNumber,
+                            Address address) {
 
         User user = new User();
         user.setFirstName(firstName);
@@ -36,6 +38,23 @@ public class UserService {
         user.setPassword(password);
         user.setPhoneNumber(phoneNumber);
         user.setRole("user");
+        user.setAddress(address);
+        userRepository.save(user);
+    }
+
+    public User getUserById(UUID userId) {
+        return userRepository.getUserById(userId);
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
+
+    public void updateUser(User currentUser) {
+        userRepository.save(currentUser);
+    }
+
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 }

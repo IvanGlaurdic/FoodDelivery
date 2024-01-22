@@ -2,6 +2,8 @@ package com.dostavljaci.FoodDelivery.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -12,7 +14,7 @@ public class Restaurant {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, name = "name")
+    @Column(nullable = false, name = "name", unique = true)
     private String name;
 
     @Column(nullable = false, name = "contact_number")
@@ -24,5 +26,14 @@ public class Restaurant {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "restaurant_addresses",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private List<Address> address;
 
 }

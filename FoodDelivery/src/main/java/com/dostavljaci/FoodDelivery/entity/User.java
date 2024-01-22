@@ -2,6 +2,8 @@ package com.dostavljaci.FoodDelivery.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 @Data
 @Table(name = "user", schema = "public")
@@ -31,4 +33,8 @@ public class User {
 
     @Column(nullable = false, name = "role")
     private String role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "address_id")
+    private Address address;
 }

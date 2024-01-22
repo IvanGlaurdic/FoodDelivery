@@ -2,6 +2,8 @@ package com.dostavljaci.FoodDelivery.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -32,14 +34,6 @@ public class Address {
 
     @Column(name = "longitude")
     private Float longitude;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
 
     @Override
     public String toString() {

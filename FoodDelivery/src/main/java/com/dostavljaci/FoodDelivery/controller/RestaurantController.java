@@ -7,13 +7,11 @@ import com.dostavljaci.FoodDelivery.service.AddressService;
 import com.dostavljaci.FoodDelivery.service.GeocodeService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
@@ -27,43 +25,43 @@ public class RestaurantController {
         model.addAttribute("restaurant", new Restaurant());
         model.addAttribute("address", new Address());
         model.addAttribute("error", null);
-        return "RestaurantForm";
+        return "restaurant-form";
     }
 
     @PostMapping("/restaurant")
     public String handleRestaurantSubmission(
-                                             @RequestParam String restaurantName,
-                                             @RequestParam String contactNumber,
-                                             @RequestParam String street,
-                                             @RequestParam String city,
-                                             @RequestParam String province,
-                                             @RequestParam String country,
-                                             @RequestParam String postalCode,
-                                             Model model) {
+            @RequestParam String restaurantName,
+            @RequestParam String contactNumber,
+            @RequestParam String street,
+            @RequestParam String city,
+            @RequestParam String province,
+            @RequestParam String country,
+            @RequestParam String postalCode,
+            Model model,
+            HttpSession session) {
 
-        User user = userService.getUserByUsername("bg121788");
-        Address savedAddress = addressService.saveAddress(city,street,province,country,postalCode);
-        Restaurant savedRestaurant = restaurantService.saveRestaurant(restaurantName,contactNumber,user,(float)0);
+        Object sessionUser = session.getAttribute("user");
+        User user;
 
-        addressService.updateAddressRestaurant(savedAddress, savedRestaurant);
+        if (sessionUser instanceof User userInstance){
+            user = userService.getUserByUsername(userInstance.getUsername());
+        }
+        else {
+            throw new RuntimeException("Cant locate user:" + sessionUser);
+        }
 
-        model.addAttribute(addressService.getAddressById(savedAddress.getId()));
+        //save the address and restaurant
+        Address address = addressService.getAddressByCityStreetCountryPostalCode(city,street,country,postalCode);
+        if (address == null){
+            address = addressService.saveAddress(city,street,province,country,postalCode);
+        }
+        Restaurant savedRestaurant = restaurantService.saveRestaurant(restaurantName,contactNumber,user,(float)0,address);
+
+
+        model.addAttribute(addressService.getAddressById(address.getId()));
         model.addAttribute(restaurantService.getRestaurantById(savedRestaurant.getId()));
-
-        return "home"; // Assuming you have a Thymeleaf template for address form
-    }
-
-    @PostMapping("/restaurant/{restaurantId}/address")
-    public String handleAddressSubmission(@PathVariable UUID restaurantId, @ModelAttribute Address address) throws IOException {
-        // Retrieve the restaurant entity by ID
-        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-
-        // Set the retrieved restaurant to the address
-        address.setRestaurant(restaurant);
-
-        // Save the address
-        addressService.saveAddress(address);
 
         return "home";
     }
+
 }
