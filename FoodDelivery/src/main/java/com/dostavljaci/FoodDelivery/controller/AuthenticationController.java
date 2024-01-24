@@ -1,6 +1,7 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.User;
+import com.dostavljaci.FoodDelivery.service.AddressService;
 import com.dostavljaci.FoodDelivery.service.AuthenticationService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final AddressService addressService;
 
     @GetMapping("/login")
     public String login(){
@@ -48,6 +50,11 @@ public class AuthenticationController {
                                   @RequestParam String password,
                                   @RequestParam String confirmPassword,
                                   @RequestParam String phoneNumber,
+                                  @RequestParam String street,
+                                  @RequestParam String city,
+                                  @RequestParam String province,
+                                  @RequestParam String country,
+                                  @RequestParam String postalCode,
                                   Model model) {
         if (!password.equals(confirmPassword)) {
             // Handle the case where passwords do not match
@@ -55,13 +62,15 @@ public class AuthenticationController {
             return "register";
         }
 
+
+
         userService.saveNewUser(firstName,
                 lastName,
                 username,
                 email,
                 authenticationService.getPasswordEncoder().encode(password),
                 phoneNumber,
-                null);
+                addressService.getAddressByAllParams(city,street,province,country,postalCode));
 
 
         // Redirect to a success page or login page after successful registration

@@ -64,4 +64,8 @@ public class RestaurantService {
     public List<Restaurant> getAllRestaurantsWithAddresses() {
         return restaurantRepository.findRestaurantsWithAddresses();
     }
+
+    public void deleteRestaurantById(UUID id) {
+         restaurantRepository.deleteById(id);
+    }
 }

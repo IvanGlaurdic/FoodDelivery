@@ -57,4 +57,13 @@ public class UserService {
     public void saveUser(User user) {
         userRepository.save(user);
     }
+
+    public boolean isUsernameTaken(String username, UUID userId) {
+        User user = userRepository.findByUsername(username);
+        return user != null && !user.getId().equals(userId);
+    }
+    public boolean isEmailTaken(String email, UUID userId) {
+        User user = userRepository.findByEmail(email);
+        return user != null && !user.getId().equals(userId);
+    }
 }

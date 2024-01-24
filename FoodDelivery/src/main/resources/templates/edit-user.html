@@ -46,70 +46,89 @@
     </div>
 </nav>
 
-<div class="card w-100" style="max-width: 400px;">
+<div class="card w-300" style="max-width: 700px;">
     <div class="card-body">
-        <form class="row g-3" th:action="@{/profile/edit-user}" method="post">
+        <form class="row g-3" th:action="@{/profile/edit-user/{username}(username=${user.getUsername()})}" method="post">
 
-        <!-- Error Message -->
+            <!-- Error Message -->
             <div class="col-12">
                 <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
             </div>
 
-            <!-- First Name Input -->
-            <div class="col-6">
-                <label for="firstName" class="form-label">First Name:</label>
-                <input type="text" class="form-control mb-2" id="firstName" name="firstName" th:value="${user.getFirstName()}" required>
-            </div>
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <!-- First Name, Last Name, Username, Email, Password, Confirm Password, Phone Number, Role -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name:</label>
+                            <input type="text" class="form-control mb-2" id="firstName" name="firstName" th:value="${user.getFirstName()}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name:</label>
+                            <input type="text" class="form-control mb-2" id="lastName" name="lastName" th:value="${user.getLastName()}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" class="form-control mb-2" id="username" name="username" th:value="${user.getUsername()}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control mb-2" id="email" name="email" th:value="${user.getEmail()}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" class="form-control mb-4" id="password" name="password" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                            <input type="password" class="form-control mb-4" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="phoneNumber" class="form-label">Phone Number:</label>
+                            <input type="tel" class="form-control mb-2" id="phoneNumber" name="phoneNumber" th:value="${user.getPhoneNumber()}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="role" class="form-label">Role:</label>
+                            <select class="form-control mb-2" id="role" name="role" required>
+                                <option value="user" th:selected="${user.getRole() == 'user'}">User</option>
+                                <option value="admin" th:selected="${user.getRole() == 'admin'}">Admin</option>
+                                <option value="owner" th:selected="${user.getRole() == 'owner'}">Owner</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Last Name Input -->
-            <div class="col-6">
-                <label for="lastName" class="form-label">Last Name:</label>
-                <input type="text" class="form-control mb-2" id="lastName" name="lastName" th:value="${user.getLastName()}" required>
-            </div>
-
-            <!-- Username Input -->
-            <div class="col-12">
-                <label for="username" class="form-label">Username:</label>
-                <input type="text" class="form-control mb-2" id="username" name="username" th:value="${user.getUsername()}" required>
-            </div>
-
-            <!-- Email Input -->
-            <div class="col-12">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" class="form-control mb-2" id="email" name="email" th:value="${user.getEmail()}" required>
-            </div>
-
-            <!-- Password Input -->
-            <div class="col-6">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" class="form-control mb-4" id="password" name="password" required>
-            </div>
-
-            <!-- Confirm Password Input -->
-            <div class="col-6">
-                <label for="confirmPassword" class="form-label">Confirm Password:</label>
-                <input type="password" class="form-control mb-4" id="confirmPassword" name="confirmPassword" required>
-            </div>
-
-            <!-- Phone Number Input -->
-            <div class="col-12">
-                <label for="phoneNumber" class="form-label">Phone Number:</label>
-                <input type="tel" class="form-control mb-2" id="phoneNumber" name="phoneNumber" th:value="${user.getPhoneNumber()}" required>
-            </div>
-
-            <!-- Role Input -->
-            <div class="col-12" >
-                <label for="role" class="form-label">Role:</label>
-                <select class="form-control mb-2" id="role" name="role" required>
-                    <option value="user" th:selected="${user.getRole() == 'user'}">User</option>
-                    <option value="admin" th:selected="${user.getRole() == 'admin'}">Admin</option>
-                    <option value="owner" th:selected="${user.getRole() == 'owner'}">Owner</option>
-                </select>
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <!-- Street, City, Province, Country, Postal Code -->
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="inputStreet" class="form-label">Street</label>
+                            <input type="text" class="form-control mb-2" id="inputStreet" name="street" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="inputCity" class="form-label">City</label>
+                            <input type="text" class="form-control mb-2" id="inputCity" name="city" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="inputProvince" class="form-label">Province</label>
+                            <input type="text" class="form-control mb-2" id="inputProvince" name="province">
+                        </div>
+                        <div class="col-12">
+                            <label for="inputCountry" class="form-label">Country</label>
+                            <input type="text" class="form-control mb-2" id="inputCountry" name="country" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="inputPostalCode" class="form-label">Postal Code</label>
+                            <input type="text" class="form-control mb-2" id="inputPostalCode" name="postalCode" required>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Submit Button -->
             <div class="col-12">
-                <input type="hidden" name="userId" th:value="${user.getId()}" />
                 <button type="submit" class="btn btn-primary w-100 mb-2">Apply Changes</button>
             </div>
         </form>

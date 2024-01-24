@@ -46,6 +46,13 @@
     </div>
 </nav>
 
+<div th:if="${successMessage}">
+    <p class="alert alert-success" th:text="${successMessage}"></p>
+</div>
+<div th:if="${errorMessage}">
+    <p class="alert alert-danger" th:text="${errorMessage}"></p>
+</div>
+
 <table>
     <th>Personal Information</th>
     <tr>
@@ -70,12 +77,12 @@
     </tr>
     <tr>
         <td></td>
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user(username=${user.getUsername()})}">Edit Info</a></td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit Info</a></td>
     </tr>
 </table>
 
 
-<table th:if="${users != null}">
+<table th:if="${users != null}" style="border: #212121 1px solid">
     <th th:text="Users">Users</th>
     <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/add-user}">Add User</a></td></tr>
     <tr>
@@ -83,7 +90,7 @@
         <td>Full Name</td>
         <td>Email</td>
         <td>Role</td>
-        <td></td>
+        <td>Address</td>
         <td></td>
     </tr>
     <tr th:each="user : ${users}">
@@ -91,12 +98,9 @@
         <td th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">Full Name</td>
         <td th:text="${user.getEmail()}">Email</td>
         <td th:text="${user.getRole()}">Role</td>
-        <td></td>
-        <td></td>
-        <td></td>
         <td th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ' ' + user.getAddress().getCity() + ' ' + user.getAddress().getPostalCode()}">Address</td>
 
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Edit User</a></td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit User</a></td>
         <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Delete User</a></td>
     </tr>
 </table>
@@ -119,7 +123,11 @@
             <span th:text="${address.getStreet() + ' ' + address.getCity()}">Address</span><br>
         </td>
         <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Edit</a></td>
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Delete</a></td>
+        <td>
+            <form th:action="@{/restaurant/delete/{id}(id=${restaurant.id})}" method="post">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </td>
     </tr>
 </table>
 

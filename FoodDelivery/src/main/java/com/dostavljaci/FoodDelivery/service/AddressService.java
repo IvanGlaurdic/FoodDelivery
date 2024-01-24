@@ -1,7 +1,6 @@
 package com.dostavljaci.FoodDelivery.service;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
-import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.repository.AddressRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,7 +44,9 @@ public class AddressService {
         return addressRepository.getReferenceById(id);
     }
 
-    public Address getAddressByCityStreetCountryPostalCode(String city, String street, String country, String postalCode) {
+    public Address getAddressByAllParams(String city, String street, String province, String country, String postalCode) {
+        if (addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode)==null )
+            return saveAddress(city,street,province,country,postalCode);
         return addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode);
     }
 }

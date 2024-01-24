@@ -2,15 +2,16 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Addresses Table
-CREATE TABLE Address(
-                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                        street TEXT NOT NULL,
-                        city TEXT NOT NULL,
-                        province TEXT NOT NULL,
-                        country TEXT NOT NULL,
-                        postal_code TEXT NOT NULL,
-                        latitude FLOAT,
-                        longitude FLOAT
+-- Addresses Table
+CREATE TABLE Address (
+                         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                         street TEXT NOT NULL,
+                         city TEXT NOT NULL,
+                         province TEXT NOT NULL,
+                         country TEXT NOT NULL,
+                         postal_code TEXT NOT NULL,
+                         latitude FLOAT,
+                         longitude FLOAT
 );
 
 -- Users Table
@@ -23,7 +24,7 @@ CREATE TABLE "user" (
                         password TEXT NOT NULL,
                         phone_number VARCHAR(15),
                         role VARCHAR(100) NOT NULL,
-                        address_id UUID REFERENCES "address"(id) ON DELETE CASCADE
+                        address_id UUID REFERENCES Address(id) ON DELETE CASCADE
 );
 
 -- Restaurants Table
@@ -35,13 +36,12 @@ CREATE TABLE Restaurant (
                             owner_id UUID REFERENCES "user"(id) ON DELETE CASCADE
 );
 
-
+-- Restaurant Addresses Junction Table
 CREATE TABLE restaurant_addresses (
-                                      restaurant_id UUID REFERENCES "restaurant" (id) ON DELETE CASCADE,
-                                      address_id UUID REFERENCES "address" (id) ON DELETE CASCADE,
+                                      restaurant_id UUID REFERENCES Restaurant(id) ON DELETE CASCADE,
+                                      address_id UUID REFERENCES Address(id),
                                       PRIMARY KEY (restaurant_id, address_id)
 );
-
 -- MenuItems Table
 CREATE TABLE MenuItem (
                           id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

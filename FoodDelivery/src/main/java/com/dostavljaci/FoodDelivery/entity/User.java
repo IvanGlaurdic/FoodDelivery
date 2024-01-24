@@ -35,6 +35,6 @@ public class User {
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "address_id")
+    @JoinColumn(name = "address_id")
     private Address address;
 }
