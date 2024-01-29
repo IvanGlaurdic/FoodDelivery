@@ -137,6 +137,7 @@ public class RestaurantController {
         if (session.getAttribute("user") instanceof User sessionUser){
             return "redirect:/profile/" + sessionUser.getUsername();
         }
+
         return "redirect:/";
 
 
