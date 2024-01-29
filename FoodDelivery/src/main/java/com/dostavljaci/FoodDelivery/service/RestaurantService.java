@@ -41,7 +41,7 @@ public class RestaurantService {
     }
 
     public boolean isUsernameTaken(String restaurantName,UUID id) {
-        Restaurant restaurant =restaurantRepository.getRestaurantByName(restaurantName);
+        Restaurant restaurant = restaurantRepository.getRestaurantByName(restaurantName);
         return restaurant != null && !restaurant.getId().equals(id);
     }
 

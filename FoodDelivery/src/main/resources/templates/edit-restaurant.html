@@ -10,26 +10,25 @@
     <link rel="stylesheet" th:href="@{style.css}">
 </head>
 <body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<span th:text="${restaurant}"></span>
 
 <div class="card w-100" style="max-width: 400px;">
     <div class="card-body">
-        <form class="row g-3" th:action="@{/restaurant/edit-restaurant/{restaurantname}(restaurantname=${restaurant.getName()})}" method="post">
+        <form class="row g-3" th:action="@{/restaurant/edit-restaurant/{restaurantId}(restaurantId=${restaurant.getName()})}" method="post">
             <div class="col-12">
                 <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
             </div>
             <!-- Restaurant Name Input -->
             <div class="col-12">
                 <label for="inputName" class="form-label">Name</label>
-                <input type="text" class="form-control mb-2" id="inputName" th:value="${restaurant.getName()}" name="restaurantName">
+                <input type="text" class="form-control mb-2" id="inputName" th:value="${restaurant.getName()}" name="Name">
             </div>
 
             <!-- Contact Number Input -->
             <div class="col-12">
                 <label for="inputContactNumber" class="form-label">Contact Number</label>
-                <input type="text" class="form-control mb-2" id="inputContactNumber" th:value="${restaurant.getContactNumber()}" name="contactNumber">
+                <input type="text" class="form-control mb-2" id="inputContactNumber" th:value="${restaurant.getContactNumber()}" name="ContactNumber">
             </div>
-
-
 
             <!-- Submit Button -->
             <div class="col-12">
