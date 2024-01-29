@@ -94,29 +94,24 @@ public class RestaurantController {
         }
     }
 
-    @GetMapping("/edit-restaurant/{restaurantName}")
-    public String editRestaurant(@PathVariable("restaurantName") String restaurantName,
-                                 Model model){
+    @GetMapping("/edit-restaurant/{restaurantname}")
+    public String editRestorant( @PathVariable("restaurantname") String restaurantname,
+                               Model model){
 
-        Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
-        if (restaurant == null) {
-            model.addAttribute("error", "Restaurant not found");
-            return "edit-restaurant";  // You might want to redirect to a different page or show an error message
-        }
-        model.addAttribute("restaurant", restaurant);
-        return "edit-restaurant";
+                Restaurant restaurant = restaurantService.getRestaurantByName(restaurantname);
+                System.out.print(restaurant);
+                model.addAttribute("restaurant", restaurant);
+                model.addAttribute("error", null);
+                return "edit-restaurant";
 
         }
-    @PostMapping("/edit-restaurant/{restaurantName}")
-    public String handleEditedRestaurant(@PathVariable("restaurantName") String requestedName,
-                                         @RequestParam String Name,
-                                         @RequestParam String ContactNumber,
-                                         Model model,
-                                         HttpSession session){
-        System.out.print(requestedName);
-
+    @PostMapping("/edit-restaurant/{restaurantname}")
+    public String handleEditedProfile(@PathVariable("restaurantname") String requestedName,
+                                      @RequestParam String Name,
+                                      @RequestParam String ContactNumber,
+                                      Model model,
+                                      HttpSession session){
         Restaurant currentRestaurant = restaurantService.getRestaurantByName(requestedName);
-        System.out.print(currentRestaurant);
 
         if (currentRestaurant == null) {
             return "redirect:/";
@@ -125,7 +120,7 @@ public class RestaurantController {
         if (restaurantService.isUsernameTaken(Name, currentRestaurant.getId())) {
             model.addAttribute("error", "Username is already taken");
             model.addAttribute("restaurant", currentRestaurant);
-            return "redirect:/restaurant/edit-restaurant/" + requestedName;
+            return "edit-restaurant/" + requestedName;
         }
 
         boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)
