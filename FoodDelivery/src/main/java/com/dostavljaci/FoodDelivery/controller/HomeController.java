@@ -16,12 +16,8 @@ public class HomeController {
     private final RestaurantService restaurantService;
     @GetMapping("/")
     public String home(Model model, HttpSession session) {
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
-        }
-        else{
-            model.addAttribute("user", null);
-        }
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("loggedIn", isLoggedIn);
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
         model.addAttribute("restaurants", restaurants);
         return "home"; // This should match the name of your Thymeleaf template
