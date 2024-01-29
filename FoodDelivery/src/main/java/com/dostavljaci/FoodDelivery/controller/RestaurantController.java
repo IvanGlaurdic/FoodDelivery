@@ -134,6 +134,7 @@ public class RestaurantController {
         }
         return "redirect:/";
 
+
     }
     private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
         if (!Objects.equals(getter.get(), newValue)) {
