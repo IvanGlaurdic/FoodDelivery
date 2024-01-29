@@ -21,4 +21,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     List<Restaurant> findRestaurantsWithAddresses();
 
     Restaurant findRestaurantByName(String restaurantName);
+
+
+    Restaurant getRestaurantByName(String restaurantName);
 }

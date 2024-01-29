@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-;
+
 @Service
 @AllArgsConstructor
 public class GeocodeService {

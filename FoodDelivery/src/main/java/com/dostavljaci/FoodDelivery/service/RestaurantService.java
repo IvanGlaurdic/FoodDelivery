@@ -36,6 +36,16 @@ public class RestaurantService {
         return restaurantRepository.getReferenceById(restaurantId);
     }
 
+    public Restaurant getRestaurantByName(String restaurantName) {
+        return restaurantRepository.getRestaurantByName(restaurantName);
+    }
+
+    public boolean isUsernameTaken(String restaurantName,UUID id) {
+        Restaurant restaurant =restaurantRepository.getRestaurantByName(restaurantName);
+        return restaurant != null && !restaurant.getId().equals(id);
+    }
+
+
     public Restaurant saveRestaurant(Restaurant restaurant) {
         return restaurantRepository.save(restaurant);
     }
