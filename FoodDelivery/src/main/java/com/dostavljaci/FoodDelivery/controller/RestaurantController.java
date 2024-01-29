@@ -95,7 +95,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/edit-restaurant/{restaurantname}")
-    public String editRestorant( @PathVariable("restaurantname") String restaurantname,
+    public String editRestaurant( @PathVariable("restaurantname") String restaurantname,
                                Model model){
 
                 Restaurant restaurant = restaurantService.getRestaurantByName(restaurantname);
@@ -120,7 +120,7 @@ public class RestaurantController {
         if (restaurantService.isUsernameTaken(Name, currentRestaurant.getId())) {
             model.addAttribute("error", "Username is already taken");
             model.addAttribute("restaurant", currentRestaurant);
-            return "edit-restaurant/" + requestedName;
+            return "redirect:/edit-restaurant/" + requestedName;
         }
 
         boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)
