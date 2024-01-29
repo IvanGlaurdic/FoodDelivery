@@ -31,9 +31,6 @@ This food delivery web app offers a range of features to enhance the ordering an
 ### Real-Time Order Tracking
 - **Order Status**: Users can track the real-time status of their orders, including when it's accepted, prepared, and out for delivery.
 
-### Delivery Scheduling
-- **Scheduled Deliveries**: Users can schedule their food deliveries for a specific date and time, which is particularly useful for planning meals in advance.
-
 ### User Reviews
 - **Reviewing Restaurants**: Users can leave ratings and written reviews for restaurants they've ordered from, helping other users make informed decisions.
 
