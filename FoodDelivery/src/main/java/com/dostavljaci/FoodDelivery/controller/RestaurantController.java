@@ -121,6 +121,7 @@ public class RestaurantController {
             model.addAttribute("error", "Username is already taken");
             model.addAttribute("restaurant", currentRestaurant);
             return "redirect:/restaurant/edit-restaurant/" + requestedName;
+            
         }
 
         boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)
