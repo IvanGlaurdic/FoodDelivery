@@ -2,32 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Fragment Example</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{style.css}">
 </head>
 <body>
 <div th:fragment="navbar">
     <!-- Your navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" th:href="@{/}">
-            <p id="logo-text" style="font-size: 28px">byte<span class="yellow-dot">.</span></p>
+        <a class="navbar-brand" th:href="@{/}" id="logo-text" style="font-size: 28px" >
+            byte<span class="yellow-dot">.</span>
         </a>
+
+        <div class="navbar-nav mx-auto" th:if="${loggedIn}">
+            <span class="navigation-address" th:text="${user.getAddress().getCity() + ', ' + user.getAddress().getStreet()}"></span>
+        </div>
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <!-- Synchronous search form -->
-                <form class="form-inline my-2 my-lg-0" th:action="@{/search}" method="get">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search Restaurants" aria-label="Search" name="query">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+            <ul class="navbar-nav mr-auto">
+                <!-- Left side of navbar (empty for now) -->
+            </ul>
 
+            <!-- Synchronous search form (Center of navbar) -->
+            <form class="form-inline my-2 my-lg-0 mx-auto" th:action="@{/search}" method="get">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search Restaurants" aria-label="Search" name="query">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+
+            <ul class="navbar-nav ml-auto">
                 <!-- Logged in User Options -->
                 <li class="nav-item" th:if="${loggedIn}">
                     <!-- Profile Icon -->
-                    <a class="nav-link" th:href="@{/profile/{username}(username=${user.getUsername()})}" th:text="${user.getUsername()}">
-                        <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
-                    </a>
+                    <a class="md-2 navigation-address" th:href="@{/profile/{username}(username=${user.getUsername()})}" th:text="${user.getUsername()}"></a>
                 </li>
                 <li class="nav-item" th:if="${loggedIn}">
                     <a href="/logout" class="btn btn-warning">Logout</a>
@@ -35,12 +44,11 @@
 
                 <!-- Not Logged In User Options -->
                 <li class="nav-item" th:if="${!loggedIn}">
-                    <a class="nav-link" th:href="@{/login}" style="color: var(--dark-shades);">Login</a>
+                    <a class="nav-link" th:href="@{/login}">Login</a>
                 </li>
                 <li class="nav-item" th:if="${!loggedIn}">
-                    <a class="nav-link" th:href="@{/register}" style="color: var(--dark-shades);">Register</a>
+                    <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
-
             </ul>
         </div>
     </nav>
