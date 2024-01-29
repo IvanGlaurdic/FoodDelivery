@@ -1,16 +1,19 @@
 package com.dostavljaci.FoodDelivery.controller;
 
+import com.dostavljaci.FoodDelivery.entity.Address;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.service.AddressService;
 import com.dostavljaci.FoodDelivery.service.AuthenticationService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @AllArgsConstructor
@@ -21,7 +24,7 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String login(){
-        return "login";
+        return "login-form";
     }
 
     @PostMapping("/login")
@@ -33,48 +36,79 @@ public class AuthenticationController {
         }
         else {
             model.addAttribute("error","Incorrect username or password");
-            return "login";
+            return "login-form";
         }
     }
 
     @GetMapping("/register")
     public String register(){
-       return "register";
+       return "registration-form";
     }
+
 
     @PostMapping("/register")
-    public String performRegister(@RequestParam String firstName,
-                                  @RequestParam String lastName,
-                                  @RequestParam String username,
-                                  @RequestParam String email,
-                                  @RequestParam String password,
-                                  @RequestParam String confirmPassword,
-                                  @RequestParam String phoneNumber,
-                                  @RequestParam String street,
-                                  @RequestParam String city,
-                                  @RequestParam String province,
-                                  @RequestParam String country,
-                                  @RequestParam String postalCode,
-                                  Model model) {
-        if (!password.equals(confirmPassword)) {
-            // Handle the case where passwords do not match
-            model.addAttribute("error", "Passwords do not match");
-            return "register";
+    public String handleUserRegistration(@ModelAttribute User user,
+                                         @RequestParam String confirmPassword,
+                                         RedirectAttributes redirectAttributes,
+                                         Model model) {
+
+        if (!user.getPassword().equals(confirmPassword)) {
+            model.addAttribute("error", "Passwords do not match.");
+            return "registration-form";
+        }
+        if (userService.getUserByUsername(user.getUsername())!= null){
+            model.addAttribute("error", "Username already taken.");
+            return "registration-form";
+        }
+        if (userService.getUserByEmail(user.getEmail())!= null){
+            model.addAttribute("error", "Email already taken.");
+            return "registration-form";
         }
 
+        redirectAttributes.addFlashAttribute("user", user);
+        return "redirect:/address-form";
+    }
+
+    @GetMapping("/address-form")
+    public String showAddressForm(Model model) {
+        // Check for user data in flash attributes and add to model
+        if (!model.containsAttribute("user")) {
+            return "redirect:/register"; // Redirect back to the registration page if user data is not found
+        }
+        // Return the address form view
+        return "address-form";
+    }
+
+    @PostMapping("/create-account")
+    public String createAccount(@ModelAttribute User user, @ModelAttribute Address address) {
+
+        System.out.print(user);
+        System.out.print(address);
 
 
-        userService.saveNewUser(firstName,
-                lastName,
-                username,
-                email,
-                authenticationService.getPasswordEncoder().encode(password),
-                phoneNumber,
-                addressService.getAddressByAllParams(city,street,province,country,postalCode));
-
-
-        // Redirect to a success page or login page after successful registration
+        userService.saveNewUser(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail(),
+                authenticationService.getPasswordEncoder().encode(user.getPassword()),
+                user.getPhoneNumber(),
+                addressService.getAddressByAllParams(
+                        address.getCity(),
+                        address.getStreet(),
+                        address.getProvince(),
+                        address.getCountry(),
+                        address.getPostalCode())
+        );
         return "redirect:/login";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+
+
 }
 

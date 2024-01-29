@@ -1,79 +1,97 @@
 :root {
-    --light-shades: #F5F5F5;
-    --dark-shades: #212121;
     --light-accent: #4CAF50;
     --main-brand-color: #FFC107;
     --dark-accent: #673AB7;
 
-    --color-confirm: #4CAF50;
-    --color-decline: #F44336;
+    --dark-shades: #212121;
+    --light-shades: #EEEEEE;
+    --accent-color: #4CAF50;
+    --error-color: #D32F2F;
 
-    --border-size: 1px; /* You can adjust this as needed */
-    --radius-size: 8px; /* You can adjust this as needed */
+
+    --border-size: 1px;
+    --radius-size: 8px;
     --color-background: var(--light-shades);
     --color-text: var(--dark-shades);
     --color-accent: var(--light-accent);
 
-    --font-family: 'Inter', sans-serif;
+    --font-family: Product Sans, sans-serif;
     --font-size: calc(.6rem + .4vw);
 
     padding: 0 calc(var(--border-size) * 3);
 }
 
-* {
-    margin: 0;
+*{
     padding: 0;
+    margin: 0;
     box-sizing: border-box;
 }
 
-/* This would be added to your existing style.css file */
-.text-muted {
-    color: #6c757d; /* Bootstrap's default for muted text */
-}
 
-a.text-secondary {
-    color: #6c757d; /* Bootstrap's default for secondary text */
-    text-decoration: none; /* Removes the underline from the link */
-}
-
-a.text-secondary:hover {
-    color: #5a6268; /* Slightly darker to indicate hover state */
-    text-decoration: underline; /* Adds underline on hover for better UX */
-}
-
-/* Adjustments to the button */
-.btn-primary {
-    background-color: var(--main-brand-color);
-    border-color: var(--main-brand-color);
-}
-
-.btn-primary:hover {
-    background-color: var(--dark-accent);
-    border-color: var(--dark-accent);
-}
-
-/* Style adjustments for centering the card */
-body {
-    background-color: var(--color-background);
+#logo-text{
+    font: var(--font-family);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 42px;
+    letter-spacing: 0;
+    text-align: left;
     color: var(--color-text);
-    font-family: var(--font-family);
-    padding: 0;
-    margin: 0;
+}
+.yellow-dot{
+    color: var(--main-brand-color);
 }
 
-/* Adjustments for spacing */
-.form-label {
-    margin-bottom: .5rem; /* Adds space below the label */
+.registration-header{
+
+
+    font: var(--font-family);
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 58px;
+    letter-spacing: 0;
+    text-align: left;
+
+    color: var(--color-text);
+}
+.registration-header>span:first-child{
+    color: var(--color-accent);
 }
 
-.form-control {
-    margin-bottom: 1rem; /* Adds space below the input fields */
+
+#signup-btn{
+    background-color: var(--color-accent) ;
+    width:  504px;
+    height:  45px;
+    top: 615px;
+    left: 836px;
+    padding: 14px 8px;
+    border-radius: 8px;
+    gap: 8px;
+
+    font: var(--font-family);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 17px;
+    letter-spacing: 1px;
+    text-align: center;
+    color: #FFFFFF;
+
 }
 
-.btn-primary {
-    margin-bottom: 1rem; /* Adds space below the button */
+.alert{
+    background: #F4433626;
 }
 
-.text-muted {
-    margin-top: 1rem; /* Adds space above the muted text */
+.vh-100 {
+    min-height: 100vh; /* Minimum height to be 100% of the viewport height */
+}
+
+.overflow-hidden {
+    overflow: hidden; /* Hide the overflow to remove scrollbars */
+}
+
+.bg-image{
+    content:url(images/webpage/registration-form.jpg);
+    background-size: cover;
+    background-position: center;
 }

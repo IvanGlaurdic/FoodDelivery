@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="../static/style.css" th:href="@{style.css}">
+
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+<div class="row g-0">
+    <img class="col-md-6 bg-image" th:src="@{/images/webpage/registration-form.jpg}" src="/images/webpage/registration-form.jpg" alt="picture">    <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="px-5">
+            <div class="text-center mb-5">
+                <p id="logo-text">byte<span class="yellow-dot">.</span></p>
+                <h2 class="registration-header">
+                    Let’s <span>Sign you up</span>, your meal awaits<span class="yellow-dot">.</span>
+                </h2>
+            </div>
+            <form class="row g-3" action="/create-account" method="post">
+                <!-- Include hidden fields for user data -->
+                <input type="hidden" name="firstName" th:value="${user.firstName}">
+                <input type="hidden" name="lastName" th:value="${user.lastName}">
+                <input type="hidden" name="username" th:value="${user.username}">
+                <input type="hidden" name="email" th:value="${user.email}">
+                <input type="hidden" name="password" th:value="${user.password}">
+                <!-- Error Message -->
+                <div class="col-12">
+                    <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+                </div>
+
+                <div class="col-6">
+                    <label for="inputStreet" class="form-label">Street:</label>
+                    <input type="text" class="form-control" id="inputStreet" name="street" required>
+                </div>
+                <div class="col-6">
+                    <label for="inputCity" class="form-label">City:</label>
+                    <input type="text" class="form-control" id="inputCity" name="city" required>
+                </div>
+                <div class="col-12">
+                    <label for="inputProvince" class="form-label">Province:</label>
+                    <input type="text" class="form-control" id="inputProvince" name="province">
+                </div>
+                <div class="col-6">
+                    <label for="inputCountry" class="form-label">Country:</label>
+                    <input type="text" class="form-control" id="inputCountry" name="country" required>
+                </div>
+                <div class="col-6 mb-4">
+                    <label for="inputPostalCode" class="form-label">Postal Code:</label>
+                    <input type="text" class="form-control" id="inputPostalCode" name="postalCode" required>
+                </div>
+
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" id="signup-btn" class="btn w-100 mb-2">SIGN UP</button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="col-12">
+                    <p class="text-muted small text-center">Don't have an account yet? <a th:href="@{/login}" class="text-secondary">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- Include Bootstrap Bundle with Popper -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

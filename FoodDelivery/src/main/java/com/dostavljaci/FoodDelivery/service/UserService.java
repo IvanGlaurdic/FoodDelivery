@@ -30,16 +30,18 @@ public class UserService {
                             String phoneNumber,
                             Address address) {
 
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setPhoneNumber(phoneNumber);
-        user.setRole("user");
-        user.setAddress(address);
-        userRepository.save(user);
+        if (userRepository.findByUsernameOrEmail(username,email)==null){
+            User user = new User();
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setPhoneNumber(phoneNumber);
+            user.setRole("user");
+            user.setAddress(address);
+            userRepository.save(user);
+        }
     }
 
     public User getUserById(UUID userId) {

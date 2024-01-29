@@ -45,8 +45,11 @@ public class AddressService {
     }
 
     public Address getAddressByAllParams(String city, String street, String province, String country, String postalCode) {
-        if (addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode)==null )
-            return saveAddress(city,street,province,country,postalCode);
-        return addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode);
+        if(street!=null){
+            if (addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode)==null )
+                return saveAddress(city,street,province,country,postalCode);
+            return addressRepository.findAddressByCityAndStreetAndCountryAndPostalCode(city,street,country,postalCode);
+        }
+        return null;
     }
 }
