@@ -123,7 +123,7 @@
         <td th:each="address : ${restaurant.getAddress()}">
             <span th:text="${address.getStreet() + ' ' + address.getCity()}">Address</span><br>
         </td>
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Edit</a></td>
+        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant/edit-restaurant/{restaurantname}(restaurantname=${restaurant.getName()})}">Edit</a></td>
         <td>
             <form th:action="@{/restaurant/delete/{id}(id=${restaurant.id})}" method="post">
                 <button type="submit" class="btn btn-danger">Delete</button>

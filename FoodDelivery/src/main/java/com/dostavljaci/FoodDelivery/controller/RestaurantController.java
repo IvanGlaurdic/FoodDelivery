@@ -14,7 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Controller
 @AllArgsConstructor
@@ -89,6 +92,55 @@ public class RestaurantController {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting restaurant.");
             return "redirect:/profile/" + user.getUsername();
         }
+    }
+
+    @GetMapping("/edit-restaurant/{restaurantname}")
+    public String editRestorant( @PathVariable("restaurantname") String restaurantname,
+                               Model model){
+
+                Restaurant restaurant = restaurantService.getRestaurantByName(restaurantname);
+                System.out.print(restaurant);
+                model.addAttribute("restaurant", restaurant);
+                model.addAttribute("error", null);
+                return "edit-restaurant";
+
+        }
+    @PostMapping("/edit-restaurant/{restaurantname}")
+    public String handleEditedProfile(@PathVariable("restaurantname") String requestedName,
+                                      @RequestParam String Name,
+                                      @RequestParam String ContactNumber,
+                                      Model model,
+                                      HttpSession session){
+        Restaurant currentRestaurant = restaurantService.getRestaurantByName(requestedName);
+
+        if (currentRestaurant == null) {
+            return "redirect:/";
+        }
+
+        if (restaurantService.isUsernameTaken(Name, currentRestaurant.getId())) {
+            model.addAttribute("error", "Username is already taken");
+            model.addAttribute("restaurant", currentRestaurant);
+            return "edit-restaurant/" + requestedName;
+        }
+
+        boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)
+                | updateIfChanged(currentRestaurant::getContactNumber, currentRestaurant::setContactNumber, ContactNumber);
+
+        if (isUpdated){
+            restaurantService.saveRestaurant(currentRestaurant);
+        }
+        if (session.getAttribute("user") instanceof User sessionUser){
+            return "redirect:/profile/" + sessionUser.getUsername();
+        }
+        return "redirect:/";
+
+    }
+    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
     }
 
 }
