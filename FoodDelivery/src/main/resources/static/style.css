@@ -95,3 +95,19 @@
     background-size: cover;
     background-position: center;
 }
+
+.navigation-address{
+
+    border-radius: 20px;
+    border: 2px solid var(--main-brand-color);
+    font-weight: bold;
+    color:var(--main-brand-color);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+}
