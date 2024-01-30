@@ -2,9 +2,7 @@ package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.MenuItem;
 import com.dostavljaci.FoodDelivery.entity.User;
-import com.dostavljaci.FoodDelivery.service.MenuItemService;
-import com.dostavljaci.FoodDelivery.service.OrderService;
-import com.dostavljaci.FoodDelivery.service.UserService;
+import com.dostavljaci.FoodDelivery.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.ui.Model;
@@ -12,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,19 +24,21 @@ public class OrderController {
     private final RestaurantService restaurantService;
     private final MenuItemService menuItemService;
     private final UserService userService;
+    private final OrderItemService orderItemService;
+
 
     @GetMapping("/{Name}")
-    public String orderPage(@PathVariable String Name, Model model, HttpSession session) {
+    public ModelAndView orderPage(@PathVariable String Name, Model model, HttpSession session) {
 
         Object sessionUser = session.getAttribute("user");
         User user;
-
         if (sessionUser instanceof User userInstance){
             user = userService.getUserByUsername(userInstance.getUsername());
         }
         else {
             throw new RuntimeException("Cant locate user:" + sessionUser);
         }
+
         model.addAttribute("user",user);
         Restaurant restaurant=restaurantService.getRestaurantByName(Name);
 
@@ -48,7 +48,33 @@ public class OrderController {
         System.out.print(menu);
         model.addAttribute("menu",menu);
 
-        return "order-page";
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+        ModelAndView modelAndView=new ModelAndView("order-page");
+        modelAndView.addObject("user",user);
+        modelAndView.addObject("menu",menu);
+        modelAndView.addObject("restaurant",restaurant);
+        modelAndView.addObject("loggedIn",true);
+
+
+        return modelAndView;
     }
 
 
