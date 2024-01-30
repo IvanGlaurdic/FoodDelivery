@@ -195,7 +195,17 @@ public class UserController {
                                   @RequestParam String province,
                                   @RequestParam String country,
                                   @RequestParam String postalCode,
-                                  Model model){
+                                  Model model,
+                                  HttpSession session ){
+        Object sessionUser = session.getAttribute("user");
+        User user1;
+
+        if (sessionUser instanceof User userInstance){
+            user1 = userService.getUserByUsername(userInstance.getUsername());
+        }
+        else {
+            throw new RuntimeException("Cant locate user:" + sessionUser);
+        }
 
         if (!password.equals(confirmPassword)) {
             // Handle the case where passwords do not match
@@ -231,7 +241,7 @@ public class UserController {
 
 
 
-        return "home";
+        return "redirect:/profile/" + user1.getUsername();
 
     }
 
