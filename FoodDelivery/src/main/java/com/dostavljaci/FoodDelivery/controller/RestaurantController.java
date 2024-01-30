@@ -27,6 +27,7 @@ public class RestaurantController {
     public final AddressService addressService;
     public final GeocodeService geocodeService;
     public final UserService userService;
+
     @GetMapping()
     public String showRestaurantForm(Model model) {
         model.addAttribute("restaurant", new Restaurant());
