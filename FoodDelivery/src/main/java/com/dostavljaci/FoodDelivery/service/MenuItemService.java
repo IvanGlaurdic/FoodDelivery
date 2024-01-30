@@ -18,4 +18,8 @@ public class MenuItemService {
     public List<MenuItem> getMenuByRestaurantId(UUID id) {
         return menuItemRepository.getMenuItemsByRestaurantId(id);
     }
+
+    public MenuItem getMenuItemById(UUID menuItemId) {
+        return menuItemRepository.getReferenceById(menuItemId);
+    }
 }

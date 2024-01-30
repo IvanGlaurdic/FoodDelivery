@@ -1,19 +1,16 @@
 package com.dostavljaci.FoodDelivery.controller;
 
-import com.dostavljaci.FoodDelivery.entity.MenuItem;
-import com.dostavljaci.FoodDelivery.entity.User;
+import com.dostavljaci.FoodDelivery.entity.*;
 import com.dostavljaci.FoodDelivery.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.dostavljaci.FoodDelivery.entity.Restaurant;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -51,22 +48,6 @@ public class OrderController {
 
 
 
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
         ModelAndView modelAndView=new ModelAndView("order-page");
         modelAndView.addObject("user",user);
         modelAndView.addObject("menu",menu);
@@ -75,6 +56,21 @@ public class OrderController {
 
 
         return modelAndView;
+    }
+
+    @PostMapping("/add-to-basket")
+    public ResponseEntity<List<OrderItem>> addToBasket(@RequestBody Map<String, UUID> payload, HttpSession session) {
+        UUID menuItemId = payload.get("menuItemId");
+        Order order = (Order) session.getAttribute("currentOrder");
+        if (order == null) {
+            order = new Order();
+            // Initialize order properties
+            session.setAttribute("currentOrder", order);
+        }
+
+        orderService.addMenuItemToOrder(order, menuItemId);
+
+        return ResponseEntity.ok(order.getOrderItems());
     }
 
 

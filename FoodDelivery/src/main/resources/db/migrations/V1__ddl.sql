@@ -224,9 +224,9 @@ VALUES
     ('Vegetarian sandwich in pastry', 'Pastries, vegetables, side dishes of your choice', 3.50, 'images/restaurants/orders/biberon_order2.jpg','Sandwich'),
     ('Prosciutto cheese sandwich in a bun', 'Pastries, cheese, prosciutto, side dishes of your choice', 2.90, 'images/restaurants/orders/biberon_order3.jpg','Sandwich'),
     ('Splićo menu', '4 pieces Dragon roll, 4 pieces Prawn roll, 4 pieces Rainbow roll, 4 pieces Mediterranean roll, 6 pieces Agemaky fantasy', 34.30, 'images/restaurants/orders/biberon_order4.jpg','Sushi'),
-    ('Pizza Plodovi mora', 'Pizza Seafood', 8.80, 'images/restaurants/orders/malomist_order1.jpg','Pizza'),
-    ('Pizza Seljačka', 'Pizza Seljačka', 8.50, 'images/restaurants/orders/malomist_order2.jpg','Pizza'),
-    ('4 cheese pizza', 'Pelati, 4 types of cheese', 10.00, 'images/restaurants/orders/malomist_order3.jpg','Pizza'),
+    ('Pizza Plodovi mora', 'Pizza Seafood', 8.80, 'images/restaurants/orders/malomisto_order1.jpg','Pizza'),
+    ('Pizza Seljačka', 'Pizza Seljačka', 8.50, 'images/restaurants/orders/malomisto_order2.jpg','Pizza'),
+    ('4 cheese pizza', 'Pelati, 4 types of cheese', 10.00, 'images/restaurants/orders/malomisto_order3.jpg','Pizza'),
     ('Pizza Gourmet', 'Tomato, cheese, ham, mushrooms, pancetta, sweet pepperoni, cream, oregano', 10.90, 'images/restaurants/orders/fantasia_order1.jpg','Pizza'),
     ('Pizza s pršutom', 'Tomato, cheese, prosciutto, oregano', 10.90, 'images/restaurants/orders/fantasia_order2.jpg','Pizza'),
     ('Pizza Calzona', 'Pizza Calzona', 8.20, 'images/restaurants/orders/fantasia_order3.jpg','Pizza');
