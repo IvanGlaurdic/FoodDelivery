@@ -236,5 +236,49 @@ public class UserController {
     }
 
 
+    @PostMapping("/delete-user/{username}")
+    public String deleteUser(@PathVariable("username") String username,
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session) {
+
+        Object sessionUser = session.getAttribute("user");
+
+        if (sessionUser instanceof User sessionUserInstance) {
+            User authenticatedUser = userService.getUserByUsername(sessionUserInstance.getUsername());
+
+            // Check if the authenticated user is an admin or the user being deleted
+            if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")
+                    || Objects.equals(authenticatedUser.getUsername(), username)) {
+
+                try {
+                    // Get the user to be deleted
+                    User userToDelete = userService.getUserByUsername(username);
+
+                    // Set the address to null before deleting the user
+                    if (userToDelete != null) {
+                        userToDelete.setAddress(null);
+                        userService.saveUser(userToDelete);
+                        userService.deleteUserByUsername(username);
+                        redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
+                    }
+                } catch (Exception e) {
+                    // Log the exception using a logging framework (e.g., SLF4J)
+
+                    redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user.");
+                }
+
+                if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")) {
+                    return "redirect:/profile/" + authenticatedUser.getUsername();
+                } else {
+                    return "redirect:/logout"; // Redirect to logout for non-admin users
+                }
+            }
+        }
+
+        return "redirect:/";
+    }
+
+
+
 
 }

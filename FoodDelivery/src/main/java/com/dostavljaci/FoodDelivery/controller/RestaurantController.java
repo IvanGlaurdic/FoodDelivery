@@ -72,34 +72,43 @@ public class RestaurantController {
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteRestaurant(@PathVariable UUID id, RedirectAttributes redirectAttributes, HttpSession httpSession, Model model) {
+    public String deleteRestaurant(
+            @PathVariable UUID id,
+            RedirectAttributes redirectAttributes,
+            HttpSession httpSession,
+            Model model) {
+
         User user;
+
         Object sessionUser = httpSession.getAttribute("user");
-        System.out.print(sessionUser);
-        if(sessionUser instanceof User userInstance){
+        if (sessionUser instanceof User userInstance) {
+
             user = userService.getUserByUsername(userInstance.getUsername());
-        }else {
+        } else {
+
             model.addAttribute("error", "User authentication failed.");
             return "redirect:/login";
         }
 
         try {
-            restaurantService.deleteRestaurantById(id); // Method to delete restaurant
+
+            restaurantService.deleteRestaurantById(id);
+
             redirectAttributes.addFlashAttribute("successMessage", "Restaurant deleted successfully!");
-            return "redirect:/profile/" + user.getUsername(); // Redirect to the page listing restaurants
+            return "redirect:/profile/" + user.getUsername();
         } catch (Exception e) {
-            System.out.print(e.getMessage());
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting restaurant.");
             return "redirect:/profile/" + user.getUsername();
         }
     }
+
 
     @GetMapping("/edit-restaurant/{restaurantname}")
     public String editRestorant( @PathVariable("restaurantname") String restaurantname,
                                Model model){
 
                 Restaurant restaurant = restaurantService.getRestaurantByName(restaurantname);
-                System.out.print(restaurant);
                 model.addAttribute("restaurant", restaurant);
                 model.addAttribute("error", null);
                 return "edit-restaurant";
@@ -145,5 +154,7 @@ public class RestaurantController {
         }
         return false;
     }
+
+
 
 }

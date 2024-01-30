@@ -29,13 +29,19 @@
                 <input type="text" class="form-control mb-2" id="inputContactNumber" th:value="${restaurant?.getContactNumber()}" name="ContactNumber">
             </div>
 
-
-
             <!-- Submit Button -->
             <div class="col-12">
                 <button type="submit" class="btn btn-primary w-100 mb-2">Submit</button>
             </div>
         </form>
+
+        <div class="col-12" th:each="address :${restaurant?.getAddress()}">
+            <span th:text="${address.getStreet()+ ' '+ address.getCity()}"></span>
+            <form method="post" th:action="@{/address/delete-address/{addressId}/{restaurantId}(addressId=${address.getId()}, restaurantId=${restaurant.getId()})}">
+                <input type="hidden" name="_method" value="post"/>
+                <button type="submit">Delete</button>
+            </form>
+        </div>
     </div>
 </div>
 

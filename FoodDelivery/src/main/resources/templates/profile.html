@@ -102,7 +102,9 @@
         <td th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ' ' + user.getAddress().getCity() + ' ' + user.getAddress().getPostalCode()}">Address</td>
 
         <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit User</a></td>
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/}">Delete User</a></td>
+        <td><form th:action="@{/profile/delete-user/{username}(username=${user.getUsername()})}" method="post">
+            <button type="submit" class="btn btn-primary w-100 mb-2">Delete User</button>
+        </form></td>
     </tr>
 </table>
 
