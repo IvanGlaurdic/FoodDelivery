@@ -42,7 +42,7 @@
                 <!-- Display Closest Address if Logged In -->
                 <div class="card-text" th:if="${loggedIn}">
                     <span class="card-address">Closest Address: <span th:text="${entry.value}"></span></span>
-                    <a th:src="@{/}" class="btn btn-custom-color w-100 mb-2">Order</a>
+                    <a th:href="@{/order/{Name}(Name=${entry.key.getName()})}" class="btn btn-custom-color w-100 mb-2">Order</a>
                 </div>
             </div>
         </div>
