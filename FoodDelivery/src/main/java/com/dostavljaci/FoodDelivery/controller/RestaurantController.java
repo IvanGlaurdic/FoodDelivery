@@ -118,9 +118,10 @@ public class RestaurantController {
         }
 
         if (restaurantService.isUsernameTaken(Name, currentRestaurant.getId())) {
-            model.addAttribute("error", "Username is already taken");
             model.addAttribute("restaurant", currentRestaurant);
-            return "edit-restaurant/" + requestedName;
+            model.addAttribute("error", null);
+            return "edit-restaurant";
+
         }
 
         boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)
