@@ -84,11 +84,11 @@ public class RestaurantController {
         }
 
         try {
-            restaurantService.deleteRestaurantById(id); // Method to delete restaurant
+            restaurantService.deleteRestaurantById(id);
             redirectAttributes.addFlashAttribute("successMessage", "Restaurant deleted successfully!");
-            return "redirect:/profile/" + user.getUsername(); // Redirect to the page listing restaurants
+            return "redirect:/profile/" + user.getUsername();
         } catch (Exception e) {
-            System.out.print(e.getMessage());
+            // Handle the exception...
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting restaurant.");
             return "redirect:/profile/" + user.getUsername();
         }
@@ -118,10 +118,10 @@ public class RestaurantController {
         }
 
         if (restaurantService.isUsernameTaken(Name, currentRestaurant.getId())) {
-            model.addAttribute("error", "Username is already taken");
             model.addAttribute("restaurant", currentRestaurant);
-            return "redirect:/restaurant/edit-restaurant/" + requestedName;
-            
+            model.addAttribute("error", null);
+            return "edit-restaurant";
+
         }
 
         boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)

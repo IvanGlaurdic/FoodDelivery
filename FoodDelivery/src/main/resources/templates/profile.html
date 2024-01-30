@@ -125,7 +125,8 @@
         </td>
         <td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant/edit-restaurant/{restaurantname}(restaurantname=${restaurant.getName()})}">Edit</a></td>
         <td>
-            <form th:action="@{/restaurant/delete/{id}(id=${restaurant.id})}" method="post">
+            <form th:action="@{/restaurant/delete/{id}}" th:method="post">
+                <input type="hidden" name="id" th:value="${restaurant.getId()}"/>
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </td>
