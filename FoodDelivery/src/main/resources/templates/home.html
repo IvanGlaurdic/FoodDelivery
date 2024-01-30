@@ -12,10 +12,28 @@
 
 <div th:replace="fragments/fragment :: navbar"></div>
 
+<div class="row row-cols-1 row-cols-md-3 g-4" th:if="${closestAddresses}==null">
+    <div th:each="restaurant : ${restaurants}" class="col">
+        <div class="card h-100">
+            <img th:src="@{/{picturePath}(picturePath=${restaurant.getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
+            <div class="card-body">
+                <!-- Display Restaurant Name -->
+                <h5 class="card-title" th:text="${restaurant.getName()}">Restaurant Name</h5>
+                <!-- Display Restaurant Rating -->
+                <p class="card-rating" th:text="${'Rating: ' + restaurant.getRating()}">Rating</p>
+                <!-- Display Closest Address if Logged In -->
+                <div class="card-text">
+                    <span class="card-address">Address: <span th:text="${restaurant.getAddress().getFirst()}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div th:each="entry : ${closestAddresses}" class="col">
         <div class="card h-100">
-            <img src="..." class="card-img-top" alt="Restaurant Image">
+            <img th:src="@{/{picturePath}(picturePath=${entry.key.getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
             <div class="card-body">
                 <!-- Display Restaurant Name -->
                 <h5 class="card-title" th:text="${entry.key.getName()}">Restaurant Name</h5>
@@ -24,6 +42,7 @@
                 <!-- Display Closest Address if Logged In -->
                 <div class="card-text" th:if="${loggedIn}">
                     <span class="card-address">Closest Address: <span th:text="${entry.value}"></span></span>
+                    <a th:src="@{/}" class="btn btn-custom-color w-100 mb-2">Order</a>
                 </div>
             </div>
         </div>
