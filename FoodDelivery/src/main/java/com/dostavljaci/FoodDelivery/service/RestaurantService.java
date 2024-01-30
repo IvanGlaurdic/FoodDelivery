@@ -8,15 +8,43 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
 @Service
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
+    private final GeocodeService geocodeService;
+
+    public Map<Restaurant, Address> findClosestAddressesForAllRestaurants(Address userAddress) {
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        Map<Restaurant, Address> closestAddresses = new HashMap<>();
+
+        for (Restaurant restaurant : restaurants) {
+            Address closestAddress = null;
+            double minDistance = Double.MAX_VALUE;
+
+            for (Address address : restaurant.getAddress()) {
+                Map<String, Object> distanceAndTime = geocodeService.calculateDistanceAndTime(
+                        userAddress.getLatitude().toString(),
+                        userAddress.getLongitude().toString(),
+                        address.getLatitude().toString(),
+                        address.getLongitude().toString()
+                );
+
+                double distance = (double) distanceAndTime.get("distance");
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestAddress = address;
+                }
+            }
+
+            closestAddresses.put(restaurant, closestAddress);
+        }
+
+        return closestAddresses;
+    }
 
     public List<Restaurant> getAllRestaurants(){
         return restaurantRepository.findAll();

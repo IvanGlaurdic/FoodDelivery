@@ -19,6 +19,40 @@ public class GeocodeService {
     private final RestTemplate restTemplate;
 
 
+    public Map<String, Object> calculateDistanceAndTime(
+            String startAddressLatitude,
+            String startAddressLongitude,
+            String endAddressLatitude,
+            String endAddressLongitude) {
+
+        Map<String, Object> result = new HashMap<>();
+        try {
+            String url = String.format(
+                    "https://graphhopper.com/api/1/route?point=%s,%s&point=%s,%s&vehicle=car&key=%s",
+                    URLEncoder.encode(startAddressLatitude, StandardCharsets.UTF_8),
+                    URLEncoder.encode(startAddressLongitude, StandardCharsets.UTF_8),
+                    URLEncoder.encode(endAddressLatitude, StandardCharsets.UTF_8),
+                    URLEncoder.encode(endAddressLongitude, StandardCharsets.UTF_8),
+                    "24f245a4-bd48-4a72-b873-3710a6d8bab0"
+            );
+
+            ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                JsonNode path = response.getBody().path("paths").get(0);
+                double distance = path.path("distance").asDouble(); // Distance in meters
+                long time = path.path("time").asLong(); // Time in milliseconds
+
+                result.put("distance", distance);
+                result.put("time", time);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+
     public Map<String, Double> geocodeAddress(String address) {
         Map<String, Double> coordinates = new HashMap<>();
         try {

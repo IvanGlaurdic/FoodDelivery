@@ -1,5 +1,6 @@
 package com.dostavljaci.FoodDelivery.controller;
 
+import com.dostavljaci.FoodDelivery.entity.Address;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Controller
@@ -26,6 +28,8 @@ public class HomeController {
             Object sessionUser = session.getAttribute("user");
             if (sessionUser instanceof User userInstance) {
                 User user = userService.getUserByUsername(userInstance.getUsername());
+                Map<Restaurant, Address> closestAddresses = restaurantService.findClosestAddressesForAllRestaurants(user.getAddress());
+                model.addAttribute("closestAddresses", closestAddresses);
                 model.addAttribute("user", user);
             } else {
                 model.addAttribute("user", null);
@@ -33,7 +37,9 @@ public class HomeController {
         }
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
         model.addAttribute("restaurants", restaurants);
+
+
+
         return "home"; // This should match the name of your Thymeleaf template
     }
-
 }
