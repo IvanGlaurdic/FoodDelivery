@@ -17,6 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class GeocodeService {
     private final RestTemplate restTemplate;
+    private final String graphhopperApiKey= "05ce8031-8243-4b47-b1fb-534bf8d3f6b4";
 
 
     public Map<String, Object> calculateDistanceAndTime(
@@ -33,7 +34,7 @@ public class GeocodeService {
                     URLEncoder.encode(startAddressLongitude, StandardCharsets.UTF_8),
                     URLEncoder.encode(endAddressLatitude, StandardCharsets.UTF_8),
                     URLEncoder.encode(endAddressLongitude, StandardCharsets.UTF_8),
-                    "4970408b-093d-42d7-9163-0d166657cd11"
+                    graphhopperApiKey
             );
 
             ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
@@ -58,7 +59,6 @@ public class GeocodeService {
         try {
             String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8).replace("+", "%20");
             String graphhopperLink = "https://graphhopper.com/api/1/geocode?";
-            String graphhopperApiKey = "4970408b-093d-42d7-9163-0d166657cd11";
             String url = String.format(graphhopperLink + "q=%s&limit=1&key=%s", encodedAddress, graphhopperApiKey);
 
             ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
