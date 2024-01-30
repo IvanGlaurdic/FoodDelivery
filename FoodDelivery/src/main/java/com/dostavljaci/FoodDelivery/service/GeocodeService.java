@@ -33,7 +33,7 @@ public class GeocodeService {
                     URLEncoder.encode(startAddressLongitude, StandardCharsets.UTF_8),
                     URLEncoder.encode(endAddressLatitude, StandardCharsets.UTF_8),
                     URLEncoder.encode(endAddressLongitude, StandardCharsets.UTF_8),
-                    "24f245a4-bd48-4a72-b873-3710a6d8bab0"
+                    "4970408b-093d-42d7-9163-0d166657cd11"
             );
 
             ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
@@ -58,7 +58,7 @@ public class GeocodeService {
         try {
             String encodedAddress = URLEncoder.encode(address, StandardCharsets.UTF_8).replace("+", "%20");
             String graphhopperLink = "https://graphhopper.com/api/1/geocode?";
-            String graphhopperApiKey = "24f245a4-bd48-4a72-b873-3710a6d8bab0";
+            String graphhopperApiKey = "4970408b-093d-42d7-9163-0d166657cd11";
             String url = String.format(graphhopperLink + "q=%s&limit=1&key=%s", encodedAddress, graphhopperApiKey);
 
             ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
