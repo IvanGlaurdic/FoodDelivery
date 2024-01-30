@@ -25,6 +25,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font:var(--font-family);
 }
 
 
@@ -109,5 +110,11 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+
+}
+.btn-custom-color{
+    background-color: var(--main-brand-color);
+    color: #FFFFFF;
+    font-weight: 500;
 
 }

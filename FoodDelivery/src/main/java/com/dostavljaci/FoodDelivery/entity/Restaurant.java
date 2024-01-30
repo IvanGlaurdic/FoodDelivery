@@ -27,6 +27,9 @@ public class Restaurant {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(name = "picture_path")
+    private String picturePath;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
