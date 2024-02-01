@@ -12,6 +12,11 @@
 
 <div th:replace="fragments/fragment :: navbar"></div>
 
+<ul th:if="${loggedIn}" th:each="category : ${categories}">
+    <li ><a th:href="@{/category/{category}(category=${category})}" th:text="${category}"></a></li>
+</ul>
+
+
 <div class="row row-cols-1 row-cols-md-3 g-4" th:if="${closestAddresses}==null">
     <div th:each="restaurant : ${restaurants}" class="col">
         <div class="card h-100">

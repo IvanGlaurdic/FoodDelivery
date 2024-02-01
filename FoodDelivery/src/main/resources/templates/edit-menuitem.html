@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Items</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{style.css}">
+</head>
+<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+
+<div class="card w-100" style="max-width: 400px;">
+    <div class="card-body">
+        <form class="row g-3" th:action="@{/menu-items/edit-menuitem/{restaurantName}/{menuItemId}(restaurantName=${restaurant.getName()}, menuItemId=${menuItem.getId()})}" method="post">
+            <div class="col-12">
+                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+            </div>
+            <!-- Restaurant Name Input -->
+            <div class="col-12">
+                <label for="inputName" class="form-label">Name</label>
+                <input type="text" class="form-control mb-2" id="inputName" th:value="${menuItem.getName()}" name="Name">
+            </div>
+
+
+            <div class="col-12">
+                <label for="Description" class="form-label">Description</label>
+                <input type="text" class="form-control mb-2" id="Description" th:value="${menuItem.getDescription()}" name="Description">
+            </div>
+
+            <div class="col-12">
+                <label for="Price" class="form-label">Price</label>
+                <input type="text" class="form-control mb-2" id="Price" th:value="${menuItem.getPrice()}" name="Price">
+            </div>
+
+            <div class="col-12">
+                <label for="Category" class="form-label">Category</label>
+                <input type="text" class="form-control mb-2" id="Category" th:value="${menuItem.getCategory()}" name="Category">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary w-100 mb-2">Submit</button>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

@@ -63,9 +63,7 @@ public class RestaurantService {
     }
 
     public Restaurant getRestaurantByName(String restaurantName) {
-        Restaurant restaurant = restaurantRepository.getRestaurantByName(restaurantName);
-        //Hibernate.initialize(restaurant.getAddress()); // Initialize the addresses collection
-        return restaurant;
+        return restaurantRepository.getRestaurantByName(restaurantName);
     }
 
     public boolean isUsernameTaken(String restaurantName,UUID id) {
@@ -105,5 +103,13 @@ public class RestaurantService {
 
     public void deleteRestaurantById(UUID id) {
          restaurantRepository.deleteById(id);
+    }
+
+    public Restaurant getRestaurantByNameIgnoreCase(String lowercaseQuery) {
+        return restaurantRepository.findByNameIgnoreCase(lowercaseQuery);
+    }
+
+    public List<Restaurant> getRestaurantsByMenuItemCategory(String category) {
+        return restaurantRepository.findRestaurantsByMenuItemCategory(category);
     }
 }

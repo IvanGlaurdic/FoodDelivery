@@ -108,7 +108,7 @@
     </tr>
 </table>
 
-<table th:if="${restaurants != null}">
+<table th:if="${restaurants != null}" style="border: #212121 1px solid">
     <th>Restaurants</th>
     <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant}">Add Restaurant</a></td></tr>
     <tr>
@@ -117,19 +117,29 @@
         <td>Rating</td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+
     </tr>
     <tr th:each="restaurant : ${restaurants}">
         <td th:text="${restaurant.getName()}">Restaurant Name</td>
         <td th:text="${restaurant.getOwner().getFirstName()} + ' ' + ${restaurant.getOwner().getLastName()}">Owner Name</td>
         <td th:text="${restaurant.getRating()}">Rating</td>
-        <td th:each="address : ${restaurant.getAddress()}">
-            <span th:text="${address.getStreet() + ' ' + address.getCity()}">Address</span><br>
+        <td >
+            <ul th:each="address : ${restaurant.getAddress()}">
+                <li th:text="${address.getStreet() + ' ' + address.getCity()}"></li>
+            </ul>
         </td>
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant/edit-restaurant/{restaurantId}(restaurantId=${restaurant.getName()})}">Edit</a></td>
+        <td>
+            <a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant/edit-restaurant/{restaurantId}(restaurantId=${restaurant.getName()})}">Edit</a>
+        </td>
         <td>
             <form th:action="@{/restaurant/delete/{id}(id=${restaurant.id})}" method="post">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
+        </td>
+        <td>
+            <a class="btn btn-primary w-100 mb-2" th:href="@{/menu-items/{restaurantName}(restaurantName=${restaurant.getName()})}">Info</a>
         </td>
     </tr>
 </table>

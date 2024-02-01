@@ -1,15 +1,21 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
+import com.dostavljaci.FoodDelivery.entity.MenuItem;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.entity.User;
+import com.dostavljaci.FoodDelivery.service.MenuItemService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +25,7 @@ import java.util.Map;
 public class HomeController {
     private final RestaurantService restaurantService;
     private final UserService userService;
+    private final MenuItemService menuItemService;
     @GetMapping("/")
     public String home(Model model, HttpSession session) {
         boolean isLoggedIn = session.getAttribute("user") != null;
@@ -40,7 +47,39 @@ public class HomeController {
         model.addAttribute("restaurants", restaurants);
 
 
+        List<String> categories=menuItemService.getAllUniqueCategories();
+
+        model.addAttribute("categories",categories);
 
         return "home"; // This should match the name of your Thymeleaf template
     }
+
+    @PostMapping("/search")
+    public String homeSearch(@RequestParam String query){
+        // Convert the input query to lowercase
+        String lowercaseQuery = query.toLowerCase();
+
+        // Retrieve the restaurant by the case-insensitive name search
+        Restaurant restaurant = restaurantService.getRestaurantByNameIgnoreCase(lowercaseQuery);
+
+        if (restaurant == null) {
+            return "redirect:/";
+        }
+
+        return "redirect:/order/" + restaurant.getName();
+
+    }
+
+
+    @GetMapping("/category/{category}")
+    public String homeSearchCategory(@PathVariable String category,
+                                     Model model,
+                                     HttpSession session){
+
+        List<Restaurant> restaurants=restaurantService.getRestaurantsByMenuItemCategory(category);
+        model.addAttribute("restaurants",restaurants);
+        return "category-page";
+
+    }
+
 }

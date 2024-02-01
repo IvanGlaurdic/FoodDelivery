@@ -22,4 +22,13 @@ public class MenuItemService {
     public MenuItem getMenuItemById(UUID menuItemId) {
         return menuItemRepository.getReferenceById(menuItemId);
     }
+
+    public List<String> getAllUniqueCategories() {
+        return menuItemRepository.findAllDistinctCategories();
+    }
+
+
+    public void saveMenuItem(MenuItem menuItem) {
+        menuItemRepository.save(menuItem);
+    }
 }
