@@ -87,7 +87,7 @@ public class GeocodeService {
     }
 
 
-    public long getClosestRestaurantAddress(Restaurant restaurant, Address userAddress) {
+    public long getScheduledDeliveryTime(Restaurant restaurant, Address userAddress) {
         Address closestAddress = null;
         double minDistance = Double.MAX_VALUE;
         long estimatedDeliveryTime = 0;

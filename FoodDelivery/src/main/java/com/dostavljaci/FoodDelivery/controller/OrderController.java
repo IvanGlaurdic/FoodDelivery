@@ -27,8 +27,7 @@ public class OrderController {
     public final OrderService orderService;
     private final RestaurantService restaurantService;
     private final MenuItemService menuItemService;
-    private final UserService userService;
-    private final OrderItemService orderItemService;
+
 
 
     @GetMapping("/{Name}")
@@ -39,15 +38,10 @@ public class OrderController {
         Restaurant restaurant = getRestaurantFromSession(session, Name);
         List<MenuItem> menu= menuItemService.getMenuByRestaurantId(restaurant.getId());
 
-        System.out.print(restaurant);
-        System.out.print(Name);
-
 
         model.addAttribute("user",user);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("menu",menu);
-
-
 
 
         ModelAndView modelAndView=new ModelAndView("order-page");
@@ -73,7 +67,6 @@ public class OrderController {
             Restaurant restaurant = getRestaurantFromSession(session, restaurantName);
             order = orderService.setNewOrder(
                         Date.valueOf(LocalDate.now()),
-                        "processing",
                         user,
                         restaurant);
 
@@ -132,7 +125,7 @@ public class OrderController {
     }
 
 
-    
+
 
     public  Restaurant getRestaurantFromSession(HttpSession session, String name){
         Restaurant restaurant = restaurantService.getRestaurantByName(name);
@@ -146,6 +139,9 @@ public class OrderController {
         session.setAttribute("restaurant", restaurant);
         return restaurant;
     }
+
+
+
 
 
 }

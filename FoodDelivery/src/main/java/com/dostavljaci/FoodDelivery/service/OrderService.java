@@ -1,6 +1,5 @@
 package com.dostavljaci.FoodDelivery.service;
 
-import com.ctc.wstx.shaded.msv_core.datatype.xsd.Base64BinaryType;
 import com.dostavljaci.FoodDelivery.entity.*;
 import com.dostavljaci.FoodDelivery.repository.OrderItemRepository;
 import com.dostavljaci.FoodDelivery.repository.OrderRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,6 +55,9 @@ public class OrderService {
         orderItem.setQuantity(orderItem.getQuantity() + 1);
         orderItemRepository.save(orderItem);
 
+        // Recalculate total amount after adding the item
+        recalculateTotalAmount(managedOrder);
+
 
         return orderRepository.save(managedOrder);
 
@@ -72,19 +73,18 @@ public class OrderService {
     }
 
     @Transactional
-    public Order setNewOrder(Date date, String status, User user, Restaurant restaurant) {
+    public Order setNewOrder(Date date, User user, Restaurant restaurant) {
         Order order = new Order();
         order.setOrderDate(date);
-        order.setStatus(status);
+        order.setStatus("ordering");
         order.setUser(user);
         order.setRestaurant(restaurant);
-        order.setScheduledDeliveryTime(calculateScheduledDeliveryTime(restaurant,user.getAddress()));
         order.setTotalAmount(0);
         return orderRepository.save(order);
     }
 
     LocalDateTime calculateScheduledDeliveryTime(Restaurant restaurant, Address userAddress) {
-        long estimatedTimeInMillis = geocodeService.getClosestRestaurantAddress(restaurant, userAddress);
+        long estimatedTimeInMillis = geocodeService.getScheduledDeliveryTime(restaurant, userAddress);
         // Convert milliseconds to minutes or your desired unit
         long estimatedTimeInMinutes = TimeUnit.MILLISECONDS.toMinutes(estimatedTimeInMillis);
 
@@ -114,6 +114,8 @@ public class OrderService {
                 managedOrder.getOrderItems().remove(orderItem);
                 orderItemRepository.delete(orderItem);
             }
+            // Recalculate total amount after adding the item
+            recalculateTotalAmount(managedOrder);
         } else {
             // This might happen if the item was removed in a concurrent transaction
             System.out.println("OrderItem not found for deletion or already deleted: " + menuItemId);
@@ -129,8 +131,29 @@ public class OrderService {
         return orderRepository.save(managedOrder);
     }
 
+    private void recalculateTotalAmount(Order order) {
+        float totalAmount = order.getOrderItems().stream()
+                .map(item -> item.getQuantity() * item.getMenuItem().getPrice())
+                .reduce(0f, Float::sum);
+        order.setTotalAmount(totalAmount);
+    }
+
     public void confirmOrder(Order order) {
+        order.setScheduledDeliveryTime(
+                calculateScheduledDeliveryTime(
+                        order.getRestaurant(),
+                        order.getUser().getAddress()
+                )
+        );
 
+        order.setStatus("processed");
+        order.setRating((float) 0);
+        orderRepository.save(order);
+        orderRepository.deleteOrdersByStatus("ordering");
 
+    }
+
+    public List<Order> getUserOrders(UUID id) {
+        return orderRepository.getReferenceByUserId(id);
     }
 }
