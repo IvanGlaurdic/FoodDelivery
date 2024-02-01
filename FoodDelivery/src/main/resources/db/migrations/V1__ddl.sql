@@ -124,7 +124,8 @@ values
     ('Ana','Anic','ana.anic','ana.anic@gmail.com','$2a$10$LzJGWFhAwt/C2TkX18lGieocdioTkYLyyg/pJzd8lTh7r7x/dji1u','123456789','user'),
     ('Lucija','Lucic','lucija.lucic','lucija.lucic@gmail.com','$2a$10$LzJGWFhAwt/C2TkX18lGieocdioTkYLyyg/pJzd8lTh7r7x/dji1u','123456789','user'),
     ('Marta','Martic','marta.martic','marta.martic@gmail.com','$2a$10$LzJGWFhAwt/C2TkX18lGieocdioTkYLyyg/pJzd8lTh7r7x/dji1u','123456789','user'),
-    ('Bruno','Galic','bruno.galic','bruno.galic@gmail.com','$2a$10$LzJGWFhAwt/C2TkX18lGieocdioTkYLyyg/pJzd8lTh7r7x/dji1u','123456789','admin');
+    ('Bruno','Galic','bruno.galic','bruno.galic@gmail.com','$2a$10$LzJGWFhAwt/C2TkX18lGieocdioTkYLyyg/pJzd8lTh7r7x/dji1u','123456789','admin'),
+    ('Ivan','Glaurdic','Ivan','ivan.glaurdic@gmail.com','$2a$10$LzJGWFhAwt/C2TkX18lGieocdioTkYLyyg/pJzd8lTh7r7x/dji1u','123456789','admin');
 
 
 UPDATE "user" u
@@ -142,6 +143,7 @@ WHERE a.street = CASE
                      WHEN u.username = 'lucija.lucic' THEN 'Spinutska ul. 39'
                      WHEN u.username = 'marta.martic' THEN 'Put Piketa 40'
                      WHEN u.username = 'bruno.galic' THEN 'Put Piketa 40'
+                     WHEN u.username = 'Ivan' THEN 'Put Piketa 40'
                      ELSE NULL
     END;
 
