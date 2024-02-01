@@ -29,6 +29,7 @@ public class HomeController {
             if (sessionUser instanceof User userInstance) {
                 User user = userService.getUserByUsername(userInstance.getUsername());
                 Map<Restaurant, Address> closestAddresses = restaurantService.findClosestAddressesForAllRestaurants(user.getAddress());
+                session.setAttribute("user", user);
                 model.addAttribute("closestAddresses", closestAddresses);
                 model.addAttribute("user", user);
             } else {

@@ -1,69 +1,87 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Order Page</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Your Custom CSS -->
-    <link rel="stylesheet" th:href="@{style.css}">
-</head>
-<body>
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Order Page</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<div th:replace="fragments/fragment :: navbar"></div>
+        <!-- Your Custom CSS -->
+        <link rel="stylesheet" th:href="@{style.css}">
+    </head>
+    <body>
 
-<div id="orderBasket">
-    <h3>Your Basket</h3>
-    <ul id="basketItems">
-        <!-- Basket items will be added here -->
-    </ul>
-    <p>Total: <span id="basketTotal">0</span></p>
-</div>
+    <div th:replace="fragments/fragment :: navbar"></div>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    <div th:each="menuItem : ${menu}" class="col">
-        <div class="card h-100">
-            <img th:src="@{/{picturePath}(picturePath=${menuItem.getImageURL()})}" class="card-img-top" alt="Restaurant Image">
-            <div class="card-body">
-                <!-- Display Restaurant Name -->
-                <h5 class="card-title" th:text="${menuItem.getName()}">Restaurant Name</h5>
-                <!-- Display Restaurant Rating -->
-                <p class="card-rating" th:text="${'Price: ' + menuItem.getPrice()}">Rating</p>
-                <!-- Display Closest Address if Logged In -->
-                <div class="card-text" th:if="${loggedIn}">
-                    <span th:text="${menuItem.getDescription()}"></span>
-                    <a th:href="@{/}" class="btn btn-custom-color w-100 mb-2">Order</a>
+    <div id="orderBasket">
+        <h3>Your Basket</h3>
+        <ul id="basketItems">
+            <!-- Basket items will be added here -->
+        </ul>
+        <p>Total: <span id="basketTotal">0 </span>€</p>
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div th:each="menuItem : ${menu}" class="col">
+            <div class="card h-100">
+                <img th:src="@{/{picturePath}(picturePath=${menuItem.getImageURL()})}" class="card-img-top" alt="Menu Item Image">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${menuItem.getName()}">Menu Item Name</h5>
+                    <p class="card-rating" th:text="${'Price: ' + menuItem.getPrice()}">Price</p>
+                    <p class="card-text" th:text="${menuItem.getDescription()}">Description</p>
+                    <!-- Update this button -->
+                    <button type="button"
+                            class="btn btn-custom-color w-100 mb-2"
+                            th:data-menu-item-id="${menuItem.id}"
+                            th:data-restaurant-name="${restaurant.name}"
+                            onclick="addToBasket(this)">Add to Basket</button>
+
+
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    function addToBasket(menuItemId) {
-        $.ajax({
-            url: '/add-to-basket',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ menuItemId: menuItemId }),
-            success: function(response) {
-                updateBasketView(response);
-            },
-            error: function(error) {
-                console.error("Error adding item to basket", error);
-            }
-        });
-    }
+    <script>
+        function addToBasket(element) {
+            var menuItemId = element.getAttribute('data-menu-item-id');
+            var restaurantName = element.getAttribute('data-restaurant-name');
+            $.ajax({
+                url: '/order/add-to-basket',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ menuItemId: menuItemId, restaurantName: restaurantName }),
+                success: function(response) {
+                    updateBasketView(response);
+                },
+                error: function(error) {
+                    console.error("Error adding item to basket", error);
+                }
+            });
+        }
 
-    function updateBasketView(basket) {
-        // Clear current basket items
-        $('#basketItems').empty();
-        basket.items.forEach(item => {
-            $('#basketItems').append('<li>' + item.name + ' - Quantity: ' + item.quantity + '</li>');
-        });
-        $('#basketTotal').text(basket.total);
-    }
-</script>
+        function updateBasketView(orderItems) {
+            $('#basketItems').empty();
+            var total = 0;
 
-</body>
-</html>
+            orderItems.forEach(function(item) {
+                var itemName = item.menuItemName;
+                var itemPrice = item.price;
+                var itemQuantity = item.quantity;
+                var itemTotal = itemPrice * itemQuantity;
+                total += itemTotal;
+
+                var newItem = $('<li>')
+                    .text(itemName + ' - Quantity: ' + itemQuantity + ' - Price: ' + itemTotal.toFixed(2) + '€');
+                $('#basketItems').append(newItem);
+            });
+
+            $('#basketTotal').text(total.toFixed(2));
+        }
+    </script>
+
+    </body>
+    </html>

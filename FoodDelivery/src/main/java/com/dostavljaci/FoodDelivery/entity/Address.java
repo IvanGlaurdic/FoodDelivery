@@ -20,7 +20,7 @@ public class Address {
     @Column(nullable = false, name = "city")
     private String city;
 
-    @Column(nullable = false, name = "province")
+    @Column( name = "province")
     private String province;
 
     @Column(nullable = false, name = "country")
@@ -39,5 +39,5 @@ public class Address {
     public String toString() {
         return String.format("%s, %s, %s, %s, %s", street,city,province,country,postalCode);
     }
-    public String getLatLong(){return String.format("%s,%s", this.latitude,this.longitude);}
+
 }

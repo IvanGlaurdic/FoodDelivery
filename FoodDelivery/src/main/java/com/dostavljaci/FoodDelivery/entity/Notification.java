@@ -17,13 +17,13 @@ public class Notification {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, name = "message")
+    @Column(name = "message")
     private String message;
 
-    @Column(nullable = false, name = "timestamp")
+    @Column(name = "timestamp")
     private Date timestamp;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private Order order;
 

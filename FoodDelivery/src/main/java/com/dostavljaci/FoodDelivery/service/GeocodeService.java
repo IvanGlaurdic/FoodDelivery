@@ -1,6 +1,8 @@
 package com.dostavljaci.FoodDelivery.service;
 
 
+import com.dostavljaci.FoodDelivery.entity.Address;
+import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +84,34 @@ public class GeocodeService {
             throw new RuntimeException(e);
         }
         return coordinates;
+    }
+
+
+    public long getClosestRestaurantAddress(Restaurant restaurant, Address userAddress) {
+        Address closestAddress = null;
+        double minDistance = Double.MAX_VALUE;
+        long estimatedDeliveryTime = 0;
+
+        for (Address address : restaurant.getAddress()) { // Assuming there is a getAddresses method
+            Map<String, Object> distanceAndTime = calculateDistanceAndTime(
+                    userAddress.getLatitude().toString(),
+                    userAddress.getLongitude().toString(),
+                    address.getLatitude().toString(),
+                    address.getLongitude().toString()
+            );
+
+            double distance = (double) distanceAndTime.get("distance");
+            long time = (long) distanceAndTime.get("time");
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestAddress = address;
+                estimatedDeliveryTime = time; // Time in milliseconds
+            }
+        }
+
+        // Convert the estimated delivery time from milliseconds to the desired time unit
+        // and adjust it according to your business logic if necessary
+        return estimatedDeliveryTime;
     }
 
 

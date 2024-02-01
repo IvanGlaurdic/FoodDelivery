@@ -23,7 +23,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     Restaurant findRestaurantByName(String restaurantName);
 
 
-    Restaurant getRestaurantByName(String restaurantName);
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.address WHERE r.name = :name")
+    Restaurant getRestaurantByName(@Param("name") String name);
 
 
 }

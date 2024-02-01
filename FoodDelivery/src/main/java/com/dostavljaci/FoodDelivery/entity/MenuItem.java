@@ -13,22 +13,22 @@ public class MenuItem {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, name = "name")
+    @Column( name = "name")
     private String name;
 
     @Column(name = "description")
     private String description;
 
-    @Column(nullable = false, name = "price")
+    @Column(name = "price")
     private float price;
 
     @Column(name = "image_url")
     private String imageURL;
 
-    @Column(nullable = false, name = "category")
+    @Column(name = "category")
     private String category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "restaurant_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 }

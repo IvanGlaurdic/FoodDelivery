@@ -12,13 +12,13 @@ public class Review {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, name = "rating")
+    @Column(name = "rating")
     private int rating;
 
     @Column(name = "comment")
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private Order order;
 }

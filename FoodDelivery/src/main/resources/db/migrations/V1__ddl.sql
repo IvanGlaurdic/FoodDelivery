@@ -7,7 +7,7 @@ CREATE TABLE Address (
                          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                          street TEXT NOT NULL,
                          city TEXT NOT NULL,
-                         province TEXT NOT NULL,
+                         province TEXT,
                          country TEXT NOT NULL,
                          postal_code TEXT NOT NULL,
                          latitude FLOAT,
@@ -30,8 +30,8 @@ CREATE TABLE "user" (
 -- Restaurants Table
 CREATE TABLE Restaurant (
                             id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                            name VARCHAR(150) UNIQUE NOT NULL,
-                            contact_number VARCHAR(15) NOT NULL,
+                            name VARCHAR(150) UNIQUE,
+                            contact_number VARCHAR(15),
                             rating FLOAT DEFAULT 0,
                             picture_path VARCHAR(255),
                             owner_id UUID REFERENCES "user"(id) ON DELETE CASCADE
@@ -47,11 +47,11 @@ CREATE TABLE restaurant_addresses (
 CREATE TABLE MenuItem (
                           id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                           restaurant_id UUID REFERENCES Restaurant(ID) ON DELETE CASCADE,
-                          name VARCHAR(100) NOT NULL,
+                          name VARCHAR(100),
                           description TEXT,
-                          price DECIMAL(10,2) NOT NULL,
+                          price DECIMAL(10,2),
                           image_url TEXT,
-                          category VARCHAR(100) NOT NULL
+                          category VARCHAR(100)
 );
 
 -- Orders Table
@@ -59,10 +59,10 @@ CREATE TABLE "order" (
                          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                          user_id UUID REFERENCES "user"(ID) ON DELETE CASCADE ,
                          restaurant_id UUID REFERENCES Restaurant(ID) ON DELETE CASCADE ,
-                         order_date DATE NOT NULL,
-                         scheduled_delivery_date DATE,
-                         total_amount DECIMAL(10,2) NOT NULL,
-                         status UUID NOT NULL
+                         order_date DATE,
+                         scheduled_delivery_time TIMESTAMP WITHOUT TIME ZONE,
+                         total_amount DECIMAL(10,2),
+                         status text
 );
 
 -- OrderItems Table
@@ -70,14 +70,14 @@ CREATE TABLE OrderItem (
                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                            order_id UUID REFERENCES "order"(ID) ON DELETE CASCADE,
                            menu_item_id UUID REFERENCES MenuItem(ID) ON DELETE CASCADE,
-                           quantity INT NOT NULL
+                           quantity INT
 );
 
 -- Reviews Table
 CREATE TABLE Review (
                         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                        order_id UUID NOT NULL REFERENCES "order"(ID)  ON DELETE CASCADE,
-                        rating INT NOT NULL,
+                        order_id UUID REFERENCES "order"(ID)  ON DELETE CASCADE,
+                        rating INT,
                         comment TEXT
 );
 
@@ -85,7 +85,7 @@ CREATE TABLE Review (
 CREATE TABLE Notification (
                               id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                               order_id UUID REFERENCES "order"(ID)  ON DELETE CASCADE,
-                              message TEXT NOT NULL,
+                              message TEXT,
                               timestamp DATE
 );
 

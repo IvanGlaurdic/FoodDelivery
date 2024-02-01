@@ -6,6 +6,7 @@ import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -50,9 +51,6 @@ public class RestaurantService {
         return restaurantRepository.findAll();
     }
 
-    public List<Restaurant> getAllRestaurantsWithOwners() {
-        return restaurantRepository.findAllWithOwners();
-    }
 
     // Fetch restaurants owned by a user identified by UUID
     public List<Restaurant> getRestaurantsByOwner(UUID ownerId) {
@@ -65,7 +63,9 @@ public class RestaurantService {
     }
 
     public Restaurant getRestaurantByName(String restaurantName) {
-        return restaurantRepository.getRestaurantByName(restaurantName);
+        Restaurant restaurant = restaurantRepository.getRestaurantByName(restaurantName);
+        Hibernate.initialize(restaurant.getAddress()); // Initialize the addresses collection
+        return restaurant;
     }
 
     public boolean isUsernameTaken(String restaurantName,UUID id) {

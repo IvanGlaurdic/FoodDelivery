@@ -3,6 +3,7 @@ package com.dostavljaci.FoodDelivery.service;
 import com.dostavljaci.FoodDelivery.entity.Address;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
