@@ -36,6 +36,12 @@ public class Order {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "rating")
+    private Float rating;
+
+    @Column(name = "comment")
+    private String comment;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

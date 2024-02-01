@@ -64,7 +64,7 @@ public class RestaurantService {
 
     public Restaurant getRestaurantByName(String restaurantName) {
         Restaurant restaurant = restaurantRepository.getRestaurantByName(restaurantName);
-        Hibernate.initialize(restaurant.getAddress()); // Initialize the addresses collection
+        //Hibernate.initialize(restaurant.getAddress()); // Initialize the addresses collection
         return restaurant;
     }
 

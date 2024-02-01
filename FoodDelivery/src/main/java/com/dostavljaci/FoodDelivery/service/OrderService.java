@@ -5,6 +5,7 @@ import com.dostavljaci.FoodDelivery.entity.*;
 import com.dostavljaci.FoodDelivery.repository.OrderItemRepository;
 import com.dostavljaci.FoodDelivery.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -35,41 +36,29 @@ public class OrderService {
 
     @Transactional
     public Order addMenuItemToOrder(Order order, UUID menuItemId) {
-        // Ensure the Order entity is managed
-        if (!entityManager.contains(order)) {
-            order = entityManager.merge(order);
-        }
+        MenuItem menuItem = menuItemService.getMenuItemById(menuItemId);
+        // Fetch the order from the database or get a managed entity
+        Order managedOrder = orderRepository.findById(order.getId()).orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-        // Find or create the orderItem for the menuItem
-        Optional<OrderItem> existingItem = order.getOrderItems().stream()
-                .filter(item -> menuItemId.equals(item.getMenuItem().getId()))
-                .findFirst();
+        // Check if OrderItem already exists and update or create accordingly
+        OrderItem orderItem = managedOrder.getOrderItems().stream()
+                .filter(item -> item.getMenuItem().getId().equals(menuItemId))
+                .findFirst()
+                .orElseGet(() -> {
+                    OrderItem newItem = new OrderItem();
+                    newItem.setMenuItem(menuItem);
+                    newItem.setOrder(managedOrder);
+                    newItem.setQuantity(0);
+                    managedOrder.getOrderItems().add(newItem);
+                    return newItem;
+                });
 
-        OrderItem orderItem;
-        if (existingItem.isPresent()) {
-            // Item exists, increase quantity
-            orderItem = existingItem.get();
-            orderItem.setQuantity(orderItem.getQuantity() + 1);
-        } else {
-            // Item does not exist, create new
-            orderItem = new OrderItem();
-            MenuItem menuItem = menuItemService.getMenuItemById(menuItemId);
-            orderItem.setMenuItem(menuItem);
-            orderItem.setOrder(order);
-            orderItem.setQuantity(1);
-            order.getOrderItems().add(orderItem);
-        }
 
-        // Save the order item
+        orderItem.setQuantity(orderItem.getQuantity() + 1);
         orderItemRepository.save(orderItem);
 
-        // Recalculate the total amount for the order
-        order.setTotalAmount((float) order.getOrderItems().stream()
-                .mapToDouble(item -> item.getQuantity() * item.getMenuItem().getPrice())
-                .sum());
 
-        // Save the order
-        return orderRepository.save(order);
+        return orderRepository.save(managedOrder);
 
     }
 
@@ -101,5 +90,47 @@ public class OrderService {
 
         // Add the estimated time to the current time to get the scheduled delivery time
         return LocalDateTime.now().plusMinutes(estimatedTimeInMinutes);
+    }
+
+    @Transactional
+    public Order removeMenuItemFromOrder(Order order, UUID menuItemId) {
+        // Ensure that we're working with a managed Order entity
+        Order managedOrder = orderRepository.findById(order.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        // Find the specific order item
+        Optional<OrderItem> optionalOrderItem = managedOrder.getOrderItems().stream()
+                .filter(orderItem -> menuItemId.equals(orderItem.getMenuItem().getId()))
+                .findFirst();
+
+        if (optionalOrderItem.isPresent()) {
+            OrderItem orderItem = optionalOrderItem.get();
+            if (orderItem.getQuantity() > 1) {
+                // If more than one quantity, reduce by one
+                orderItem.setQuantity(orderItem.getQuantity() - 1);
+                orderItemRepository.save(orderItem);
+            } else {
+                // If quantity is 1, remove the order item
+                managedOrder.getOrderItems().remove(orderItem);
+                orderItemRepository.delete(orderItem);
+            }
+        } else {
+            // This might happen if the item was removed in a concurrent transaction
+            System.out.println("OrderItem not found for deletion or already deleted: " + menuItemId);
+        }
+
+        // Recalculate and set the total amount for the order
+        float totalAmount = managedOrder.getOrderItems().stream()
+                .map(item -> item.getQuantity() * item.getMenuItem().getPrice())
+                .reduce(0f, Float::sum);
+        managedOrder.setTotalAmount(totalAmount);
+
+        // Save the updated order
+        return orderRepository.save(managedOrder);
+    }
+
+    public void confirmOrder(Order order) {
+
+
     }
 }

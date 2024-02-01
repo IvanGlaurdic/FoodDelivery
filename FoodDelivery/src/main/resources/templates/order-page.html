@@ -19,7 +19,7 @@
         <ul id="basketItems">
             <!-- Basket items will be added here -->
         </ul>
-        <p>Total: <span id="basketTotal">0 </span>€</p>
+        <p>Total: <span id="basketTotal"></span></p>
     </div>
 
 
@@ -63,6 +63,36 @@
             });
         }
 
+        function removeItemFromBasket(menuItemId) {
+            $.ajax({
+                url: '/order/remove-from-basket',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ menuItemId: menuItemId }),
+                success: function(response) {
+                    updateBasketView(response);
+                },
+                error: function(error) {
+                    console.error("Error removing item from basket", error);
+                }
+            });
+        }
+
+        function confirmOrder() {
+            $.ajax({
+                url: '/order/confirm',
+                type: 'POST',
+                success: function(response) {
+                    alert('Order confirmed!');
+                    // You might want to clear the basket or redirect the user here
+                    updateBasketView([]); // Clear the basket view assuming the order is completed
+                },
+                error: function(error) {
+                    console.error("Error confirming order", error);
+                }
+            });
+        }
+
         function updateBasketView(orderItems) {
             $('#basketItems').empty();
             var total = 0;
@@ -76,10 +106,33 @@
 
                 var newItem = $('<li>')
                     .text(itemName + ' - Quantity: ' + itemQuantity + ' - Price: ' + itemTotal.toFixed(2) + '€');
+
+                var removeButton = $('<button>')
+                    .text('Remove')
+                    .addClass('btn btn-danger btn-sm mx-2')
+                    .click(function() { removeItemFromBasket(item.menuItemId); });
+
+                newItem.append(removeButton);
                 $('#basketItems').append(newItem);
             });
 
-            $('#basketTotal').text(total.toFixed(2));
+            $('#basketTotal').text(total.toFixed(2) + '€');
+
+
+            // Ensure that only one confirm button is added to the basket view
+            if (orderItems.length > 0) {
+                if ($('#confirmOrderButton').length === 0) {
+                    var confirmButton = $('<button>')
+                        .attr('id', 'confirmOrderButton')
+                        .text('Confirm Order')
+                        .addClass('btn btn-success my-2')
+                        .click(confirmOrder);
+                    $('#orderBasket').append(confirmButton);
+                }
+            } else {
+                // Remove the confirm button if it exists and the basket is empty
+                $('#confirmOrderButton').remove();
+            }
         }
     </script>
 

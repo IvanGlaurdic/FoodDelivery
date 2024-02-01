@@ -29,19 +29,19 @@ CREATE TABLE "user" (
 
 -- Restaurants Table
 CREATE TABLE Restaurant (
-                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                            name VARCHAR(150) UNIQUE,
-                            contact_number VARCHAR(15),
-                            rating FLOAT DEFAULT 0,
-                            picture_path VARCHAR(255),
-                            owner_id UUID REFERENCES "user"(id) ON DELETE CASCADE
+                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                        name VARCHAR(150) UNIQUE,
+                        contact_number VARCHAR(15),
+                        rating FLOAT DEFAULT 0,
+                        picture_path VARCHAR(255),
+                        owner_id UUID REFERENCES "user"(id) ON DELETE CASCADE
 );
 
 -- Restaurant Addresses Junction Table
 CREATE TABLE restaurant_addresses (
-                                      restaurant_id UUID REFERENCES Restaurant(id) ON DELETE CASCADE,
-                                      address_id UUID REFERENCES Address(id),
-                                      PRIMARY KEY (restaurant_id, address_id)
+                          restaurant_id UUID REFERENCES Restaurant(id) ON DELETE CASCADE,
+                          address_id UUID REFERENCES Address(id),
+                          PRIMARY KEY (restaurant_id, address_id)
 );
 -- MenuItems Table
 CREATE TABLE MenuItem (
@@ -62,7 +62,9 @@ CREATE TABLE "order" (
                          order_date DATE,
                          scheduled_delivery_time TIMESTAMP WITHOUT TIME ZONE,
                          total_amount DECIMAL(10,2),
-                         status text
+                         status text,
+                         rating FLOAT DEFAULT 0,
+                         comment TEXT
 );
 
 -- OrderItems Table
@@ -73,21 +75,6 @@ CREATE TABLE OrderItem (
                            quantity INT
 );
 
--- Reviews Table
-CREATE TABLE Review (
-                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                        order_id UUID REFERENCES "order"(ID)  ON DELETE CASCADE,
-                        rating INT,
-                        comment TEXT
-);
-
--- Notifications Table
-CREATE TABLE Notification (
-                              id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                              order_id UUID REFERENCES "order"(ID)  ON DELETE CASCADE,
-                              message TEXT,
-                              timestamp DATE
-);
 
 INSERT INTO Address (street, city, province, country, postal_code, latitude, longitude)
 VALUES
