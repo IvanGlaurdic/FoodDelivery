@@ -36,6 +36,7 @@ public class MenuItemController {
         List<MenuItem> menuItem= menuItemService.getMenuByRestaurantId(restaurant.getId());
 
         model.addAttribute("restaurant",restaurant);
+        model.addAttribute("restaurantName",restaurantName);
         model.addAttribute("menuItem", menuItem);
 
         return "restaurant-info";
@@ -65,12 +66,14 @@ public class MenuItemController {
                     || Objects.equals(userService.getUserById(userInstance.getId()),restaurant.getOwner()))
             {
 
+
+
                 menuItem.setRestaurant(restaurant);
 
                 menuItemService.saveMenuItem(menuItem);
 
 
-                return "redirect:/profile/" + userInstance.getUsername();
+                return "redirect:/menu-items/" + restaurant.getName();
             }
         }
         return "redirect:/";
@@ -115,7 +118,6 @@ public class MenuItemController {
                 menuItem.setRestaurant(restaurant);
 
 
-                menuItem.setId(menuItemId);
 
 
                 menuItemService.saveMenuItem(menuItem);

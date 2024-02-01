@@ -13,7 +13,7 @@
 
 <div class="card w-100" style="max-width: 400px;">
     <div class="card-body">
-        <form class="row g-3" th:action="@{/menu-items/add-item/{restarauntName}(restaurantName=${restaurantName})}" method="post">
+        <form class="row g-3" th:action="@{/menu-items/add-item/{restaurantName}(restaurantName=${restaurantName})}" method="post">
             <div class="col-12">
                 <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
             </div>
@@ -46,6 +46,11 @@
             <div class="col-12">
                 <label for="inputImage" class="form-label">Image</label>
                 <input type="text" class="form-control mb-2" id="inputImage" name="imageURL">
+            </div>
+
+            <div class="col-12">
+
+                <input type="hidden" class="form-control mb-2" id="restaurant" th:value="${restaurantName}" name="restaurant">
             </div>
 
 

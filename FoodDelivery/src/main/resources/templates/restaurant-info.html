@@ -11,7 +11,7 @@
 <body>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
-    <a th:href="@{/menu-items/add-item/{restarauntName}(restaurantName=${restaurant.getName()})}">Add</a>
+    <a th:href="@{/menu-items/add-item/{restaurantName}(restaurantName=${restaurant.getName()})}">Add</a>
     <div th:each="menuItem : ${menuItem}" class="col">
         <div class="card h-100">
             <img th:src="@{/{picturePath}(picturePath=${menuItem.getImageURL()})}" class="card-img-top" alt="Menu Item Image">
