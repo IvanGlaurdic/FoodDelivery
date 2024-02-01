@@ -1,12 +1,10 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
+import com.dostavljaci.FoodDelivery.entity.Order;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.entity.User;
-import com.dostavljaci.FoodDelivery.service.AddressService;
-import com.dostavljaci.FoodDelivery.service.AuthenticationService;
-import com.dostavljaci.FoodDelivery.service.RestaurantService;
-import com.dostavljaci.FoodDelivery.service.UserService;
+import com.dostavljaci.FoodDelivery.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,6 +26,7 @@ public class UserController {
     private final RestaurantService restaurantService;
     private final AuthenticationService authenticationService;
     private final AddressService addressService;
+    private final OrderService orderService;
 
     @GetMapping("/{username}")
     public String profile(
@@ -287,6 +286,37 @@ public class UserController {
 
         return "redirect:/";
     }
+
+
+
+    @GetMapping("/{username}/orders")
+    public String showOrderHistory(@PathVariable String username,
+                                   Model model,
+                                   HttpSession session){
+
+        Object sessionUser = session.getAttribute("user");
+
+        if (sessionUser instanceof User sessionUserInstance) {
+            User authenticatedUser = userService.getUserByUsername(sessionUserInstance.getUsername());
+
+            // Check if the authenticated user is an admin or the user being deleted
+            if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")
+                    || Objects.equals(authenticatedUser.getUsername(), username)){
+
+                List<Order> userOrders = orderService.getUserOrders(authenticatedUser.getId());
+                model.addAttribute("orders", userOrders);
+
+                return "order-history";
+
+            }
+
+
+        }
+        return "redirect:/";
+    }
+
+
+
 
 
 

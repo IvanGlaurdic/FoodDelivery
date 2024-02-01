@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{style.css}">
+</head>
+<body>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div th:each="order : ${orders}" class="col">
+        <div class="card h-100">
+            <img th:src="@{/{picturePath}(picturePath=${order.getRestaurant().getPicturePath()})}" class="card-img-top" alt="Menu Item Image">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${'Date of order: ' + order.getOrderDate()}">Menu Item Name</h5>
+                <p class="card-rating" th:text="${'Tiem of delivery: ' + order.getScheduledDeliveryTime()}">Price</p>
+                <p class="card-text" th:text="${'Total amount: '+order.getTotalAmount()}">Description</p>
+
+
+                <p class="card-text" th:text="${order.getRating()}">Rating</p>
+                <p class="card-text" th:text="${order.getComment()}">Comment</p>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
