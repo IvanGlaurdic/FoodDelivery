@@ -261,12 +261,14 @@ public class UserController {
             if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")
                     || Objects.equals(authenticatedUser.getUsername(), username)) {
 
-
-                
-
-                    // Get the user to be deleted
                     User userToDelete = userService.getUserByUsername(username);
                     userToDelete.setAddress(null);
+
+
+
+
+                    // Get the user to be deleted
+
                     userService.saveUser(userToDelete);
                     userService.deleteUser(userToDelete);
 

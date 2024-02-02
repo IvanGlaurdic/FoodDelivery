@@ -131,12 +131,15 @@ public class OrderService {
         return orderRepository.save(managedOrder);
     }
 
+    
     private void recalculateTotalAmount(Order order) {
         float totalAmount = order.getOrderItems().stream()
                 .map(item -> item.getQuantity() * item.getMenuItem().getPrice())
                 .reduce(0f, Float::sum);
         order.setTotalAmount(totalAmount);
     }
+
+
 
     public void confirmOrder(Order order) {
         order.setScheduledDeliveryTime(
@@ -152,6 +155,7 @@ public class OrderService {
         orderRepository.deleteOrdersByStatus("ordering");
 
     }
+
 
     public List<Order> getUserOrders(UUID id) {
         return orderRepository.getReferenceByUserId(id);
