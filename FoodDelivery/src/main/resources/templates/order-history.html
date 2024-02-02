@@ -15,13 +15,33 @@
         <div class="card h-100">
             <img th:src="@{/{picturePath}(picturePath=${order.getRestaurant().getPicturePath()})}" class="card-img-top" alt="Menu Item Image">
             <div class="card-body">
-                <h5 class="card-title" th:text="${'Date of order: ' + order.getOrderDate()}">Menu Item Name</h5>
+                <h5 class="card-title" th:text="${'Date of order: ' + order.getOrderDate()}"></h5>
+                <h5 class="card-title" th:text="${'Restaurant: ' + order.getRestaurant().getName()}"></h5>
+
+                <ul th:each="orderItem : ${order.getOrderItems()}" >
+                    <li th:text="${orderItem.getMenuItem().getName()+'  Price: ' + orderItem.getMenuItem().getPrice() + ' x' +orderItem.getQuantity()}"></li>
+                </ul>
+
                 <p class="card-rating" th:text="${'Tiem of delivery: ' + order.getScheduledDeliveryTime()}">Price</p>
                 <p class="card-text" th:text="${'Total amount: '+order.getTotalAmount()}">Description</p>
 
+                <form th:action="@{/order/order-rating/{orderId}(orderId=${order.getId()})}" method="post">
+                    <div class="">
+                        <label for="rating" class="form-label">Rating:</label>
+                        <input type="text" class="form-control mb-2" id="rating" th:value="${order.getRating()}" name="rating">
+                    </div>
+                    <div class="">
+                        <label for="comment" class="form-label">Comment:</label>
+                        <input type="text" class="form-control mb-2" id="comment" th:value="${order.getComment()}" name="comment">
+                    </div>
+                    <div class="">
+                        <input type="hidden" class="form-control mb-2" id="restaurantName" th:value="${order.getRestaurant().getName()}" name="restaurantName">
+                    </div>
 
-                <p class="card-text" th:text="${order.getRating()}">Rating</p>
-                <p class="card-text" th:text="${order.getComment()}">Comment</p>
+                    <div>
+                        <button type="submit" id="signup-btn" class="btn w-100 mb-2">SIGN IN</button>
+                    </div>
+                </form>
 
 
 

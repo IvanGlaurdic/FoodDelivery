@@ -17,4 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     void deleteOrdersByStatus(@Param("status") String status);
 
     List<Order> getReferenceByUserId(UUID id);
+
+    List<Order> getReferenceByRestaurantId(UUID id);
 }

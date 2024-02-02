@@ -11,6 +11,23 @@
 <body>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div th:each="order : ${orders}" class="col">
+        <div class="card h-70">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${'Order ID: '+order.getId()}"></h5>
+                <ul th:each="item : ${order.getOrderItems()}">
+                    <li th:text="${item.getMenuItem().getName()}"></li>
+                </ul>
+                <p class="card-rating" th:text="${'Price: ' + order.getTotalAmount()}">Price</p>
+                <p class="card-rating" th:text="${'Reviwe: ' + order.getRating()}">Price</p>
+                <p class="card-rating" th:text="${'Comment: ' + order.getComment()}">Price</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
     <a th:href="@{/menu-items/add-item/{restaurantName}(restaurantName=${restaurant.getName()})}">Add</a>
     <div th:each="menuItem : ${menuItem}" class="col">
         <div class="card h-100">

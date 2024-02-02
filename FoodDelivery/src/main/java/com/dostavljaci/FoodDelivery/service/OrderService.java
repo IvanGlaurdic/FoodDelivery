@@ -156,4 +156,8 @@ public class OrderService {
     public List<Order> getUserOrders(UUID id) {
         return orderRepository.getReferenceByUserId(id);
     }
+
+    public List<Order> getOrdersByRestaurant(Restaurant restaurant) {
+        return orderRepository.getReferenceByRestaurantId(restaurant.getId());
+    }
 }

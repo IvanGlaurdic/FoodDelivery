@@ -1,10 +1,8 @@
 package com.dostavljaci.FoodDelivery.controller;
 
-import com.dostavljaci.FoodDelivery.entity.Address;
-import com.dostavljaci.FoodDelivery.entity.MenuItem;
-import com.dostavljaci.FoodDelivery.entity.Restaurant;
-import com.dostavljaci.FoodDelivery.entity.User;
+import com.dostavljaci.FoodDelivery.entity.*;
 import com.dostavljaci.FoodDelivery.service.MenuItemService;
+import com.dostavljaci.FoodDelivery.service.OrderService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +23,7 @@ public class MenuItemController {
     public final MenuItemService menuItemService;
     public final RestaurantService restaurantService;
     public final UserService userService;
+    public final OrderService orderService;
 
 
     @GetMapping("/{restaurantName}")
@@ -34,7 +33,9 @@ public class MenuItemController {
         Restaurant restaurant=restaurantService.getRestaurantByName(restaurantName);
         System.out.print(restaurant);
         List<MenuItem> menuItem= menuItemService.getMenuByRestaurantId(restaurant.getId());
+        List<Order> orders = orderService.getOrdersByRestaurant(restaurant);
 
+        model.addAttribute("orders", orders);
         model.addAttribute("restaurant",restaurant);
         model.addAttribute("restaurantName",restaurantName);
         model.addAttribute("menuItem", menuItem);
@@ -54,24 +55,18 @@ public class MenuItemController {
 
     @PostMapping("/add-item/{restaurantName}")
     public String handleMenuItemSubmission(@ModelAttribute MenuItem menuItem,
-                                             Model model, HttpSession session,
-                                             @PathVariable String restaurantName){
+                                           Model model, HttpSession session,
+                                           @PathVariable String restaurantName) {
 
         Object sessionUser = session.getAttribute("user");
-        Restaurant restaurant=restaurantService.getRestaurantByName(restaurantName);
+        Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
 
-
-        if (sessionUser instanceof User userInstance){
+        if (sessionUser instanceof User userInstance) {
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
-                    || Objects.equals(userService.getUserById(userInstance.getId()),restaurant.getOwner()))
-            {
-
-
+                    || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
                 menuItem.setRestaurant(restaurant);
-
                 menuItemService.saveMenuItem(menuItem);
-
 
                 return "redirect:/menu-items/" + restaurant.getName();
             }
