@@ -262,6 +262,8 @@ public class UserController {
                     || Objects.equals(authenticatedUser.getUsername(), username)) {
 
 
+                
+
                     // Get the user to be deleted
                     User userToDelete = userService.getUserByUsername(username);
                     userToDelete.setAddress(null);
