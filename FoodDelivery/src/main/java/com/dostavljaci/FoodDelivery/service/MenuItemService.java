@@ -15,6 +15,10 @@ import java.util.UUID;
 public class MenuItemService {
     private final MenuItemRepository menuItemRepository;
 
+    public void deleteMenuItemById(UUID id) {
+        menuItemRepository.deleteById(id);
+    }
+
     public List<MenuItem> getMenuByRestaurantId(UUID id) {
         return menuItemRepository.getMenuItemsByRestaurantId(id);
     }

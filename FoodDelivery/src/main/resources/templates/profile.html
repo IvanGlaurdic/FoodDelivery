@@ -45,6 +45,12 @@
         <td></td>
         <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit Info</a></td>
     </tr>
+    <tr>
+        <td>
+            <a th:href="@{/profile/{username}/orders(username=${user.getUsername()})}">Order history</a>
+        </td>
+    </tr>
+
 </table>
 
 
@@ -58,6 +64,7 @@
         <td>Role</td>
         <td>Address</td>
         <td></td>
+
     </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.getUsername()}">User Name</td>
@@ -70,6 +77,7 @@
         <td><form th:action="@{/profile/delete-user/{username}(username=${user.getUsername()})}" method="post">
             <button type="submit" class="btn btn-primary w-100 mb-2">Delete User</button>
         </form></td>
+
     </tr>
 </table>
 

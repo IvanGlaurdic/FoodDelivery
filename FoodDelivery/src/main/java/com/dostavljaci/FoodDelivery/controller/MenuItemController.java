@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -135,13 +135,11 @@ public class MenuItemController {
                     || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
 
-
                 boolean isUpdated = updateIfChanged(requestedMenuItem::getName, requestedMenuItem::setName, menuItem.getName())
                         | updateIfChanged(requestedMenuItem::getDescription, requestedMenuItem::setDescription, menuItem.getDescription())
                         | updateIfChanged(requestedMenuItem::getImageURL, requestedMenuItem::setImageURL, menuItem.getImageURL())
                         | updateIfChanged(requestedMenuItem::getPrice, requestedMenuItem::setPrice, menuItem.getPrice())
                         | updateIfChanged(requestedMenuItem::getCategory, requestedMenuItem::setCategory, menuItem.getCategory());
-
 
 
 
@@ -158,6 +156,7 @@ public class MenuItemController {
 
         return "redirect:/";
     }
+
 
     private String saveFile(MultipartFile file) {
         try {
@@ -181,6 +180,28 @@ public class MenuItemController {
         }
     }
 
+
+    @PostMapping("/{restaurantName}/delete/{menuItemId}")
+    public String deleteMenuItem(
+            @PathVariable UUID menuItemId,
+            @PathVariable String restaurantName,
+            RedirectAttributes redirectAttributes,
+            HttpSession httpSession,
+            Model model) {
+        try {
+
+
+            menuItemService.deleteMenuItemById(menuItemId);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Restaurant deleted successfully!");
+            return "redirect:/menu-items/" + restaurantName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting restaurant.");
+            return "redirect:/menu-items/" + restaurantName;
+        }
+    }
+
     private <T> boolean updateIfChanged(Supplier<T> getter, Consumer<T> setter, T newValue) {
         if (!Objects.equals(getter.get(), newValue)) {
             setter.accept(newValue);
@@ -189,4 +210,10 @@ public class MenuItemController {
         return false;
     }
 
+
+
+
+
+
+    
 }
