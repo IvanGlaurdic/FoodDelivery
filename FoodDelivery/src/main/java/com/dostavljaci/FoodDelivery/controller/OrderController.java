@@ -6,18 +6,24 @@ import com.dostavljaci.FoodDelivery.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.naming.Name;
+import java.net.URI;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RestController
@@ -113,6 +119,58 @@ public class OrderController {
         return ResponseEntity.ok().build();
     }
 
+
+    @PostMapping("/order-rating/{orderId}")
+    public ResponseEntity<Object> updateOrderRating(@PathVariable UUID orderId,
+                                    @RequestParam Float rating,
+                                    @RequestParam String comment,
+                                    @RequestParam String restaurantName,
+                                    Model model,
+                                    HttpSession session){
+
+        User user = getUserFromSession(session);
+        Restaurant restaurant = getRestaurantFromSession(session, restaurantName);
+        Order order = orderService.getOrderById(orderId);
+
+        boolean ifUpdated = updateIfChanged(order::getRating, order::setRating, rating)
+                | updateIfChanged(order::getComment, order::setComment, comment);
+
+        if(ifUpdated){
+            orderService.saveOrder(order);
+
+            // Recalculate and update restaurant rating
+            List<Order> restaurantOrders = orderService.getOrdersByRestaurant(restaurant);
+            float totalRating = 0;
+            int ratingCount = 0;
+            for (Order restaurantOrder : restaurantOrders) {
+                if (restaurantOrder.getRating() != 0) {
+                    totalRating += restaurantOrder.getRating();
+                    ratingCount++;
+                }
+            }
+            if (ratingCount > 0) {
+                float averageRating = totalRating / ratingCount;
+                restaurant.setRating(averageRating);
+                restaurantService.saveRestaurant(restaurant);
+            }
+
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("redirect:/profile/"+user.getUsername()+"/orders"));
+        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+
+
+    }
+
+
+    private <T> boolean updateIfChanged(Supplier<T> getter, Consumer<T> setter, T newValue) {
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
+    }
 
 
 

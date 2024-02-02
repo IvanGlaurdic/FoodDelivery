@@ -31,4 +31,9 @@ public class MenuItem {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+
+
+
+
 }

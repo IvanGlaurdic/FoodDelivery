@@ -1,10 +1,8 @@
 package com.dostavljaci.FoodDelivery.controller;
 
-import com.dostavljaci.FoodDelivery.entity.Address;
-import com.dostavljaci.FoodDelivery.entity.MenuItem;
-import com.dostavljaci.FoodDelivery.entity.Restaurant;
-import com.dostavljaci.FoodDelivery.entity.User;
+import com.dostavljaci.FoodDelivery.entity.*;
 import com.dostavljaci.FoodDelivery.service.MenuItemService;
+import com.dostavljaci.FoodDelivery.service.OrderService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 @Controller
@@ -25,6 +25,7 @@ public class MenuItemController {
     public final MenuItemService menuItemService;
     public final RestaurantService restaurantService;
     public final UserService userService;
+    public final OrderService orderService;
 
 
     @GetMapping("/{restaurantName}")
@@ -34,7 +35,9 @@ public class MenuItemController {
         Restaurant restaurant=restaurantService.getRestaurantByName(restaurantName);
         System.out.print(restaurant);
         List<MenuItem> menuItem= menuItemService.getMenuByRestaurantId(restaurant.getId());
+        List<Order> orders = orderService.getOrdersByRestaurant(restaurant);
 
+        model.addAttribute("orders", orders);
         model.addAttribute("restaurant",restaurant);
         model.addAttribute("restaurantName",restaurantName);
         model.addAttribute("menuItem", menuItem);
@@ -54,24 +57,18 @@ public class MenuItemController {
 
     @PostMapping("/add-item/{restaurantName}")
     public String handleMenuItemSubmission(@ModelAttribute MenuItem menuItem,
-                                             Model model, HttpSession session,
-                                             @PathVariable String restaurantName){
+                                           Model model, HttpSession session,
+                                           @PathVariable String restaurantName) {
 
         Object sessionUser = session.getAttribute("user");
-        Restaurant restaurant=restaurantService.getRestaurantByName(restaurantName);
+        Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
 
-
-        if (sessionUser instanceof User userInstance){
+        if (sessionUser instanceof User userInstance) {
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
-                    || Objects.equals(userService.getUserById(userInstance.getId()),restaurant.getOwner()))
-            {
-
-
+                    || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
                 menuItem.setRestaurant(restaurant);
-
                 menuItemService.saveMenuItem(menuItem);
-
 
                 return "redirect:/menu-items/" + restaurant.getName();
             }
@@ -82,50 +79,71 @@ public class MenuItemController {
     @GetMapping("/{restaurantName}/edit-menuitem/{menuItemId}")
     public String showEditMenuItemForm(@PathVariable String restaurantName,
                                        @PathVariable UUID menuItemId, Model model, HttpSession session) {
-        Object sessionUser = session.getAttribute("user");
+
         Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
+        MenuItem menuItem = menuItemService.getMenuItemById(menuItemId);
 
-        if (sessionUser instanceof User userInstance) {
-            MenuItem menuItem = menuItemService.getMenuItemById(menuItemId);
+        model.addAttribute("menuItem", menuItem);
+        model.addAttribute("restaurant",restaurant);
+        model.addAttribute("error",null);
+        return "edit-menuitem";
 
 
-            if (menuItem != null &&
-                    (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
-                            || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner()))) {
-
-                model.addAttribute("menuItem", menuItem);
-                model.addAttribute("restaurant",restaurant);
-                model.addAttribute("error",null);
-                return "edit-menuitem";
-            }
-        }
-        return "redirect:/";
     }
 
     @PostMapping("/{restaurantName}/edit-menuitem/{menuItemId}")
-    public String handleEditMenuItemSubmission(@ModelAttribute MenuItem menuItem,
+    public String handleEditMenuItemSubmission(@RequestParam String name,
+                                               @RequestParam String description,
+                                               @RequestParam float price,
+                                               @RequestParam String imageURL,
+                                               @RequestParam String category,
                                                Model model, HttpSession session,
                                                @PathVariable String restaurantName,
                                                @PathVariable UUID menuItemId) {
+
         Object sessionUser = session.getAttribute("user");
         Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
+        MenuItem menuItem=menuItemService.getMenuItemById(menuItemId);
 
         if (sessionUser instanceof User userInstance) {
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
                     || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
 
-                menuItem.setRestaurant(restaurant);
+                boolean isUpdated = updateIfChanged(menuItem::getName, menuItem::setName, name)
+                        | updateIfChanged(menuItem::getDescription, menuItem::setDescription, description)
+                        | updateIfChanged(menuItem::getImageURL, menuItem::setImageURL, imageURL)
+                        | updateIfPriceChanged(menuItem::getPrice, menuItem::setPrice,price)
+                        | updateIfChanged(menuItem::getCategory, menuItem::setCategory, category);
 
 
+                if (isUpdated){
 
+                    menuItemService.saveMenuItem(menuItem);
 
-                menuItemService.saveMenuItem(menuItem);
+                    return "redirect:/menu-items/" + restaurantName;
+                }
 
-                return "redirect:/menu-items/" + restaurantName;
             }
         }
+
         return "redirect:/";
+    }
+
+    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean updateIfPriceChanged(Supplier<Float> getter, Consumer<Float> setter, float newValue) {
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
     }
 
 }
