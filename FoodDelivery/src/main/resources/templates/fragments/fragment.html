@@ -13,7 +13,7 @@
             byte<span class="yellow-dot">.</span>
         </a>
 
-        <div class="navbar-nav mx-auto" th:if="${loggedIn}">
+        <div class="navbar-nav mx-auto" th:if="${isLoggedIn}">
             <span class="navigation-address" th:text="${user.getAddress().getCity() + ', ' + user.getAddress().getStreet()}"></span>
         </div>
 
@@ -27,26 +27,26 @@
             </ul>
 
             <!-- Synchronous search form (Center of navbar) -->
-            <form class="form-inline my-2 my-lg-0 mx-auto" th:action="@{/search}" method="post">
+            <form class="form-inline my-2 my-lg-0 mx-auto" th:if="${isLoggedIn}" th:action="@{/search}" method="post">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search Restaurants" aria-label="Search" name="query">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
 
             <ul class="navbar-nav ml-auto">
                 <!-- Logged in User Options -->
-                <li class="nav-item" th:if="${loggedIn}">
+                <li class="nav-item" th:if="${isLoggedIn}">
                     <!-- Profile Icon -->
                     <a class="md-2 navigation-address" th:href="@{/profile/{username}(username=${user.getUsername()})}" th:text="${user.getUsername()}"></a>
                 </li>
-                <li class="nav-item" th:if="${loggedIn}">
+                <li class="nav-item" th:if="${isLoggedIn}">
                     <a href="/logout" class="btn btn-warning">Logout</a>
                 </li>
 
                 <!-- Not Logged In User Options -->
-                <li class="nav-item" th:if="${!loggedIn}">
+                <li class="nav-item" th:if="${!isLoggedIn}">
                     <a class="nav-link" th:href="@{/login}">Login</a>
                 </li>
-                <li class="nav-item" th:if="${!loggedIn}">
+                <li class="nav-item" th:if="${!isLoggedIn}">
                     <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
             </ul>

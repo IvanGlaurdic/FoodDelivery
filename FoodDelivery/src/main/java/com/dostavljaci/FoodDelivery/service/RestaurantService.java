@@ -76,7 +76,7 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
-    public Restaurant saveRestaurant(String restaurantName, String contactNumber, User user, float v, Address address) {
+    public Restaurant saveRestaurant(String restaurantName, String contactNumber, User user, float v, Address address, String fileName) {
         Restaurant restaurant;
 
         if (restaurantRepository.findRestaurantByName(restaurantName) == null){
@@ -88,6 +88,7 @@ public class RestaurantService {
             List<Address> addresses = new ArrayList<>();
             addresses.add(address);
             restaurant.setAddress(addresses);
+            restaurant.setPicturePath(fileName);
         }
         else {
             restaurant = restaurantRepository.findRestaurantByName(restaurantName);

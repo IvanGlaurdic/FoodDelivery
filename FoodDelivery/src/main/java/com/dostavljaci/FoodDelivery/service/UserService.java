@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void saveNewUser(String firstName,
+    public User saveNewUser(String firstName,
                             String lastName,
                             String username,
                             String email,
@@ -42,8 +42,9 @@ public class UserService {
             user.setPhoneNumber(phoneNumber);
             user.setRole("user");
             user.setAddress(address);
-            userRepository.save(user);
+            return userRepository.save(user);
         }
+        return null;
     }
 
     public User getUserById(UUID userId) {
@@ -72,10 +73,7 @@ public class UserService {
     }
 
 
-    public void deleteUserByUsername(String username) {
-        User userToDelete = userRepository.findByUsername(username);
-        if (userToDelete != null) {
-            userRepository.delete(userToDelete);
-        }
+    public void deleteUser(User userToDelete) {
+        userRepository.delete(userToDelete);
     }
 }

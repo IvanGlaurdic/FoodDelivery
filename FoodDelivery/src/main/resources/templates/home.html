@@ -12,12 +12,13 @@
 
 <div th:replace="fragments/fragment :: navbar"></div>
 
-<ul th:if="${loggedIn}" th:each="category : ${categories}">
+<ul th:if="${isLoggedIn}" th:each="category : ${categories}">
     <li ><a th:href="@{/category/{category}(category=${category})}" th:text="${category}"></a></li>
 </ul>
 
 
-<div class="row row-cols-1 row-cols-md-3 g-4" th:if="${closestAddresses}==null">
+
+<div class="row row-cols-1 row-cols-md-3 g-4" th:if="${!isLoggedIn}">
     <div th:each="restaurant : ${restaurants}" class="col">
         <div class="card h-100">
             <img th:src="@{/{picturePath}(picturePath=${restaurant.getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
@@ -28,7 +29,7 @@
                 <p class="card-rating" th:text="${'Rating: ' + restaurant.getRating()}">Rating</p>
                 <!-- Display Closest Address if Logged In -->
                 <div class="card-text">
-                    <span class="card-address">Address: <span th:text="${restaurant.getAddress().getFirst()}"></span>
+                    <span class="card-address">Address: <span th:text="${restaurant.getAddress().getFirst()}"></span></span>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
                 <!-- Display Restaurant Rating -->
                 <p class="card-rating" th:text="${'Rating: ' + entry.key.getRating()}">Rating</p>
                 <!-- Display Closest Address if Logged In -->
-                <div class="card-text" th:if="${loggedIn}">
+                <div class="card-text" th:if="${isLoggedIn}">
                     <span class="card-address">Closest Address: <span th:text="${entry.value}"></span></span>
                     <a th:href="@{/order/{Name}(Name=${entry.key.getName()})}" class="btn btn-custom-color w-100 mb-2">Order</a>
                 </div>

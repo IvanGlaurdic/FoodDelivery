@@ -6,11 +6,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Your Custom CSS -->
-    <link rel="stylesheet" th:href="@{style.css}">
+    <link rel="stylesheet" th:href="@{../style.css}">
 </head>
 <body>
 
-<div class="row row-cols-1 row-cols-md-3 g-4" th:if="${closestAddresses}==null">
+<div th:replace="fragments/fragment :: navbar"></div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4" th:if="${isLoggedIn}">
     <div th:each="restaurant : ${restaurants}" class="col">
         <div class="card h-100">
             <img th:src="@{/{picturePath}(picturePath=${restaurant.getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
@@ -19,8 +21,10 @@
                 <h5 class="card-title" th:text="${restaurant.getName()}">Restaurant Name</h5>
                 <!-- Display Restaurant Rating -->
                 <p class="card-rating" th:text="${'Rating: ' + restaurant.getRating()}">Rating</p>
-                <!-- Display Closest Address if Logged In -->
 
+                <div class="card-text" th:if="${isLoggedIn}">
+                    <a th:href="@{/order/{Name}(Name=${restaurant.getName()})}" class="btn btn-custom-color w-100 mb-2">Order</a>
+                </div>
             </div>
         </div>
     </div>

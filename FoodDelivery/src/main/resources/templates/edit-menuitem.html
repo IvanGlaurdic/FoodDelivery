@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Menu Items</title>
+    <title>Home Page</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Your Custom CSS -->
-    <link rel="stylesheet" th:href="@{style.css}">
+    <link rel="stylesheet" th:href="@{../../../style.css}">
 </head>
-<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<body>
+
+<div th:replace="fragments/fragment :: navbar"></div>
 
 <div class="card w-100" style="max-width: 400px;">
     <div class="card-body">

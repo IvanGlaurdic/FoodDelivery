@@ -22,7 +22,7 @@
                         Let’s <span>Sign you up</span>, your meal awaits<span class="yellow-dot">.</span>
                     </h2>
                 </div>
-                <form class="row g-3" action="/register" method="post">
+                <form class="row g-3" th:action="@{/register}" method="post">
                     <!-- Error Message -->
                     <div class="col-12">
                         <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>

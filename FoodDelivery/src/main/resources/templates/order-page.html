@@ -1,18 +1,16 @@
-    <!DOCTYPE html>
-    <html xmlns:th="http://www.thymeleaf.org" lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Order Page</title>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{../style.css}">
+</head>
+<body>
 
-        <!-- Your Custom CSS -->
-        <link rel="stylesheet" th:href="@{style.css}">
-    </head>
-    <body>
-
-    <div th:replace="fragments/fragment :: navbar"></div>
+<div th:replace="fragments/fragment :: navbar"></div>
 
     <div id="orderBasket">
         <h3>Your Basket</h3>

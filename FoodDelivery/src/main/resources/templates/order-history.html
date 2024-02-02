@@ -6,9 +6,11 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Your Custom CSS -->
-    <link rel="stylesheet" th:href="@{style.css}">
+    <link rel="stylesheet" th:href="@{../../../style.css}">
 </head>
 <body>
+
+<div th:replace="fragments/fragment :: navbar"></div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     <div th:each="order : ${orders}" class="col">

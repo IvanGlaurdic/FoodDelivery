@@ -10,7 +10,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -32,6 +37,14 @@ public class MenuItemController {
     public String restaurantInfo(Model model,
                                  @PathVariable String restaurantName,
                                  HttpSession session){
+
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
         Restaurant restaurant=restaurantService.getRestaurantByName(restaurantName);
         System.out.print(restaurant);
         List<MenuItem> menuItem= menuItemService.getMenuByRestaurantId(restaurant.getId());
@@ -47,7 +60,13 @@ public class MenuItemController {
     }
 
     @GetMapping("/add-item/{restaurantName}")
-    public String showMenuItemForm(Model model, @PathVariable String restaurantName) {
+    public String showMenuItemForm(Model model, @PathVariable String restaurantName, HttpSession session) {
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
         model.addAttribute("address", new MenuItem());
         model.addAttribute("restaurantName", restaurantName);
@@ -57,6 +76,7 @@ public class MenuItemController {
 
     @PostMapping("/add-item/{restaurantName}")
     public String handleMenuItemSubmission(@ModelAttribute MenuItem menuItem,
+                                           @RequestParam("picture") MultipartFile file,
                                            Model model, HttpSession session,
                                            @PathVariable String restaurantName) {
 
@@ -68,6 +88,7 @@ public class MenuItemController {
                     || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
                 menuItem.setRestaurant(restaurant);
+                menuItem.setImageURL(saveFile(file));
                 menuItemService.saveMenuItem(menuItem);
 
                 return "redirect:/menu-items/" + restaurant.getName();
@@ -79,6 +100,12 @@ public class MenuItemController {
     @GetMapping("/{restaurantName}/edit-menuitem/{menuItemId}")
     public String showEditMenuItemForm(@PathVariable String restaurantName,
                                        @PathVariable UUID menuItemId, Model model, HttpSession session) {
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
         Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
         MenuItem menuItem = menuItemService.getMenuItemById(menuItemId);
@@ -107,7 +134,6 @@ public class MenuItemController {
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
                     || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
-                System.out.print("UPADTING :::" + requestedMenuItem);
 
 
                 boolean isUpdated = updateIfChanged(requestedMenuItem::getName, requestedMenuItem::setName, menuItem.getName())
@@ -121,7 +147,6 @@ public class MenuItemController {
 
                 if (isUpdated){
 
-                    System.out.print("AWONWOINAOIWCNOASHINNNNNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
                     menuItemService.saveMenuItem(requestedMenuItem);
 
                     return "redirect:/menu-items/" + restaurantName;
@@ -132,6 +157,28 @@ public class MenuItemController {
         }
 
         return "redirect:/";
+    }
+
+    private String saveFile(MultipartFile file) {
+        try {
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = Objects.requireNonNull(originalFileName)
+                    .substring(originalFileName.lastIndexOf('.'));
+            String uniqueFileName = originalFileName.substring(0, originalFileName.lastIndexOf('.'))
+                    + "_" + UUID.randomUUID() + fileExtension;
+
+            // This is the path where the file will be saved
+            Path savePath = Paths.get("src/main/resources/static/images/restaurants/orders/" + uniqueFileName);
+
+            // Ensure the directory exists
+            Files.createDirectories(savePath.getParent());
+            Files.copy(file.getInputStream(), savePath);
+
+            return "images/restaurants/orders/" + uniqueFileName;
+        } catch (IOException e) {
+            // Handle exception
+            throw new RuntimeException("Failed to store file.", e);
+        }
     }
 
     private <T> boolean updateIfChanged(Supplier<T> getter, Consumer<T> setter, T newValue) {

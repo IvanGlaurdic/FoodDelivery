@@ -54,7 +54,7 @@ public class OrderController {
         modelAndView.addObject("user",user);
         modelAndView.addObject("menu",menu);
         modelAndView.addObject("restaurant",restaurant);
-        modelAndView.addObject("loggedIn",true);
+        modelAndView.addObject("isLoggedIn",true);
 
 
         return modelAndView;

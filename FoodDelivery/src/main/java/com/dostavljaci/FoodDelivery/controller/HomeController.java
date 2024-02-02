@@ -28,8 +28,9 @@ public class HomeController {
     private final MenuItemService menuItemService;
     @GetMapping("/")
     public String home(Model model, HttpSession session) {
+
         boolean isLoggedIn = session.getAttribute("user") != null;
-        model.addAttribute("loggedIn", isLoggedIn);
+        model.addAttribute("isLoggedIn", isLoggedIn);
 
         if (session.getAttribute("user") != null) {
             Object sessionUser = session.getAttribute("user");
@@ -43,19 +44,18 @@ public class HomeController {
                 model.addAttribute("user", null);
             }
         }
+
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
         model.addAttribute("restaurants", restaurants);
 
-
         List<String> categories=menuItemService.getAllUniqueCategories();
-
         model.addAttribute("categories",categories);
 
-        return "home"; // This should match the name of your Thymeleaf template
+        return "home";
     }
 
     @PostMapping("/search")
-    public String homeSearch(@RequestParam String query){
+    public String homeSearch(@RequestParam String query, HttpSession session, Model model){
         // Convert the input query to lowercase
         String lowercaseQuery = query.toLowerCase();
 
@@ -65,6 +65,8 @@ public class HomeController {
         if (restaurant == null) {
             return "redirect:/";
         }
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
 
         return "redirect:/order/" + restaurant.getName();
 
@@ -75,6 +77,14 @@ public class HomeController {
     public String homeSearchCategory(@PathVariable String category,
                                      Model model,
                                      HttpSession session){
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        if(session.getAttribute("user") instanceof  User user){
+            model.addAttribute("user", user);
+        }
+
 
         List<Restaurant> restaurants=restaurantService.getRestaurantsByMenuItemCategory(category);
         model.addAttribute("restaurants",restaurants);

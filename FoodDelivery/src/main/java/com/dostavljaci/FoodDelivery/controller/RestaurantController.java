@@ -9,8 +9,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -26,7 +31,13 @@ public class RestaurantController {
     public final UserService userService;
 
     @GetMapping()
-    public String showRestaurantForm(Model model) {
+    public String showRestaurantForm(Model model, HttpSession session) {
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
         model.addAttribute("restaurant", new Restaurant());
         model.addAttribute("address", new Address());
         model.addAttribute("error", null);
@@ -42,6 +53,7 @@ public class RestaurantController {
             @RequestParam String province,
             @RequestParam String country,
             @RequestParam String postalCode,
+            @RequestParam("picture") MultipartFile file,
             Model model,
             HttpSession session) {
 
@@ -60,7 +72,9 @@ public class RestaurantController {
         if (address == null){
             address = addressService.saveAddress(city,street,province,country,postalCode);
         }
-        Restaurant savedRestaurant = restaurantService.saveRestaurant(restaurantName,contactNumber,user,(float)0,address);
+
+        Restaurant savedRestaurant =
+                restaurantService.saveRestaurant(restaurantName,contactNumber,user,(float)0,address, saveFile(file));
 
 
         model.addAttribute(addressService.getAddressById(address.getId()));
@@ -68,6 +82,8 @@ public class RestaurantController {
 
         return "redirect:/profile/" + user.getUsername();
     }
+
+
 
     @PostMapping("/delete/{id}")
     public String deleteRestaurant(
@@ -103,15 +119,21 @@ public class RestaurantController {
 
 
     @GetMapping("/edit-restaurant/{restaurantname}")
-    public String editRestorant( @PathVariable("restaurantname") String restaurantname,
-                               Model model){
+    public String editRestaurant(@PathVariable("restaurantname") String restaurantname,
+                                 Model model, HttpSession session){
 
-                Restaurant restaurant = restaurantService.getRestaurantByName(restaurantname);
-                model.addAttribute("restaurant", restaurant);
-                model.addAttribute("error", null);
-                return "edit-restaurant";
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
 
-        }
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        Restaurant restaurant = restaurantService.getRestaurantByName(restaurantname);
+        model.addAttribute("restaurant", restaurant);
+        model.addAttribute("error", null);
+        return "edit-restaurant";
+
+    }
     @PostMapping("/edit-restaurant/{restaurantname}")
     public String handleEditedProfile(@PathVariable("restaurantname") String requestedName,
                                       @RequestParam String Name,
@@ -130,6 +152,7 @@ public class RestaurantController {
             return "edit-restaurant";
 
         }
+
 
         boolean isUpdated = updateIfChanged(currentRestaurant::getName, currentRestaurant::setName, Name)
                 | updateIfChanged(currentRestaurant::getContactNumber, currentRestaurant::setContactNumber, ContactNumber);
@@ -152,7 +175,27 @@ public class RestaurantController {
         }
         return false;
     }
+    private String saveFile(MultipartFile file) {
+        try {
+            String originalFileName = file.getOriginalFilename();
+            String fileExtension = Objects.requireNonNull(originalFileName)
+                    .substring(originalFileName.lastIndexOf('.'));
+            String uniqueFileName = originalFileName.substring(0, originalFileName.lastIndexOf('.'))
+                    + "_" + UUID.randomUUID() + fileExtension;
 
+            // This is the path where the file will be saved
+            Path savePath = Paths.get("src/main/resources/static/images/restaurants/" + uniqueFileName);
+
+            // Ensure the directory exists
+            Files.createDirectories(savePath.getParent());
+            Files.copy(file.getInputStream(), savePath);
+
+            return "images/restaurants/" + uniqueFileName;
+        } catch (IOException e) {
+            // Handle exception
+            throw new RuntimeException("Failed to store file.", e);
+        }
+    }
 
 
 }

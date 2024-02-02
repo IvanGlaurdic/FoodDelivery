@@ -29,18 +29,23 @@ public class UserController {
     private final OrderService orderService;
 
     @GetMapping("/{username}")
-    public String profile(
-            @PathVariable("username") String username,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+    public String profile(@PathVariable("username") String username,
+                          Model model,
+                          RedirectAttributes redirectAttributes,
+                          HttpSession session) {
+
         User user = userService.getUserByUsername(username);
+
         if (user != null) {
+
             List<User> users;
             List<Restaurant> restaurants;
+
             if (Objects.equals(user.getRole().toLowerCase(), "admin")){
                 users = userService.getAllUsers();
                 restaurants = restaurantService.getAllRestaurantsWithAddresses();
-            } else if (Objects.equals(user.getRole().toLowerCase(), "owner")) {
+            }
+            else if (Objects.equals(user.getRole().toLowerCase(), "owner")) {
                 restaurants = restaurantService.getRestaurantsByOwner(user.getId());
                 users = null;
             }
@@ -48,13 +53,20 @@ public class UserController {
                 users = null;
                 restaurants = null;
             }
+
+            boolean isLoggedIn = session.getAttribute("user") != null;
+            model.addAttribute("isLoggedIn", isLoggedIn);
+
             model.addAttribute("user", user);
             model.addAttribute("users", users);
             model.addAttribute("restaurants", restaurants);
+
             redirectAttributes.addFlashAttribute("successMessage", null);
             redirectAttributes.addFlashAttribute("errorMessage", null);
+
             return "profile";
-        } else {
+        }
+        else {
             // User is not authenticated, redirect to login page
             return "redirect:/login";
         }
@@ -64,15 +76,21 @@ public class UserController {
     public String editProfile( @PathVariable("username") String username,
                                Model model,
                                HttpSession session){
+
         Object sessionUser = session.getAttribute("user");
 
         if (sessionUser instanceof User userInstance){
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
                 || Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getUsername(), username)
             ) {
-                User user = userService.getUserByUsername(username);
-                model.addAttribute("user", user);
+                boolean isLoggedIn = session.getAttribute("user") != null;
+                User requestedUser = userService.getUserByUsername(username);
+
+                model.addAttribute("isLoggedIn", isLoggedIn);
+                model.addAttribute("user", userInstance);
+                model.addAttribute("requestedUser", requestedUser);
                 model.addAttribute("error", null);
+
                 return "edit-user";
             }
         }
@@ -156,27 +174,15 @@ public class UserController {
         return "redirect:/";
     }
 
-    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
-        if (!Objects.equals(getter.get(), newValue)) {
-            setter.accept(newValue);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean updatePasswordIfChanged(User user, String newPassword) {
-        String encodedPassword = authenticationService.getPasswordEncoder().encode(newPassword);
-        if (!encodedPassword.equals(user.getPassword())) {
-            user.setPassword(encodedPassword);
-            return true;
-        }
-        return false;
-    }
 
     @GetMapping("/add-user")
-    public String addUser(Model model){
-        model.addAttribute("user", new User());
-        model.addAttribute("address", new Address());
+    public String addUser(Model model, HttpSession session){
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
         model.addAttribute("error", null);
         return "add-user";
     }
@@ -196,11 +202,12 @@ public class UserController {
                                   @RequestParam String postalCode,
                                   Model model,
                                   HttpSession session ){
+
         Object sessionUser = session.getAttribute("user");
-        User user1;
+        User user;
 
         if (sessionUser instanceof User userInstance){
-            user1 = userService.getUserByUsername(userInstance.getUsername());
+            user = userService.getUserByUsername(userInstance.getUsername());
         }
         else {
             throw new RuntimeException("Cant locate user:" + sessionUser);
@@ -218,29 +225,24 @@ public class UserController {
                 address = addressService.saveAddress(city,street,province,country,postalCode);
             }
 
-            userService.saveNewUser(
-                    firstName,
-                    lastName,
-                    username,
-                    email,
-                    authenticationService.getPasswordEncoder().encode(password),
-                    phoneNumber,
-                    address);
 
-            User user=userService.getUserByUsername(username);
-            if (user.getAddress()==null){
-                user.setAddress(address);
-                userService.saveUser(user);
+
+            User newUser=userService.saveNewUser(firstName, lastName, username, email,
+                    authenticationService.getPasswordEncoder().encode(password),
+                    phoneNumber, address);
+
+            if (newUser.getAddress()==null){
+                newUser.setAddress(address);
+                userService.saveUser(newUser);
             }
 
-            System.out.print(user);
         }
 
         model.addAttribute("error", null);
 
 
 
-        return "redirect:/profile/" + user1.getUsername();
+        return "redirect:/profile/" + user.getUsername();
 
     }
 
@@ -259,27 +261,17 @@ public class UserController {
             if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")
                     || Objects.equals(authenticatedUser.getUsername(), username)) {
 
-                try {
+
                     // Get the user to be deleted
                     User userToDelete = userService.getUserByUsername(username);
-
-                    // Set the address to null before deleting the user
-                    if (userToDelete != null) {
-                        userToDelete.setAddress(null);
-                        userService.saveUser(userToDelete);
-                        userService.deleteUserByUsername(username);
-                        redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
-                    }
-                } catch (Exception e) {
-                    // Log the exception using a logging framework (e.g., SLF4J)
-
-                    redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user.");
-                }
+                    userToDelete.setAddress(null);
+                    userService.saveUser(userToDelete);
+                    userService.deleteUser(userToDelete);
 
                 if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")) {
                     return "redirect:/profile/" + authenticatedUser.getUsername();
                 } else {
-                    return "redirect:/logout"; // Redirect to logout for non-admin users
+                    return "redirect:/logout";
                 }
             }
         }
@@ -293,6 +285,12 @@ public class UserController {
     public String showOrderHistory(@PathVariable String username,
                                    Model model,
                                    HttpSession session){
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
         Object sessionUser = session.getAttribute("user");
 
@@ -309,16 +307,25 @@ public class UserController {
                 return "order-history";
 
             }
-
-
         }
         return "redirect:/";
     }
 
+    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
+    }
 
-
-
-
-
+    private boolean updatePasswordIfChanged(User user, String newPassword) {
+        String encodedPassword = authenticationService.getPasswordEncoder().encode(newPassword);
+        if (!encodedPassword.equals(user.getPassword())) {
+            user.setPassword(encodedPassword);
+            return true;
+        }
+        return false;
+    }
 
 }
