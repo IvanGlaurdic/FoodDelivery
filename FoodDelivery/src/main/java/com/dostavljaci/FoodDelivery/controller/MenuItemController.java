@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Objects;
@@ -107,7 +108,7 @@ public class MenuItemController {
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
                     || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
-                System.out.print("UPADTING :::" + requestedMenuItem);
+             
 
 
                 boolean isUpdated = updateIfChanged(requestedMenuItem::getName, requestedMenuItem::setName, menuItem.getName())
@@ -121,7 +122,6 @@ public class MenuItemController {
 
                 if (isUpdated){
 
-                    System.out.print("AWONWOINAOIWCNOASHINNNNNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
                     menuItemService.saveMenuItem(requestedMenuItem);
 
                     return "redirect:/menu-items/" + restaurantName;
@@ -132,6 +132,28 @@ public class MenuItemController {
         }
 
         return "redirect:/";
+    }
+
+
+    @PostMapping("/{restaurantName}/delete/{menuItemId}")
+    public String deleteMenuItem(
+            @PathVariable UUID menuItemId,
+            @PathVariable String restaurantName,
+            RedirectAttributes redirectAttributes,
+            HttpSession httpSession,
+            Model model) {
+        try {
+
+
+            menuItemService.deleteMenuItemById(menuItemId);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Restaurant deleted successfully!");
+            return "redirect:/menu-items/" + restaurantName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting restaurant.");
+            return "redirect:/menu-items/" + restaurantName;
+        }
     }
 
     private <T> boolean updateIfChanged(Supplier<T> getter, Consumer<T> setter, T newValue) {
