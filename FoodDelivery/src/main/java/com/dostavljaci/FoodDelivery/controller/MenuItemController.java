@@ -92,53 +92,49 @@ public class MenuItemController {
     }
 
     @PostMapping("/{restaurantName}/edit-menuitem/{menuItemId}")
-    public String handleEditMenuItemSubmission(@RequestParam String name,
-                                               @RequestParam String description,
-                                               @RequestParam float price,
-                                               @RequestParam String imageURL,
-                                               @RequestParam String category,
+    public String handleEditMenuItemSubmission(@ModelAttribute MenuItem menuItem,
                                                Model model, HttpSession session,
                                                @PathVariable String restaurantName,
                                                @PathVariable UUID menuItemId) {
 
         Object sessionUser = session.getAttribute("user");
         Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
-        MenuItem menuItem=menuItemService.getMenuItemById(menuItemId);
+        MenuItem requestedMenuItem = menuItemService.getMenuItemById(menuItemId);
+
+        System.out.print(sessionUser);
 
         if (sessionUser instanceof User userInstance) {
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
                     || Objects.equals(userService.getUserById(userInstance.getId()), restaurant.getOwner())) {
 
+                System.out.print("UPADTING :::" + requestedMenuItem);
 
-                boolean isUpdated = updateIfChanged(menuItem::getName, menuItem::setName, name)
-                        | updateIfChanged(menuItem::getDescription, menuItem::setDescription, description)
-                        | updateIfChanged(menuItem::getImageURL, menuItem::setImageURL, imageURL)
-                        | updateIfPriceChanged(menuItem::getPrice, menuItem::setPrice,price)
-                        | updateIfChanged(menuItem::getCategory, menuItem::setCategory, category);
+
+                boolean isUpdated = updateIfChanged(requestedMenuItem::getName, requestedMenuItem::setName, menuItem.getName())
+                        | updateIfChanged(requestedMenuItem::getDescription, requestedMenuItem::setDescription, menuItem.getDescription())
+                        | updateIfChanged(requestedMenuItem::getImageURL, requestedMenuItem::setImageURL, menuItem.getImageURL())
+                        | updateIfChanged(requestedMenuItem::getPrice, requestedMenuItem::setPrice, menuItem.getPrice())
+                        | updateIfChanged(requestedMenuItem::getCategory, requestedMenuItem::setCategory, menuItem.getCategory());
+
+
 
 
                 if (isUpdated){
 
-                    menuItemService.saveMenuItem(menuItem);
+                    System.out.print("AWONWOINAOIWCNOASHINNNNNSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+                    menuItemService.saveMenuItem(requestedMenuItem);
 
                     return "redirect:/menu-items/" + restaurantName;
                 }
 
             }
+            return "redirect:/profile/" + userInstance.getUsername();
         }
 
         return "redirect:/";
     }
 
-    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
-        if (!Objects.equals(getter.get(), newValue)) {
-            setter.accept(newValue);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean updateIfPriceChanged(Supplier<Float> getter, Consumer<Float> setter, float newValue) {
+    private <T> boolean updateIfChanged(Supplier<T> getter, Consumer<T> setter, T newValue) {
         if (!Objects.equals(getter.get(), newValue)) {
             setter.accept(newValue);
             return true;
