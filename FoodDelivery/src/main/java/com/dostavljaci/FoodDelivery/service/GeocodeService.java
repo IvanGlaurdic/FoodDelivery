@@ -92,7 +92,7 @@ public class GeocodeService {
         double minDistance = Double.MAX_VALUE;
         long estimatedDeliveryTime = 0;
 
-        for (Address address : restaurant.getAddress()) { // Assuming there is a getAddresses method
+        for (Address address : restaurant.getAddress()) {
             Map<String, Object> distanceAndTime = calculateDistanceAndTime(
                     userAddress.getLatitude().toString(),
                     userAddress.getLongitude().toString(),
@@ -109,8 +109,6 @@ public class GeocodeService {
             }
         }
 
-        // Convert the estimated delivery time from milliseconds to the desired time unit
-        // and adjust it according to your business logic if necessary
         return estimatedDeliveryTime;
     }
 

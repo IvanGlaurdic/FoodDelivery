@@ -1,17 +1,13 @@
 package com.dostavljaci.FoodDelivery.controller;
 
-import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.service.AddressService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
@@ -21,7 +17,6 @@ import java.util.UUID;
 public class AddressController {
     private final AddressService addressService;
     private final RestaurantService restaurantService;
-    private final UserService userService;
 
 
     @PostMapping("/delete-address/{addressId}/{restaurantId}")

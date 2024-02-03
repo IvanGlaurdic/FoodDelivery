@@ -11,8 +11,8 @@ public class OrderItemDTO {
     private int quantity;
     private UUID orderId;
     private UUID menuItemId;
-    private String menuItemName; // Optional, for display purposes
-    private float price; // Optional, for display purposes
+    private String menuItemName;
+    private float price;
 
     public OrderItemDTO(OrderItem orderItem) {
         this.id = orderItem.getId();

@@ -55,10 +55,6 @@ public class UserService {
         return userRepository.getUserByEmail(email);
     }
 
-    public void updateUser(User currentUser) {
-        userRepository.save(currentUser);
-    }
-
     public void saveUser(User user) {
         userRepository.save(user);
     }
@@ -71,7 +67,6 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         return user != null && !user.getId().equals(userId);
     }
-
 
     public void deleteUser(User userToDelete) {
         userRepository.delete(userToDelete);

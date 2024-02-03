@@ -1,8 +1,13 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.DTO.OrderItemDTO;
-import com.dostavljaci.FoodDelivery.entity.*;
-import com.dostavljaci.FoodDelivery.service.*;
+import com.dostavljaci.FoodDelivery.entity.MenuItem;
+import com.dostavljaci.FoodDelivery.entity.Order;
+import com.dostavljaci.FoodDelivery.entity.Restaurant;
+import com.dostavljaci.FoodDelivery.entity.User;
+import com.dostavljaci.FoodDelivery.service.MenuItemService;
+import com.dostavljaci.FoodDelivery.service.OrderService;
+import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -13,11 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.naming.Name;
 import java.net.URI;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

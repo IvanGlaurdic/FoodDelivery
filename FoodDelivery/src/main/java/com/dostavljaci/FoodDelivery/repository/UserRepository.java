@@ -11,7 +11,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u JOIN FETCH u.address WHERE u.username = :username")
     User findByUsername(String username);
 
-
     User getUserById(UUID userId);
 
     User getUserByEmail(String email);

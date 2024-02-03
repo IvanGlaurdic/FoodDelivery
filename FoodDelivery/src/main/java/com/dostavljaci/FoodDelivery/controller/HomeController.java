@@ -1,14 +1,12 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
-import com.dostavljaci.FoodDelivery.entity.MenuItem;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.service.MenuItemService;
 import com.dostavljaci.FoodDelivery.service.RestaurantService;
 import com.dostavljaci.FoodDelivery.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

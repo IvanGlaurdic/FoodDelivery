@@ -6,7 +6,6 @@ import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -52,7 +51,6 @@ public class RestaurantService {
     }
 
 
-    // Fetch restaurants owned by a user identified by UUID
     public List<Restaurant> getRestaurantsByOwner(UUID ownerId) {
         return restaurantRepository.findByOwnerId(ownerId);
     }
