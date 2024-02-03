@@ -19,7 +19,7 @@ This food delivery web app offers a range of features to enhance the ordering an
 - **User Authentication**: A secure login system ensures only registered users can access the app.
 
 ### Restaurant and Menu Management
-- **Restaurant Profiles**: Restaurants can create profiles, including essential information such as name, address, contact details, and working hours.
+- **Restaurant Profiles**: Restaurant owners can create profiles, including essential information such as name, address, contact details.
 - **Menu Creation**: Restaurant owners can manage their menus by adding, editing, or removing items, each with a name, price, description, and images.
 - **Cuisine Categories**: Restaurants can categorize their menu items into various cuisines for easy navigation.
 
@@ -28,9 +28,6 @@ This food delivery web app offers a range of features to enhance the ordering an
 - **Adding to Cart**: Users can add multiple items to their shopping cart, adjust quantities, and remove items as needed.
 - **Order Preview**: Users can review their cart, see the total cost, and make modifications before placing an order.
 
-### Real-Time Order Tracking
-- **Order Status**: Users can track the real-time status of their orders, including when it's accepted, prepared, and out for delivery.
-
 ### User Reviews
 - **Reviewing Restaurants**: Users can leave ratings and written reviews for restaurants they've ordered from, helping other users make informed decisions.
 
@@ -38,15 +35,13 @@ This food delivery web app offers a range of features to enhance the ordering an
 - **User Profiles**: Users can manage their profiles, update personal information, and view their order history.
 - **Order History**: Users can access details of their past orders, including order date, items ordered, and total cost.
 
-### Notifications for Order Updates
-- **Order Notifications**: Users receive notifications regarding their order status updates, ensuring they stay informed throughout the delivery process.
 
 ### Search and Filter Options for Restaurants
-- **Search Functionality**: Users can search for specific restaurants, menu items, or cuisines.
-- **Filtering**: Filter options may include sorting by rating, price, distance, or dietary preferences.
+- **Search Functionality**: Users can search for specific restaurants.
+- **Filtering**: Filter options by food category.
 
 ## Database
-![image](https://github.com/OSS-Java-Seminar-2023/FoodDelivery/assets/78646771/0b4e5975-d56e-4b30-99e4-5ab952227151)
+![image](https://github.com/OSS-Java-Seminar-2023/FoodDelivery/assets/78646771/350fcf04-824b-4be8-95a7-d7cfbf066820)
 
 
 ## Technologies Used
