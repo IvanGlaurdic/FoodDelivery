@@ -12,93 +12,105 @@
 
 <div th:replace="fragments/fragment :: navbar"></div>
 
-<div class="card w-300" style="max-width: 700px;">
-    <div class="card-body">
-        <form class="row g-3" th:action="@{/profile/add-user}" method="post">
-            <!-- Error Message -->
-            <div class="col-12">
-                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+<div class="row g-0 vh-100 bg-light">
+    <img class="col-md-6 bg-image" th:src="@{/images/webpage/registration-form.jpg}" src="/images/webpage/registration-form.jpg" alt="picture"></img>
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="px-5">
+            <div class="text-center mb-5">
+                <p id="logo-text">byte<span class="yellow-dot">.</span></p>
+                <h2 class="registration-header">
+                    Join the Feast, a <span>New User's</span>, at the Table<span class="yellow-dot">.</span>
+                </h2>
             </div>
 
-            <div class="row">
-                <!-- Left Column -->
-                <div class="col-md-6">
-                    <!-- First Name, Last Name, Username, Email, Password, Confirm Password, Phone Number, Role -->
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="firstName" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+            <form class="row g-3" th:action="@{/profile/add-user}" method="post">
+                <!-- Error Message -->
+                <div class="col-12">
+                    <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+                </div>
+
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <!-- First Name, Last Name, Username, Email, Password, Confirm Password, Phone Number, Role -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">First Name:</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName" class="form-label">Last Name:</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="username" class="form-label">Username:</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="phoneNumber" class="form-label">Phone Number:</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="role" class="form-label">Role:</label>
+                                <select class="form-control" id="role" name="role" required>
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="owner">Owner</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="lastName" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="username" class="form-label">Username:</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="confirmPassword" class="form-label">Confirm Password:</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="phoneNumber" class="form-label">Phone Number:</label>
-                            <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="role" class="form-label">Role:</label>
-                            <select class="form-control" id="role" name="role" required>
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                                <option value="owner">Owner</option>
-                            </select>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <!-- Street, City, Province, Country, Postal Code -->
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="inputStreet" class="form-label">Street</label>
+                                <input type="text" class="form-control" id="inputStreet" name="street" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="inputCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="inputCity" name="city" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="inputProvince" class="form-label">Province</label>
+                                <input type="text" class="form-control" id="inputProvince" name="province" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="inputCountry" class="form-label">Country</label>
+                                <input type="text" class="form-control" id="inputCountry" name="country" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="inputPostalCode" class="form-label">Postal Code</label>
+                                <input type="text" class="form-control" id="inputPostalCode" name="postalCode" required>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column -->
-                <div class="col-md-6">
-                    <!-- Street, City, Province, Country, Postal Code -->
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label for="inputStreet" class="form-label">Street</label>
-                            <input type="text" class="form-control" id="inputStreet" name="street" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="inputCity" class="form-label">City</label>
-                            <input type="text" class="form-control" id="inputCity" name="city" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="inputProvince" class="form-label">Province</label>
-                            <input type="text" class="form-control" id="inputProvince" name="province">
-                        </div>
-                        <div class="col-12">
-                            <label for="inputCountry" class="form-label">Country</label>
-                            <input type="text" class="form-control" id="inputCountry" name="country" required>
-                        </div>
-                        <div class="col-12">
-                            <label for="inputPostalCode" class="form-label">Postal Code</label>
-                            <input type="text" class="form-control" id="inputPostalCode" name="postalCode" required>
-                        </div>
-                    </div>
+                <!-- Submit Button -->
+                <div class="col-12 text-center my-2">
+                    <button type="submit" class="btn btn-success w-100 my-2">Apply Changes</button>
                 </div>
-            </div>
+            </form>
 
-            <!-- Submit Button -->
-            <div class="col-12 text-center">
-                <button type="submit" class="btn btn-primary">Apply Changes</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
 
 
 

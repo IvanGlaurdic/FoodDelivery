@@ -19,103 +19,105 @@
     <p class="alert alert-danger" th:text="${errorMessage}"></p>
 </div>
 
-<table>
-    <th>Personal Information</th>
-    <tr>
-        <td>Full name:</td>
-        <td th:text="${user.getFirstName() + ' ' + user.getLastName()}"></td>
-    </tr>
-    <tr>
-        <td>Username</td>
-        <td th:text="${user.getUsername()}"></td>
-    </tr>
-    <tr>
-        <td>Email:</td>
-        <td th:text="${user.getEmail()}"></td>
-    </tr>
-    <tr>
-        <td>Role:</td>
-        <td th:text="${user.getRole()}"></td>
-    </tr>
-    <tr>
-        <td>Address:</td>
-        <td th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ' ' + user.getAddress().getCity() + ' ' + user.getAddress().getPostalCode()}"></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit Info</a></td>
-    </tr>
-    <tr>
-        <td>
-            <a th:href="@{/profile/{username}/orders(username=${user.getUsername()})}">Order history</a>
-        </td>
-    </tr>
-
-</table>
 
 
-<table th:if="${users != null}" style="border: #212121 1px solid">
-    <th th:text="Users">Users</th>
-    <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/add-user}">Add User</a></td></tr>
-    <tr>
-        <td>Username</td>
-        <td>Full Name</td>
-        <td>Email</td>
-        <td>Role</td>
-        <td>Address</td>
-        <td></td>
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">
+            <span th:text="${user.getFirstName() + ' ' + user.getLastName()}">Full Name</span>
+            <small class="text-muted" th:text="${'(' + user.getRole() + ')'}">(Role)</small>
+        </h2>
 
-    </tr>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.getUsername()}">User Name</td>
-        <td th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}">Full Name</td>
-        <td th:text="${user.getEmail()}">Email</td>
-        <td th:text="${user.getRole()}">Role</td>
-        <td th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ' ' + user.getAddress().getCity() + ' ' + user.getAddress().getPostalCode()}">Address</td>
+        <p class="mb-2">
+            <strong>Username:</strong> <span th:text="${user.getUsername()}">Username</span>
+        </p>
 
-        <td><a class="btn btn-primary w-100 mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit User</a></td>
-        <td><form th:action="@{/profile/delete-user/{username}(username=${user.getUsername()})}" method="post">
-            <button type="submit" class="btn btn-primary w-100 mb-2">Delete User</button>
-        </form></td>
+        <p class="mb-2">
+            <strong>Email:</strong> <span th:text="${user.getEmail()}">Email</span>
+        </p>
 
-    </tr>
-</table>
+        <p class="mb-4">
+            <strong>Address:</strong>
+            <span th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ', ' + user.getAddress().getCity() + ', ' + user.getAddress().getPostalCode()}">Address</span>
+        </p>
 
-<table th:if="${restaurants != null}" style="border: #212121 1px solid">
-    <th>Restaurants</th>
-    <tr><td><a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant}">Add Restaurant</a></td></tr>
-    <tr>
-        <td>Restaurant Name</td>
-        <td>Owner</td>
-        <td>Rating</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <div class="d-grid gap-2">
+            <a class="btn btn-primary mb-2" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit Info</a>
+            <a th:href="@{/profile/{username}/orders(username=${user.getUsername()})}" class="btn btn-outline-secondary mb-2">Order history</a>
+        </div>
+    </div>
+</div>
 
-    </tr>
-    <tr th:each="restaurant : ${restaurants}">
-        <td th:text="${restaurant.getName()}">Restaurant Name</td>
-        <td th:text="${restaurant.getOwner().getFirstName()} + ' ' + ${restaurant.getOwner().getLastName()}">Owner Name</td>
-        <td th:text="${restaurant.getRating()}">Rating</td>
-        <td >
-            <ul th:each="address : ${restaurant.getAddress()}">
-                <li th:text="${address.getStreet() + ' ' + address.getCity()}"></li>
-            </ul>
-        </td>
-        <td>
-            <a class="btn btn-primary w-100 mb-2" th:href="@{/restaurant/edit-restaurant/{restaurantId}(restaurantId=${restaurant.getName()})}">Edit</a>
-        </td>
-        <td>
-            <form th:action="@{/restaurant/delete/{id}(id=${restaurant.id})}" method="post">
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-        </td>
-        <td>
-            <a class="btn btn-primary w-100 mb-2" th:href="@{/menu-items/{restaurantName}(restaurantName=${restaurant.getName()})}">Info</a>
-        </td>
-    </tr>
-</table>
+
+<div class="card" th:if="${users != null}">
+    <div class="card-header ">
+        <strong class="fs-1 h2 font-weight-bold">Users</strong>
+        <a class="btn btn-primary float-right" th:href="@{/profile/add-user}">Add User</a>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row font-weight-bold">
+                <div class="col-md-4">Full Name (Role)</div>
+                <div class="col-md-3">Email</div>
+                <div class="col-md-3">Address</div>
+                <div class="col-md-2">Actions</div>
+            </div>
+        </li>
+        <li class="list-group-item" th:each="user : ${users}">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <span class="font-weight-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></span>
+                    <small class="text-muted" th:text="${'(' + user.getRole() + ')'}"></small>
+                </div>
+                <div class="col-md-3" th:text="${user.getEmail()}">Email</div>
+                <div class="col-md-3" th:if="${user.getAddress()!=null}" th:text="${user.getAddress().getStreet() + ', ' + user.getAddress().getCity() + ', ' + user.getAddress().getPostalCode()}">Address</div>
+                <div class="col-md-2 d-flex">
+                    <a class="btn btn-primary mr-1 flex-fill" th:href="@{/profile/edit-user/{username}(username=${user.getUsername()})}">Edit</a>
+                    <form th:action="@{/profile/delete-user/{username}(username=${user.getUsername()})}" method="post" class="flex-fill">
+                        <button type="submit" class="btn btn-danger w-100">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="card" th:if="${restaurants != null}">
+    <div class="card-header">
+        <strong class="fs-1 h2 font-weight-bold">Restaurants</strong>
+        <a class="btn btn-primary float-right" th:href="@{/restaurant}">Add Restaurant</a>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row font-weight-bold">
+                <div class="col-md-3">Restaurant Name</div>
+                <div class="col-md-2">Owner</div>
+                <div class="col-md-1">Rating</div>
+                <div class="col-md-4">Address</div>
+                <div class="col-md-2">Actions</div>
+            </div>
+        </li>
+        <li class="list-group-item" th:each="restaurant : ${restaurants}">
+            <div class="row align-items-center">
+                <div class="col-md-3" th:text="${restaurant.getName()}">Restaurant Name</div>
+                <div class="col-md-2" th:text="${restaurant.getOwner().getFirstName()} + ' ' + ${restaurant.getOwner().getLastName()}">Owner Name</div>
+                <div class="col-md-1" th:text="${#numbers.formatDecimal(restaurant.getRating(), 1, 'COMMA', 2, 'POINT')}">Rating</div>
+                <div class="col-md-4">
+                    <ul class="pl-0" style="list-style-type: none;">
+                        <li th:each="address : ${restaurant.getAddress()}" th:text="${address.getStreet() + ', ' + address.getCity()}"></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 d-flex justify-content-around">
+                    <a class="btn btn-primary mb-2 flex-fill mr-1" th:href="@{/restaurant/edit-restaurant/{restaurantId}(restaurantId=${restaurant.getName()})}">Edit</a>
+                    <form th:action="@{/restaurant/delete/{id}(id=${restaurant.id})}" method="post" class="flex-fill">
+                        <button type="submit" class="btn btn-danger flex-fill">Delete</button>
+                    </form>
+                    <a class="btn btn-outline-primary mb-2 flex-fill ml-1" th:href="@{/menu-items/{restaurantName}(restaurantName=${restaurant.getName()})}">Info</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

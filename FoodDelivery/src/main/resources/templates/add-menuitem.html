@@ -12,54 +12,57 @@
 
 <div th:replace="fragments/fragment :: navbar"></div>
 
-<div class="card w-100" style="max-width: 400px;">
-    <div class="card-body">
-        <form class="row g-3" th:action="@{/menu-items/add-item/{restaurantName}(restaurantName=${restaurantName})}" method="post" enctype="multipart/form-data">
-            <div class="col-12">
-                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+<div class="row g-0 vh-100 bg-light">
+    <img class="col-md-6 bg-image" th:src="@{/images/webpage/registration-form.jpg}" src="/images/webpage/registration-form.jpg" alt="picture"></img>
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="px-5">
+            <div class="text-center mb-5">
+                <p id="logo-text">byte<span class="yellow-dot">.</span></p>
+                <h2 class="registration-header">
+                    Spice Things Up, a <span>New Dish</span> Takes the Stage<span class="yellow-dot">.</span>
+                </h2>
             </div>
-            <!-- Restaurant Name Input -->
-            <div class="col-12">
-                <label for="inputName" class="form-label">Name</label>
-                <input type="text" class="form-control mb-2" id="inputName" name="name">
-            </div>
+            <form class="row g-3" th:action="@{/menu-items/add-item/{restaurantName}(restaurantName=${restaurantName})}" method="post" enctype="multipart/form-data">
+                <div class="col-12">
+                    <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+                </div>
+                <!-- Restaurant Name Input -->
+                <div class="col-12">
+                    <label for="inputName" class="form-label">Name</label>
+                    <input type="text" class="form-control mb-2" id="inputName" name="name">
+                </div>
 
-            <!-- Contact Number Input -->
-            <div class="col-12">
-                <label for="inputDescription" class="form-label">Description</label>
-                <input type="text" class="form-control mb-2" id="inputDescription" name="description">
-            </div>
+                <!-- Contact Number Input -->
+                <div class="col-12">
+                    <label for="inputDescription" class="form-label">Description</label>
+                    <input type="text" class="form-control mb-2" id="inputDescription" name="description">
+                </div>
 
 
-            <!-- Street Input -->
-            <div class="col-12">
-                <label for="inputPrice" class="form-label">Price</label>
-                <input type="text" class="form-control mb-2" id="inputPrice" name="price">
-            </div>
+                <!-- Street Input -->
+                <div class="col-12">
+                    <label for="inputPrice" class="form-label">Price</label>
+                    <input type="text" class="form-control mb-2" id="inputPrice" name="price">
+                </div>
 
-            <!-- City Input -->
-            <div class="col-12">
-                <label for="inputCategory" class="form-label">Category</label>
-                <input type="text" class="form-control mb-2" id="inputCategory" name="category">
-            </div>
+                <!-- City Input -->
+                <div class="col-12">
+                    <label for="inputCategory" class="form-label">Category</label>
+                    <input type="text" class="form-control mb-2" id="inputCategory" name="category">
+                </div>
 
-            <!-- Province Input -->
-            <div class="col-12">
-                <label for="inputImage" class="form-label">Image</label>
-                <input type="text" class="form-control mb-2" id="inputImage" name="imageURL">
-            </div>
+                <!-- Picture Input -->
+                <div class="col-12">
+                    <label for="inputPicture" class="form-label">Picture:</label>
+                    <input type="file" class="form-control mb-2" id="inputPicture" name="picture" />
+                </div>
 
-            <!-- Picture Input -->
-            <div class="col-12">
-                <label for="inputPicture" class="form-label">Picture:</label>
-                <input type="file" class="form-control mb-2" id="inputPicture" name="picture" />
-            </div>
-
-            <!-- Submit Button -->
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary w-100 mb-2">Submit</button>
-            </div>
-        </form>
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success w-100 my-2">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

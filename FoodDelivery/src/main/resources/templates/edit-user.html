@@ -12,8 +12,16 @@
 
 <div th:replace="fragments/fragment :: navbar"></div>
 
-<div class="card w-300" style="max-width: 700px;">
-    <div class="card-body">
+<div class="row g-0 vh-100 bg-light">
+    <img class="col-md-6 bg-image" th:src="@{/images/webpage/registration-form.jpg}" src="/images/webpage/registration-form.jpg" alt="picture"></img>
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="px-5">
+            <div class="text-center mb-5">
+                <p id="logo-text">byte<span class="yellow-dot">.</span></p>
+                <h2 class="registration-header">
+                    Taste of Change, <span>Modifying User</span> Details<span class="yellow-dot">.</span>
+                </h2>
+            </div>
         <form class="row g-3" th:action="@{/profile/edit-user/{username}(username=${requestedUser.getUsername()})}" method="post">
 
             <!-- Error Message -->
@@ -54,7 +62,7 @@
                             <label for="phoneNumber" class="form-label">Phone Number:</label>
                             <input type="tel" class="form-control mb-2" id="phoneNumber" name="phoneNumber" th:value="${requestedUser.getPhoneNumber()}" required>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12" th:if="${user.getRole()}=='admin'">
                             <label for="role" class="form-label">Role:</label>
                             <select class="form-control mb-2" id="role" name="role" required>
                                 <option value="user" th:selected="${requestedUser.getRole() == 'user'}">User</option>
@@ -71,23 +79,23 @@
                     <div class="row g-3">
                         <div class="col-12">
                             <label for="inputStreet" class="form-label">Street</label>
-                            <input type="text" class="form-control mb-2" id="inputStreet" name="street" required>
+                            <input type="text" class="form-control mb-2" id="inputStreet" th:value="${requestedUser.getAddress().getStreet()}" name="street" required>
                         </div>
                         <div class="col-12">
                             <label for="inputCity" class="form-label">City</label>
-                            <input type="text" class="form-control mb-2" id="inputCity" name="city" required>
+                            <input type="text" class="form-control mb-2" id="inputCity" name="city" th:value="${requestedUser.getAddress().getCity()}" required>
                         </div>
                         <div class="col-12">
                             <label for="inputProvince" class="form-label">Province</label>
-                            <input type="text" class="form-control mb-2" id="inputProvince" name="province">
+                            <input type="text" class="form-control mb-2" id="inputProvince" name="province" required th:value="${requestedUser.getAddress().getProvince()}">
                         </div>
                         <div class="col-12">
                             <label for="inputCountry" class="form-label">Country</label>
-                            <input type="text" class="form-control mb-2" id="inputCountry" name="country" required>
+                            <input type="text" class="form-control mb-2" id="inputCountry" name="country" required th:value="${requestedUser.getAddress().getCountry()}">
                         </div>
                         <div class="col-12">
                             <label for="inputPostalCode" class="form-label">Postal Code</label>
-                            <input type="text" class="form-control mb-2" id="inputPostalCode" name="postalCode" required>
+                            <input type="text" class="form-control mb-2" id="inputPostalCode" name="postalCode" th:value="${requestedUser.getAddress().getPostalCode()}" required>
                         </div>
                     </div>
                 </div>
@@ -95,13 +103,13 @@
 
             <!-- Submit Button -->
             <div class="col-12">
-                <button type="submit" class="btn btn-primary w-100 mb-2">Apply Changes</button>
+                <button type="submit" class="btn btn-success w-100 my-2">Apply Changes</button>
 
             </div>
         </form>
+        </div>
     </div>
 </div>
-
 
 
 </body>
