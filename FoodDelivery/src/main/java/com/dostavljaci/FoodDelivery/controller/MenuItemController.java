@@ -48,8 +48,10 @@ public class MenuItemController {
         Restaurant restaurant=restaurantService.getRestaurantByName(restaurantName);
         System.out.print(restaurant);
         List<MenuItem> menuItem= menuItemService.getMenuByRestaurantId(restaurant.getId());
-        List<Order> orders = orderService.getOrdersByRestaurant(restaurant);
+        List<Order> CompletedOrders = orderService.getCompletedOrdersByRestaurant(restaurant);
+        List<Order> orders = orderService.getProcessingOrdersByRestaurant(restaurant);
 
+        model.addAttribute("CompletedOrders", CompletedOrders);
         model.addAttribute("orders", orders);
         model.addAttribute("restaurant",restaurant);
         model.addAttribute("restaurantName",restaurantName);

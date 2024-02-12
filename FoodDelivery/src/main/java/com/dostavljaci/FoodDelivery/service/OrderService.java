@@ -83,13 +83,13 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    LocalDateTime calculateScheduledDeliveryTime(Restaurant restaurant, Address userAddress) {
+    public LocalDateTime calculateScheduledDeliveryTime(Restaurant restaurant, Address userAddress) {
         long estimatedTimeInMillis = geocodeService.getScheduledDeliveryTime(restaurant, userAddress);
         // Convert milliseconds to minutes or your desired unit
         long estimatedTimeInMinutes = TimeUnit.MILLISECONDS.toMinutes(estimatedTimeInMillis);
 
         // Add the estimated time to the current time to get the scheduled delivery time
-        return LocalDateTime.now().plusMinutes(estimatedTimeInMinutes);
+        return LocalDateTime.now().plusMinutes(estimatedTimeInMinutes + 20);
     }
 
     @Transactional
@@ -142,14 +142,7 @@ public class OrderService {
 
 
     public void confirmOrder(Order order) {
-        order.setScheduledDeliveryTime(
-                calculateScheduledDeliveryTime(
-                        order.getRestaurant(),
-                        order.getUser().getAddress()
-                )
-        );
-
-        order.setStatus("processed");
+        order.setStatus("processing");
         order.setRating((float) 0);
         orderRepository.save(order);
         orderRepository.deleteOrdersByStatus("ordering");
@@ -164,4 +157,12 @@ public class OrderService {
     public List<Order> getOrdersByRestaurant(Restaurant restaurant) {
         return orderRepository.getReferenceByRestaurantId(restaurant.getId());
     }
+    public List<Order> getCompletedOrdersByRestaurant(Restaurant restaurant) {
+        return orderRepository.getReferenceByRestaurantIdCompleted(restaurant.getId());
+    }
+    public List<Order> getProcessingOrdersByRestaurant(Restaurant restaurant) {
+        return orderRepository.getReferenceByRestaurantIdProcessing(restaurant.getId());
+    }
+
+
 }

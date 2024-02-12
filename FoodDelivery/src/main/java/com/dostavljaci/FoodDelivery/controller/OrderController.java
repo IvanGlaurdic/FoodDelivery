@@ -163,7 +163,6 @@ public class OrderController {
         headers.setLocation(URI.create("redirect:/profile/"+user.getUsername()+"/orders"));
         return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
 
-
     }
 
 

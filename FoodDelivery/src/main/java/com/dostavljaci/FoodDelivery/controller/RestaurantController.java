@@ -1,6 +1,7 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
+import com.dostavljaci.FoodDelivery.entity.Order;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.service.*;
@@ -29,6 +30,7 @@ public class RestaurantController {
     public final AddressService addressService;
     public final GeocodeService geocodeService;
     public final UserService userService;
+    public final OrderService orderService;
 
     @GetMapping()
     public String showRestaurantForm(Model model, HttpSession session) {
@@ -168,6 +170,25 @@ public class RestaurantController {
 
 
     }
+
+
+
+    @PostMapping("/complete-order/{orderId}/{restaurantName}")
+    public String updateOrderStatus(@PathVariable UUID orderId,@PathVariable String restaurantName){
+        Order order = orderService.getOrderById(orderId);
+        Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
+        order.setStatus("completed");
+        order.setScheduledDeliveryTime(
+                orderService.calculateScheduledDeliveryTime(
+                        order.getRestaurant(),
+                        order.getUser().getAddress()
+                )
+        );
+        orderService.saveOrder(order);
+
+        return "redirect:/menu-items/"+restaurant.getName();
+    }
+
     private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
         if (!Objects.equals(getter.get(), newValue)) {
             setter.accept(newValue);
