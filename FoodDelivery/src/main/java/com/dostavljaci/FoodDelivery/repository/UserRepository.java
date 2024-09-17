@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
     User findByUsernameOrEmail(String username, String email);
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.address WHERE u.username = :username")
+    @Query("SELECT u FROM User u JOIN FETCH u.address WHERE u.username = :username")
     User findByUsername(String username);
 
     User getUserById(UUID userId);
@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     User getUserByEmail(String email);
 
     User findByEmail(String email);
+
 }

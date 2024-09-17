@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{../../../style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/fragment :: navbar"></div>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 bg-light">
+    <div th:each="order : ${orders}" class="col">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title h2 font-weight-bold " th:text="${order.getOrderDate()}">Order Date</h5>
+            </div>
+            <img th:src="@{/{picturePath}(picturePath=${order.getRestaurant().getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
+            <div class="card-body">
+                <h5 class="card-title font-weight-bold h3" th:text="${order.getRestaurant().getName()}">Restaurant Name</h5>
+                <p class="mt-2 font-weight-bold">
+                    Total amount:
+                    <span class="card-rating" th:text="${'€'+#numbers.formatDecimal(order.getTotalAmount(), 1, 'COMMA', 2, 'POINT')}"></span>
+                </p>
+                <p th:text="${'Time of delivery: ' + order.getScheduledDeliveryTime()}" class="text-muted font-weight-bold ">Delivery Time</p>
+                <ul class="list-group list-group-flush">
+                    <li th:each="orderItem : ${order.getOrderItems()}" class="list-group-item"
+                        th:text="${orderItem.getQuantity() + 'x ' + orderItem.getMenuItem().getName()}">Menu Item</li>
+                </ul>
+            </div>
+            <div class="card-footer bg-white">
+                <form th:action="@{/order/order-rating/{orderId}(orderId=${order.getId()})}" method="post">
+                    <div class="mb-2">
+                        <label for="rating" class="form-label">Rating:</label>
+                        <input type="number" class="form-control" id="rating" th:value="${order.getRating()}" name="rating" min="1" max="5">
+                    </div>
+                    <div class="mb-2">
+                        <label for="comment" class="form-label">Comment:</label>
+                        <textarea class="form-control" id="comment" name="comment" th:text="${order.getComment()}"></textarea>
+                    </div>
+                    <input type="hidden" id="restaurantName" th:value="${order.getRestaurant().getName()}" name="restaurantName">
+                    <button type="submit" class="btn btn-primary w-100">Submit Rating</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

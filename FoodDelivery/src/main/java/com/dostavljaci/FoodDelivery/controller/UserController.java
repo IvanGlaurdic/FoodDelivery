@@ -1,12 +1,10 @@
 package com.dostavljaci.FoodDelivery.controller;
 
 import com.dostavljaci.FoodDelivery.entity.Address;
+import com.dostavljaci.FoodDelivery.entity.Order;
 import com.dostavljaci.FoodDelivery.entity.Restaurant;
 import com.dostavljaci.FoodDelivery.entity.User;
-import com.dostavljaci.FoodDelivery.service.AddressService;
-import com.dostavljaci.FoodDelivery.service.AuthenticationService;
-import com.dostavljaci.FoodDelivery.service.RestaurantService;
-import com.dostavljaci.FoodDelivery.service.UserService;
+import com.dostavljaci.FoodDelivery.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,20 +26,26 @@ public class UserController {
     private final RestaurantService restaurantService;
     private final AuthenticationService authenticationService;
     private final AddressService addressService;
+    private final OrderService orderService;
 
     @GetMapping("/{username}")
-    public String profile(
-            @PathVariable("username") String username,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+    public String profile(@PathVariable("username") String username,
+                          Model model,
+                          RedirectAttributes redirectAttributes,
+                          HttpSession session) {
+
         User user = userService.getUserByUsername(username);
+
         if (user != null) {
+
             List<User> users;
             List<Restaurant> restaurants;
+
             if (Objects.equals(user.getRole().toLowerCase(), "admin")){
                 users = userService.getAllUsers();
                 restaurants = restaurantService.getAllRestaurantsWithAddresses();
-            } else if (Objects.equals(user.getRole().toLowerCase(), "owner")) {
+            }
+            else if (Objects.equals(user.getRole().toLowerCase(), "owner")) {
                 restaurants = restaurantService.getRestaurantsByOwner(user.getId());
                 users = null;
             }
@@ -49,13 +53,20 @@ public class UserController {
                 users = null;
                 restaurants = null;
             }
+
+            boolean isLoggedIn = session.getAttribute("user") != null;
+            model.addAttribute("isLoggedIn", isLoggedIn);
+
             model.addAttribute("user", user);
             model.addAttribute("users", users);
             model.addAttribute("restaurants", restaurants);
+
             redirectAttributes.addFlashAttribute("successMessage", null);
             redirectAttributes.addFlashAttribute("errorMessage", null);
+
             return "profile";
-        } else {
+        }
+        else {
             // User is not authenticated, redirect to login page
             return "redirect:/login";
         }
@@ -65,15 +76,21 @@ public class UserController {
     public String editProfile( @PathVariable("username") String username,
                                Model model,
                                HttpSession session){
+
         Object sessionUser = session.getAttribute("user");
 
         if (sessionUser instanceof User userInstance){
             if (Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getRole().toLowerCase(), "admin")
                 || Objects.equals(userService.getUserByUsername(userInstance.getUsername()).getUsername(), username)
             ) {
-                User user = userService.getUserByUsername(username);
-                model.addAttribute("user", user);
+                boolean isLoggedIn = session.getAttribute("user") != null;
+                User requestedUser = userService.getUserByUsername(username);
+
+                model.addAttribute("isLoggedIn", isLoggedIn);
+                model.addAttribute("user", userInstance);
+                model.addAttribute("requestedUser", requestedUser);
                 model.addAttribute("error", null);
+
                 return "edit-user";
             }
         }
@@ -157,27 +174,15 @@ public class UserController {
         return "redirect:/";
     }
 
-    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
-        if (!Objects.equals(getter.get(), newValue)) {
-            setter.accept(newValue);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean updatePasswordIfChanged(User user, String newPassword) {
-        String encodedPassword = authenticationService.getPasswordEncoder().encode(newPassword);
-        if (!encodedPassword.equals(user.getPassword())) {
-            user.setPassword(encodedPassword);
-            return true;
-        }
-        return false;
-    }
 
     @GetMapping("/add-user")
-    public String addUser(Model model){
-        model.addAttribute("user", new User());
-        model.addAttribute("address", new Address());
+    public String addUser(Model model, HttpSession session){
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
         model.addAttribute("error", null);
         return "add-user";
     }
@@ -195,7 +200,18 @@ public class UserController {
                                   @RequestParam String province,
                                   @RequestParam String country,
                                   @RequestParam String postalCode,
-                                  Model model){
+                                  Model model,
+                                  HttpSession session ){
+
+        Object sessionUser = session.getAttribute("user");
+        User user;
+
+        if (sessionUser instanceof User userInstance){
+            user = userService.getUserByUsername(userInstance.getUsername());
+        }
+        else {
+            throw new RuntimeException("Cant locate user:" + sessionUser);
+        }
 
         if (!password.equals(confirmPassword)) {
             // Handle the case where passwords do not match
@@ -209,32 +225,111 @@ public class UserController {
                 address = addressService.saveAddress(city,street,province,country,postalCode);
             }
 
-            userService.saveNewUser(
-                    firstName,
-                    lastName,
-                    username,
-                    email,
-                    authenticationService.getPasswordEncoder().encode(password),
-                    phoneNumber,
-                    address);
 
-            User user=userService.getUserByUsername(username);
-            if (user.getAddress()==null){
-                user.setAddress(address);
-                userService.saveUser(user);
+
+            User newUser=userService.saveNewUser(firstName, lastName, username, email,
+                    authenticationService.getPasswordEncoder().encode(password),
+                    phoneNumber, address);
+
+            if (newUser.getAddress()==null){
+                newUser.setAddress(address);
+                userService.saveUser(newUser);
             }
 
-            System.out.print(user);
         }
 
         model.addAttribute("error", null);
 
 
 
-        return "home";
+        return "redirect:/profile/" + user.getUsername();
 
     }
 
 
+    @PostMapping("/delete-user/{username}")
+    public String deleteUser(@PathVariable("username") String username,
+                             RedirectAttributes redirectAttributes,
+                             HttpSession session) {
+
+        Object sessionUser = session.getAttribute("user");
+
+        if (sessionUser instanceof User sessionUserInstance) {
+            User authenticatedUser = userService.getUserByUsername(sessionUserInstance.getUsername());
+
+            // Check if the authenticated user is an admin or the user being deleted
+            if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")
+                    || Objects.equals(authenticatedUser.getUsername(), username)) {
+
+                    User userToDelete = userService.getUserByUsername(username);
+                    userToDelete.setAddress(null);
+
+
+
+
+                    // Get the user to be deleted
+
+                    userService.saveUser(userToDelete);
+                    userService.deleteUser(userToDelete);
+
+                if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")) {
+                    return "redirect:/profile/" + authenticatedUser.getUsername();
+                } else {
+                    return "redirect:/logout";
+                }
+            }
+        }
+
+        return "redirect:/";
+    }
+
+
+
+    @GetMapping("/{username}/orders")
+    public String showOrderHistory(@PathVariable String username,
+                                   Model model,
+                                   HttpSession session){
+
+        boolean isLoggedIn = session.getAttribute("user") != null;
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
+        User user =(User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        Object sessionUser = session.getAttribute("user");
+
+        if (sessionUser instanceof User sessionUserInstance) {
+            User authenticatedUser = userService.getUserByUsername(sessionUserInstance.getUsername());
+
+            // Check if the authenticated user is an admin or the user being deleted
+            if (Objects.equals(authenticatedUser.getRole().toLowerCase(), "admin")
+                    || Objects.equals(authenticatedUser.getUsername(), username)){
+
+                List<Order> userOrders = orderService.getUserOrders(authenticatedUser.getId());
+                model.addAttribute("orders", userOrders);
+
+                return "order-history";
+
+            }
+        }
+        return "redirect:/";
+    }
+
+    private boolean updateIfChanged(Supplier<String> getter, Consumer<String> setter, String newValue) {
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean updatePasswordIfChanged(User user, String newPassword) {
+        String encodedPassword = authenticationService.getPasswordEncoder().encode(newPassword);
+        if (!encodedPassword.equals(user.getPassword())) {
+            user.setPassword(encodedPassword);
+            return true;
+        }
+        return false;
+    }
 
 }

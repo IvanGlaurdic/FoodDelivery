@@ -14,7 +14,7 @@
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100" style="min-height: 100vh">
 
-<div class="row g-0 vh-100">
+<div class="row g-0 vh-100 bg-light">
     <img class="col-md-6 bg-image" th:src="@{/images/webpage/registration-form.jpg}" src="/images/webpage/registration-form.jpg" alt="picture"></img>
     <div class="col-md-6 d-flex align-items-center justify-content-center">
         <div class="px-5">
@@ -24,7 +24,7 @@
                     Let’s <span>Sign you in</span>, your meal awaits<span class="yellow-dot">.</span>
                 </h2>
             </div>
-            <form class="row g-3" action="/login" method="post">
+            <form class="row g-3" th:action="@{/login}" method="post">
                 <!-- Error Message -->
                 <div class="col-12">
                     <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
@@ -45,7 +45,7 @@
 
                 <!-- Submit Button -->
                 <div class="col-12">
-                    <button type="submit" id="signup-btn" class="btn w-100 mb-2">SIGN IN</button>
+                    <button type="submit" id="signup-btn" class="btn w-100 my-2">SIGN IN</button>
                 </div>
 
                 <!-- Login Link -->

@@ -3,6 +3,7 @@ package com.dostavljaci.FoodDelivery.service;
 import com.dostavljaci.FoodDelivery.entity.Address;
 import com.dostavljaci.FoodDelivery.entity.User;
 import com.dostavljaci.FoodDelivery.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -22,7 +24,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void saveNewUser(String firstName,
+    public User saveNewUser(String firstName,
                             String lastName,
                             String username,
                             String email,
@@ -40,8 +42,9 @@ public class UserService {
             user.setPhoneNumber(phoneNumber);
             user.setRole("user");
             user.setAddress(address);
-            userRepository.save(user);
+            return userRepository.save(user);
         }
+        return null;
     }
 
     public User getUserById(UUID userId) {
@@ -50,10 +53,6 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);
-    }
-
-    public void updateUser(User currentUser) {
-        userRepository.save(currentUser);
     }
 
     public void saveUser(User user) {
@@ -67,5 +66,9 @@ public class UserService {
     public boolean isEmailTaken(String email, UUID userId) {
         User user = userRepository.findByEmail(email);
         return user != null && !user.getId().equals(userId);
+    }
+
+    public void deleteUser(User userToDelete) {
+        userRepository.delete(userToDelete);
     }
 }

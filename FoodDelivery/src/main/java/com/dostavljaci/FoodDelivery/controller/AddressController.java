@@ -1,22 +1,33 @@
 package com.dostavljaci.FoodDelivery.controller;
 
-import com.dostavljaci.FoodDelivery.entity.Address;
 import com.dostavljaci.FoodDelivery.service.AddressService;
+import com.dostavljaci.FoodDelivery.service.RestaurantService;
+import com.dostavljaci.FoodDelivery.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
+import java.util.UUID;
 
+@RequestMapping("/address")
 @Controller
 @AllArgsConstructor
 public class AddressController {
     private final AddressService addressService;
+    private final RestaurantService restaurantService;
 
+
+    @PostMapping("/delete-address/{addressId}/{restaurantId}")
+    public String removeAddressFromRestaurant(
+            @PathVariable UUID addressId,
+            @PathVariable UUID restaurantId) {
+
+
+        addressService.removeAddressFromRestaurant(addressId, restaurantId);
+
+        return "redirect:/restaurant/edit-restaurant/" +  restaurantService.getRestaurantById(restaurantId).getName();
+    }
 
 }

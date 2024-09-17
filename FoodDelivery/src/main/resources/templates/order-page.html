@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{../style.css}">
+</head>
+<body>
+
+    <div th:replace="fragments/fragment :: navbar"></div>
+
+    <div class="position-relative banner mb-1 bg-light">
+        <img th:src="@{/{picturePath}(picturePath=${restaurant.getPicturePath()})}" alt="Descriptive Text for Image" class="img-fluid" style="filter: brightness(50%)">
+        <div class="position-absolute banner-text">
+            <h2 class="text-white font-weight-bold" th:text="${restaurant.getName()}">Title Goes Here</h2>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-light">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div th:each="menuItem : ${menu}" class="col">
+                        <div class="card h-100 d-flex flex-column">
+                            <img th:src="@{/{picturePath}(picturePath=${menuItem.getImageURL()})}" class="card-img-top" alt="Menu Item Image">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title" th:text="${menuItem.getName()}">Menu Item Name</h5>
+                                    <p class="card-rating d-flex align-items-center">
+                                        <span class="font-weight-bold" th:text="${'€'+#numbers.formatDecimal(menuItem.getPrice(), 1, 'COMMA', 2, 'POINT')}"></span>
+                                    </p>
+                                </div>
+                                <p class="card-address text-muted font-weight-bold mb-3" th:text="${menuItem.getDescription()}">Description</p>
+                                <div class="mt-auto">
+                                    <button type="button"
+                                            class="btn btn-custom-color w-100"
+                                            th:data-menu-item-id="${menuItem.id}"
+                                            th:data-restaurant-name="${restaurant.name}"
+                                            onclick="addToBasket(this)">Add to Basket
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div id="orderBasket" class="sticky-top mt-1 mx-auto">
+                    <h3 class="text-center font-weight-bold">Your Order</h3>
+                    <hr> <!-- Divider line after the header -->
+                    <div class="list-group" id="basketItems">
+                        <!-- Basket items will be added here dynamically with JavaScript -->
+                    </div>
+                    <hr> <!-- Divider line before the total -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="total-text">Total:</strong>
+                        <span class="total-amount font-weight-bold card-rating" id="basketTotal"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function addToBasket(element) {
+            var menuItemId = element.getAttribute('data-menu-item-id');
+            var restaurantName = element.getAttribute('data-restaurant-name');
+            $.ajax({
+                url: '/order/add-to-basket',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ menuItemId: menuItemId, restaurantName: restaurantName }),
+                success: function(response) {
+                    updateBasketView(response);
+                },
+                error: function(error) {
+                    console.error("Error adding item to basket", error);
+                }
+            });
+        }
+
+        function removeItemFromBasket(menuItemId) {
+            $.ajax({
+                url: '/order/remove-from-basket',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ menuItemId: menuItemId }),
+                success: function(response) {
+                    updateBasketView(response);
+                },
+                error: function(error) {
+                    console.error("Error removing item from basket", error);
+                }
+            });
+        }
+
+        function confirmOrder() {
+            $.ajax({
+                url: '/order/confirm',
+                type: 'POST',
+                success: function(response) {
+                    alert('Order confirmed!');
+                    // You might want to clear the basket or redirect the user here
+                    updateBasketView([]); // Clear the basket view assuming the order is completed
+                },
+                error: function(error) {
+                    console.error("Error confirming order", error);
+                }
+            });
+        }
+
+        function updateBasketView(orderItems) {
+            $('#basketItems').empty();
+            var total = 0;
+
+            orderItems.forEach(function(item) {
+                var itemName = item.menuItemName;
+                var itemPrice = item.price;
+                var itemQuantity = item.quantity;
+                var itemTotal = itemPrice * itemQuantity;
+                total += itemTotal;
+
+                var newItem = $('<div>')
+                    .addClass('list-group-item d-flex justify-content-between align-items-center')
+                    .css({'font-weight': 'bold', 'font-size': '1rem'}); // Smaller and bolder text
+
+                // Quantity and Name
+                var itemNameQuantity = $('<span>')
+                    .text(itemQuantity + 'x ' + itemName)
+                    .css({'flex-grow': '1'}); // Allows the name to fill the available space
+
+                // Price
+                var itemPriceTag = $('<span>')
+                    .addClass('card-rating mx-1')
+                    .text('€' + itemTotal.toFixed(2));
+
+                // Remove button
+                var removeButton = $('<button>')
+                    .text('X')
+                    .addClass('btn btn-danger rounded-circle')
+                    .click(function() { removeItemFromBasket(item.menuItemId); });
+
+                // Append all parts to the newItem container
+                newItem.append(itemNameQuantity).append(itemPriceTag).append(removeButton);
+                $('#basketItems').append(newItem);
+            });
+
+            $('#basketTotal').text(total.toFixed(2) + '€');
+
+
+            // Ensure that only one confirm button is added to the basket view
+            if (orderItems.length > 0) {
+                if ($('#confirmOrderButton').length === 0) {
+                    var confirmButton = $('<button>')
+                        .attr('id', 'confirmOrderButton')
+                        .text('Confirm Order')
+                        .addClass('btn btn-success my-2 w-100')
+                        .click(confirmOrder);
+                    $('#orderBasket').append(confirmButton);
+                }
+            } else {
+                // Remove the confirm button if it exists and the basket is empty
+                $('#confirmOrderButton').remove();
+            }
+        }
+    </script>
+
+    </body>
+    </html>

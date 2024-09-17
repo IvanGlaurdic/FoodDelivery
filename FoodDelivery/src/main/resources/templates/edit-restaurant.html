@@ -1,41 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant</title>
+    <title>Home Page</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Your Custom CSS -->
-    <link rel="stylesheet" th:href="@{style.css}">
+    <link rel="stylesheet" th:href="@{../../style.css}">
 </head>
-<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<body>
 
-<div class="card w-100" style="max-width: 400px;">
-    <div class="card-body">
-        <form class="row g-3" th:action="@{/restaurant/edit-restaurant/{restaurantname}(restaurantname=${restaurant.getName()})}" method="post">
-            <div class="col-12">
-                <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+<div th:replace="fragments/fragment :: navbar"></div>
+
+<div class="row g-0 vh-100 bg-light">
+    <img class="col-md-6 bg-image" th:src="@{/images/webpage/registration-form.jpg}" src="/images/webpage/registration-form.jpg" alt="picture"></img>
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+        <div class="px-5">
+            <div class="text-center mb-5">
+                <p id="logo-text">byte<span class="yellow-dot">.</span></p>
+                <h2 class="registration-header">
+                    Refining the Recipe, <span>Restaurant Details</span> Enhanced<span class="yellow-dot">.</span>
+                </h2>
             </div>
-            <!-- Restaurant Name Input -->
-            <div class="col-12">
-                <label for="inputName" class="form-label">Name</label>
-                <input type="text" class="form-control mb-2" id="inputName" th:value="${restaurant.getName()}" name="restaurantName">
-            </div>
+            <form class="row g-3" th:action="@{/restaurant/edit-restaurant/{restaurantname}(restaurantname=${restaurant?.getName()})}" method="post">
+                <div class="col-12">
+                    <p th:if="${error != null}" th:text="${error}" class="alert alert-danger" role="alert"></p>
+                </div>
+                <!-- Restaurant Name Input -->
+                <div class="col-12">
+                    <label for="inputName" class="form-label">Name</label>
+                    <input type="text" class="form-control mb-2" id="inputName" th:value="${restaurant?.getName()}" name="Name">
+                </div>
 
-            <!-- Contact Number Input -->
-            <div class="col-12">
-                <label for="inputContactNumber" class="form-label">Contact Number</label>
-                <input type="text" class="form-control mb-2" id="inputContactNumber" th:value="${restaurant.getContactNumber()}" name="contactNumber">
-            </div>
+                <!-- Contact Number Input -->
+                <div class="col-12">
+                    <label for="inputContactNumber" class="form-label">Contact Number</label>
+                    <input type="text" class="form-control mb-2" id="inputContactNumber" th:value="${restaurant?.getContactNumber()}" name="ContactNumber">
+                </div>
 
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success w-100 my-2">Submit</button>
+                </div>
+            </form>
 
-
-            <!-- Submit Button -->
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary w-100 mb-2">Submit</button>
-            </div>
-        </form>
+            <ul class="list-group mb-3">
+                <div th:each="address : ${restaurant?.getAddress()}">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span th:text="${address.getStreet() + ', ' + address.getCity()}">Address</span>
+                        <form th:action="@{/address/delete-address/{addressId}/{restaurantId}(addressId=${address.getId()}, restaurantId=${restaurant.getId()})}" method="post" class="ml-auto">
+                            <input type="hidden" name="_method" value="post"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </li>
+                </div>
+            </ul>
+        </div>
     </div>
 </div>
 

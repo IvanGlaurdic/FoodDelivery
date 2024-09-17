@@ -30,8 +30,10 @@ public class AuthenticationController {
     @PostMapping("/login")
     public String performLogin(@RequestParam String usernameOrEmail, @RequestParam String rawPassword, Model model, HttpSession session){
         User user = authenticationService.authenticate(usernameOrEmail, rawPassword);
+
         if (user != null){
             session.setAttribute("user", user);
+            model.addAttribute("isLoggedIn", session.getAttribute("isLoggedIn"));
             return "redirect:/";
         }
         else {
@@ -52,6 +54,7 @@ public class AuthenticationController {
                                          RedirectAttributes redirectAttributes,
                                          Model model) {
 
+
         if (!user.getPassword().equals(confirmPassword)) {
             model.addAttribute("error", "Passwords do not match.");
             return "registration-form";
@@ -71,20 +74,14 @@ public class AuthenticationController {
 
     @GetMapping("/address-form")
     public String showAddressForm(Model model) {
-        // Check for user data in flash attributes and add to model
         if (!model.containsAttribute("user")) {
-            return "redirect:/register"; // Redirect back to the registration page if user data is not found
+            return "redirect:/register";
         }
-        // Return the address form view
         return "address-form";
     }
 
     @PostMapping("/create-account")
-    public String createAccount(@ModelAttribute User user, @ModelAttribute Address address) {
-
-        System.out.print(user);
-        System.out.print(address);
-
+    public String createAccount(@ModelAttribute User user, @ModelAttribute Address address,HttpSession session) {
 
         userService.saveNewUser(
                 user.getFirstName(),
@@ -108,7 +105,5 @@ public class AuthenticationController {
         session.invalidate();
         return "redirect:/";
     }
-
-
 }
 

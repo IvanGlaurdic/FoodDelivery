@@ -1,16 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>Home Page</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" integrity="sha384-ejw6H4p1K5z+8WbNSf9FmWjBWVhTc9V9TA5RjG/LCvZ0pL3yQzWfI5QzA4uVxdfj" crossorigin="anonymous">
+
     <!-- Your Custom CSS -->
     <link rel="stylesheet" th:href="@{style.css}">
 </head>
-<body>
+<body class="bg-light">
 
 <div th:replace="fragments/fragment :: navbar"></div>
+
+<div class="container my-4 bg-light" th:if="${isLoggedIn}">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <ul class="nav">
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="btn btn-custom mx-1" th:href="@{/category/{category}(category=${category})}" th:text="${category}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row row-cols-1 row-cols-md-4 g-4 bg-light" th:if="${!isLoggedIn}">
+    <div th:each="restaurant : ${restaurants}" class="col">
+        <div class="card h-100">
+            <img th:src="@{/{picturePath}(picturePath=${restaurant.getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Display Restaurant Name -->
+                    <h5 class="card-title" th:text="${restaurant.getName()}">Restaurant Name</h5>
+                    <!-- Display Restaurant Rating -->
+                    <p class="card-rating d-flex align-items-center  border border-success rounded px-1 py-1">
+                        <span class="font-weight-bold" th:text="${'★ '+#numbers.formatDecimal(restaurant.getRating(), 1, 'COMMA', 2, 'POINT')}">Rating</span>
+                    </p>
+                </div>
+                <div class="card-text">
+                    <p class="card-address text-muted font-weight-bold" th:text="${ restaurant.getAddress().getFirst().getCity() +', ' + restaurant.getAddress().getFirst().getStreet()}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 bg-light">
+    <div th:each="entry : ${closestAddresses}" class="col">
+        <div class="card h-100">
+            <img th:src="@{/{picturePath}(picturePath=${entry.key.getPicturePath()})}" class="card-img-top" alt="Restaurant Image">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Display Restaurant Name -->
+                    <h5 class="card-title" th:text="${entry.key.getName()}">Restaurant Name</h5>
+                    <!-- Display Restaurant Rating -->
+                    <p class="card-rating d-flex align-items-center border border-success rounded px-1 py-1">
+                        <span class="font-weight-bold" th:text="${'★ '+#numbers.formatDecimal(entry.key.getRating(), 1, 'COMMA', 2, 'POINT')}">Rating</span>
+                    </p>
+                </div>
+
+                <div class="card-text" th:if="${isLoggedIn}">
+                    <p class="card-address text-muted font-weight-bold" th:text="${entry.value.getCity()+', ' + entry.value.getStreet()}"></p>
+                    <a th:href="@{/order/{Name}(Name=${entry.key.getName()})}" class="btn btn-custom-color w-100 mb-2">Order</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

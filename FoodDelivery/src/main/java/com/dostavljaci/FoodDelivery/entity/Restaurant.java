@@ -17,18 +17,21 @@ public class Restaurant {
     @Column(nullable = false, name = "name", unique = true)
     private String name;
 
-    @Column(nullable = false, name = "contact_number")
+    @Column(name = "contact_number")
     private String contactNumber;
 
     @Column(name = "rating")
     private Float rating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(name = "picture_path")
+    private String picturePath;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "restaurant_addresses",
             joinColumns = @JoinColumn(name = "restaurant_id"),

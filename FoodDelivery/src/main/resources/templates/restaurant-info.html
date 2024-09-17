@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" th:href="@{../../style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/fragment :: navbar"></div>
+
+<div class="container-fluid bg-light" th:if="orders">
+    <div class="row">
+        <div class="col">
+            <h3 class="text-center mt-4 mb-4">New Orders</h3>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-5 g-4 bg-light">
+        <div th:each="order : ${orders}" class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title" th:text="${order.getId()}">Order ID</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item font-weight-bold" th:each="item : ${order.getOrderItems()}" th:text="${item.getQuantity() +'x '+item.getMenuItem().getName()}">Menu Item Name</li>
+                    </ul>
+                    <div class="row mb-2">
+                        <div class="col card-rating font-weight-bold" th:text="${'€'+#numbers.formatDecimal(order.getTotalAmount(), 1, 'COMMA', 2, 'POINT')}">Price</div>
+                    </div>
+                    <div class="card-footer ">
+                        <form th:action="@{/restaurant/complete-order/{orderId}/{restaurantName}(orderId=${order.getId()},restaurantName=${restaurant.getName()})}" method="post">
+                            <button type="submit" class="btn btn-success w-100">Confirm Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid bg-light" th:if="CompletedOrders">
+    <div class="row">
+        <div class="col">
+            <h3 class="text-center mt-4 mb-4">Order Reviews</h3>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-5 g-4 bg-light">
+        <div th:each="order : ${CompletedOrders}" class="col">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title" th:text="${order.getId()}">Order ID</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item" th:each="item : ${order.getOrderItems()}" th:text="${item.getQuantity() +'x '+item.getMenuItem().getName()}">Menu Item Name</li>
+                    </ul>
+                    <div class="row mb-2">
+                        <div class="col card-rating font-weight-bold" th:text="${'€'+#numbers.formatDecimal(order.getTotalAmount(), 1, 'COMMA', 2, 'POINT')}">Price</div>
+                        <div class="col text-right text-warning font-weight-bold" th:text="${'★'+#numbers.formatDecimal(order.getRating(), 1, 'COMMA', 2, 'POINT')}">Rating</div>
+                    </div>
+                    <div class="card-footer " th:if="${order.getComment()}">
+                        <p class="card-text font-weight-bold">Comment: </p>
+                        <p class="card-text" th:text="${order.getComment()}">Comment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid bg-light">
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong class="fs-1 h2 font-weight-bold">Menu Items</strong>
+                    <a class="btn btn-primary" th:href="@{/menu-items/add-item/{restaurantName}(restaurantName=${restaurant.getName()})}">Add Menu Item</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div th:each="menuItem : ${menuItem}" class="col">
+            <div class="card h-100 d-flex flex-column">
+                <img th:src="@{/{picturePath}(picturePath=${menuItem.getImageURL()})}" class="card-img-top" alt="Menu Item Image">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title" th:text="${menuItem.getName()}">Menu Item Name</h5>
+                    <p class="card-rating d-flex align-items-center">
+                        <span class="font-weight-bold" th:text="${'€'+#numbers.formatDecimal(menuItem.getPrice(), 1, 'COMMA', 2, 'POINT')}">Price</span>
+                    </p>
+                    <p class="card-address text-muted font-weight-bold mb-3" th:text="${menuItem.getDescription()}">Description</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-primary w-100 mb-2" th:href="@{/menu-items/{restaurantName}/edit-menuitem/{menuItemId}(restaurantName=${restaurant.getName()},menuItemId=${menuItem.getId()})}">Edit</a>
+                        <form th:action="@{/menu-items/{restaurantName}/delete/{menuItemId}(restaurantName=${restaurant.getName()},menuItemId=${menuItem.getId()})}" method="post">
+                            <button type="submit" class="btn btn-danger w-100">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -14,8 +14,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     @Query("SELECT r FROM Restaurant r WHERE r.owner.id = :ownerId")
     List<Restaurant> findByOwnerId(@Param("ownerId") UUID ownerId);
 
-    @Query("SELECT r FROM Restaurant r JOIN FETCH r.owner")
-    List<Restaurant> findAllWithOwners();
 
     @Query("SELECT r FROM Restaurant r JOIN FETCH r.address")
     List<Restaurant> findRestaurantsWithAddresses();
@@ -23,5 +21,15 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     Restaurant findRestaurantByName(String restaurantName);
 
 
-    Restaurant getRestaurantByName(String restaurantName);
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.address WHERE r.name = :name")
+    Restaurant getRestaurantByName(@Param("name") String name);
+
+    Restaurant findByNameIgnoreCase(String name);
+
+    @Query("SELECT DISTINCT r FROM Restaurant r " +
+            "JOIN MenuItem m ON r.id = m.restaurant.id " +
+            "WHERE m.category = :category")
+    List<Restaurant> findRestaurantsByMenuItemCategory(String category);
+
+
 }
